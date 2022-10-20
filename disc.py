@@ -206,7 +206,7 @@ async def on_message(message):
             
 
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), message.author.name))
-        if len(persons) == 2:
+        if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
             sanae.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), message.author.name, force=True)
         else:
             sanae.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), message.author.name)
