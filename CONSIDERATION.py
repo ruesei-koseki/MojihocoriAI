@@ -70,7 +70,7 @@ def looking(x, u, reply=True, force=False):
                                                         flag = False
                                                         break
                                             if flag:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i+1+iii
                                                 DATA.skip = iii
                                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1+iii][1]
@@ -78,12 +78,12 @@ def looking(x, u, reply=True, force=False):
                                                 return DATA.data["sentence"][i+1+iii][0]
                                         else:
                                             if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i
                                                 DATA.rate = rate
                                                 return None
                                     else:
-                                        DATA.sa = abs(DATA.heart - i)
+                                        DATA.sa = ii
                                         DATA.heart = i
                                         return
                         break
@@ -149,7 +149,7 @@ def looking(x, u, reply=True, force=False):
                                                         flag = False
                                                         break
                                             if flag:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i+1+iii
                                                 DATA.skip = iii
                                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1+iii][1]
@@ -157,12 +157,12 @@ def looking(x, u, reply=True, force=False):
                                                 return DATA.data["sentence"][i+1+iii][0]
                                         else:
                                             if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i
                                                 DATA.rate = rate
                                                 return None
                                     else:
-                                        DATA.sa = abs(DATA.heart - i)
+                                        DATA.sa = ii
                                         DATA.heart = i
                                         return
                         break
@@ -258,7 +258,7 @@ def looking(x, u, reply=True, force=False):
                                                         flag = False
                                                         break
                                             if flag:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i+1+iii
                                                 DATA.skip = iii
                                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1+iii][1]
@@ -266,7 +266,7 @@ def looking(x, u, reply=True, force=False):
                                                 return DATA.data["sentence"][i+1+iii][0]
                                         else:
                                             if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i
                                                 DATA.rate = rate
                                                 return None
@@ -336,7 +336,7 @@ def looking(x, u, reply=True, force=False):
                                                         flag = False
                                                         break
                                             if flag:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i+1+iii
                                                 DATA.skip = iii
                                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1+iii][1]
@@ -344,7 +344,7 @@ def looking(x, u, reply=True, force=False):
                                                 return DATA.data["sentence"][i+1+iii][0]
                                         else:
                                             if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                                DATA.sa = abs(DATA.heart - i)
+                                                DATA.sa = ii
                                                 DATA.heart = i
                                                 DATA.rate = rate
                                                 return None

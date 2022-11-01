@@ -184,6 +184,9 @@ async def on_message(message):
             if bool(re.search("(.+); (.+)", x)):
                 ff = True
                 sanae.MEMORY.addSentence(x.split("; ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), "l:" + x.split("; ")[0])
+            if bool(re.search("(.+): (.+)", x)):
+                ff = True
+                sanae.MEMORY.addSentence(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), x.split(": ")[0])
         if ff:
             return
 
