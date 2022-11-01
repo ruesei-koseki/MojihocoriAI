@@ -114,7 +114,7 @@ async def speak(result):
         await channel.send(Message)
         restStep = 0
 
-        if sanae.DATA.sa != 1:
+        if sanae.DATA.sa > 5:
             for myname in sanae.DATA.settings["mynames"].split("|"):
                 Message = Message.replace(myname, sanae.DATA.lastUserReplied)
             sanae.MEMORY.addSentence(Message.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]), sanae.DATA.lastUserReplied)
@@ -156,7 +156,7 @@ async def on_message(message):
         pss = []
         for ps in persons:
             pss.append(ps[0])
-        if [message.author.name, int()] not in pss:
+        if message.author.name not in pss:
             persons.append([message.author.name, 0])
         if message.content == "":
             return
@@ -190,19 +190,19 @@ async def on_message(message):
         nowTime = time.time()
         if nowTime >= prevTime + 15 and lastMessage != None:
             print("沈黙を検知")
-            sanae.receive("!command ignore", note.author.name)
+            sanae.receive("!command ignore", message.author.name)
             pss = []
             for ps in persons:
                 pss.append(ps[0])
             if sanae.DATA.lastUserReplied in pss:
                 if sanae.DATA.sa != 1:
-                    if sanae.DATA.lastUserReplied == note.author.name and restStep == 1:
-                        sanae.MEMORY.addSentence("!command ignore", note.author.name)
+                    if sanae.DATA.lastUserReplied == message.author.name and restStep == 1:
+                        sanae.MEMORY.addSentence("!command ignore", message.author.name)
                         print("自分のメッセージとして学習: {}".format("!command ignore"))
-                    elif sanae.DATA.lastUserReplied != note.author.name:
+                    elif sanae.DATA.lastUserReplied != message.author.name:
                         restStep = 1
-                        sanae.MEMORY.addSentence("!command ignore", note.author.name)
-                        print("他人のメッセージとして学習: {}, {}".format("!command ignore", note.author.name))
+                        sanae.MEMORY.addSentence("!command ignore", message.author.name)
+                        print("他人のメッセージとして学習: {}, {}".format("!command ignore", message.author.name))
             
 
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), message.author.name))
