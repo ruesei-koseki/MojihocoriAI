@@ -81,7 +81,7 @@ async def speak(result):
     print("users: {}".format(persons))
     results = result.split("\n")
 
-    if sanae.DATA.sa != 1:
+    if sanae.DATA.sa > 5:
         for myname in sanae.DATA.settings["mynames"].split("|"):
             sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
         sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
@@ -195,7 +195,7 @@ async def on_message(message):
             for ps in persons:
                 pss.append(ps[0])
             if sanae.DATA.lastUserReplied in pss:
-                if sanae.DATA.sa != 1:
+                if sanae.DATA.sa > 5:
                     if sanae.DATA.lastUserReplied == message.author.name and restStep == 1:
                         sanae.MEMORY.addSentence("!command ignore", message.author.name)
                         print("自分のメッセージとして学習: {}".format("!command ignore"))
@@ -244,11 +244,11 @@ async def on_message(message):
             for ps in persons:
                 pss.append(ps[0])
             if sanae.DATA.lastUserReplied in pss:
-                if sanae.DATA.sa != 1:
+                if sanae.DATA.sa > 5:
                     if sanae.DATA.lastUserReplied == message.author.name and restStep == 1 and "😅" not in message.content:
                         sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), "!")
                         print("自分のメッセージとして学習: {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]))))
-                    elif sanae.DATA.lastUserReplied != message.author.name:
+                    elif sanae.DATA.lastUserReplied != message.author.name and "😅" not in message.content:
                         restStep = 1
                         sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), message.author.name)
                         print("他人のメッセージとして学習: {}, {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), message.author.name))
@@ -354,7 +354,7 @@ async def cron():
                     for ps in persons:
                         pss.append(ps[0])
                     if sanae.DATA.lastUserReplied in pss:
-                        if sanae.DATA.sa != 1:
+                        if sanae.DATA.sa > 5:
                             if sanae.DATA.lastUserReplied == lastMessage.author.name and restStep == 1:
                                 sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
                                 print("自分のメッセージとして学習: {}".format("!command ignore"))
