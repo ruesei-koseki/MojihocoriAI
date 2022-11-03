@@ -64,7 +64,7 @@ def looking(x, u, reply=True, force=False):
                                         if i != len(DATA.data["sentence"]) and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1+iii][1] and DATA.lastSentenceInput != DATA.data["sentence"][i+1+iii][0] and DATA.lastSentence != DATA.data["sentence"][i+1+iii][0] and (DATA.data["sentence"][i+1+iii][1] == "!" or DATA.data["sentence"][i+1+iii][1] == DATA.settings["myname"] or isMine):
                                             print("返信: {}, {}".format(DATA.data["sentence"][i+1+iii][0], i+1+iii))
                                             flag = True
-                                            for iiiii in range(1):
+                                            for iiiii in range(8):
                                                 if i+1+iii+iiiii < len(DATA.data["sentence"]) - 1:
                                                     if DATA.data["sentence"][i+1+iii+iiiii][0] == "×":
                                                         flag = False
@@ -143,7 +143,7 @@ def looking(x, u, reply=True, force=False):
                                         if i != len(DATA.data["sentence"]) and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1+iii][1] and DATA.lastSentenceInput != DATA.data["sentence"][i+1+iii][0] and DATA.lastSentence != DATA.data["sentence"][i+1+iii][0] and (DATA.data["sentence"][i+1+iii][1] == "!" or DATA.data["sentence"][i+1+iii][1] == DATA.settings["myname"] or isMine):
                                             print("返信: {}, {}".format(DATA.data["sentence"][i+1+iii][0], i+1+iii))
                                             flag = True
-                                            for iiiii in range(1):
+                                            for iiiii in range(8):
                                                 if i+1+iii+iiiii < len(DATA.data["sentence"]) - 1:
                                                     if DATA.data["sentence"][i+1+iii+iiiii][0] == "×":
                                                         flag = False
@@ -252,7 +252,7 @@ def looking(x, u, reply=True, force=False):
                                         if i != len(DATA.data["sentence"]) and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1+iii][1] and DATA.lastSentenceInput != DATA.data["sentence"][i+1+iii][0] and DATA.lastSentence != DATA.data["sentence"][i+1+iii][0] and (DATA.data["sentence"][i+1+iii][1] == "!" or DATA.data["sentence"][i+1+iii][1] == DATA.settings["myname"] or isMine):
                                             print("返信: {}, {}".format(DATA.data["sentence"][i+1+iii][0], i+1+iii))
                                             flag = True
-                                            for iiiii in range(1):
+                                            for iiiii in range(8):
                                                 if i+1+iii+iiiii < len(DATA.data["sentence"]) - 1:
                                                     if DATA.data["sentence"][i+1+iii+iiiii][0] == "×":
                                                         flag = False
@@ -330,7 +330,7 @@ def looking(x, u, reply=True, force=False):
                                         if i != len(DATA.data["sentence"]) and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1+iii][1] and DATA.lastSentenceInput != DATA.data["sentence"][i+1+iii][0] and DATA.lastSentence != DATA.data["sentence"][i+1+iii][0] and (DATA.data["sentence"][i+1+iii][1] == "!" or DATA.data["sentence"][i+1+iii][1] == DATA.settings["myname"] or isMine):
                                             print("返信: {}, {}".format(DATA.data["sentence"][i+1+iii][0], i+1+iii))
                                             flag = True
-                                            for iiiii in range(1):
+                                            for iiiii in range(8):
                                                 if i+1+iii+iiiii < len(DATA.data["sentence"]) - 1:
                                                     if DATA.data["sentence"][i+1+iii+iiiii][0] == "×":
                                                         flag = False
