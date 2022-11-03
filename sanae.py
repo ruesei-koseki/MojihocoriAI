@@ -80,7 +80,7 @@ def speakFreely(add=True):
 
 
     #名前置き換え用
-    DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1])
+    DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
     if len(DATA.brainUser) > 5:
         DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
 
@@ -125,7 +125,7 @@ def receive(x, u, add=True, force=False):
             DATA.myVoice = None
         
             #名前置き換え用
-            DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1])
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
             if len(DATA.brainUser) > 5:
                 DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
 
@@ -139,7 +139,7 @@ def receive(x, u, add=True, force=False):
         else:
 
             #名前置き換え用
-            DATA.brainUser.append(DATA.data["sentence"][DATA.heart-1][1])
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart-1][1].replace("l:", ""))
             if len(DATA.brainUser) > 5:
                 DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
 
