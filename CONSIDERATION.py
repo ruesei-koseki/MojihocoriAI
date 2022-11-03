@@ -53,7 +53,7 @@ def looking(x, u, reply=True, force=False):
                         if len(cc) >= 2:
                             if (cc[-1] - cc[-2] >= rate or c >= rate) and "l:" in DATA.data["sentence"][i][1]:
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                                for iii in range(8):
+                                for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
                                         break
                                     if reply:
@@ -132,7 +132,7 @@ def looking(x, u, reply=True, force=False):
                         if len(cc) >= 2:
                             if (cc[-1] - cc[-2] >= rate or c >= rate) and "l:" in DATA.data["sentence"][i][1]:
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                                for iii in range(8):
+                                for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
                                         break
                                     if reply:
@@ -241,7 +241,7 @@ def looking(x, u, reply=True, force=False):
                         if len(cc) >= 2:
                             if cc[-1] - cc[-2] >= rate or c >= rate:
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                                for iii in range(8):
+                                for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
                                         break
                                     if reply:
@@ -319,7 +319,7 @@ def looking(x, u, reply=True, force=False):
                         if len(cc) >= 2:
                             if cc[-1] - cc[-2] >= rate or c >= rate:
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                                for iii in range(8):
+                                for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
                                         break
                                     if reply:
