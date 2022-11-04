@@ -343,30 +343,31 @@ async def cron():
             """
 
             if channel != None and lastMessage != None:
-                sanae.receive("!command ignore", lastMessage.author.name)
-                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or sanae.DATA.myVoice != None:
-                    
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
-                        await speak(result)
-                        messages = []
+                if mode == 2:
+                    sanae.receive("!command ignore", lastMessage.author.name)
+                    if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or sanae.DATA.myVoice != None:
+                        
+                        result = sanae.speakFreely()
+                        if result == None:
+                            messages = []
+                        else:
+                            print("{}: {}".format(sanae.DATA.settings["myname"], result))
+                            await speak(result)
+                            messages = []
 
-                    
-                pss = []
-                for ps in persons:
-                    pss.append(ps[0])
-                if sanae.DATA.lastUserReplied in pss:
-                    if sanae.DATA.sa > 15:
-                        if sanae.DATA.lastUserReplied == lastMessage.author.name and restStep == 1:
-                            sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
-                            print("自分のメッセージとして学習: {}".format("!command ignore"))
-                        elif sanae.DATA.lastUserReplied != lastMessage.author.name:
-                            restStep = 1
-                            sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
-                            print("他人のメッセージとして学習: {}, {}".format("!command ignore", lastMessage.author.name))
+                       
+                    pss = []
+                    for ps in persons:
+                        pss.append(ps[0])
+                    if sanae.DATA.lastUserReplied in pss:
+                        if sanae.DATA.sa > 15:
+                            if sanae.DATA.lastUserReplied == lastMessage.author.name and restStep == 1:
+                                sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
+                                print("自分のメッセージとして学習: {}".format("!command ignore"))
+                            elif sanae.DATA.lastUserReplied != lastMessage.author.name:
+                                restStep = 1
+                                sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
+                                print("他人のメッセージとして学習: {}, {}".format("!command ignore", lastMessage.author.name))
 
             i += 1
             prevTime = time.time()
