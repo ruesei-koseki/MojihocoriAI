@@ -82,9 +82,10 @@ async def speak(result):
     results = result.split("\n")
 
     if sanae.DATA.sa > 15:
-        for myname in sanae.DATA.settings["mynames"].split("|"):
-            sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
-        sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
+        if "😅" not in Message and "😅" not in sanae.DATA.lastSentenceInput:
+            for myname in sanae.DATA.settings["mynames"].split("|"):
+                sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
+            sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
 
     Message = ""
     for result in results:
@@ -115,9 +116,10 @@ async def speak(result):
         restStep = 0
 
         if sanae.DATA.sa > 15:
-            for myname in sanae.DATA.settings["mynames"].split("|"):
-                Message = Message.replace(myname, sanae.DATA.lastUserReplied)
-            sanae.MEMORY.addSentence(Message.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]), sanae.DATA.lastUserReplied)
+            if "😅" not in Message and "😅" not in sanae.DATA.lastSentenceInput:
+                for myname in sanae.DATA.settings["mynames"].split("|"):
+                    Message = Message.replace(myname, sanae.DATA.lastUserReplied)
+                sanae.MEMORY.addSentence(Message.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]), sanae.DATA.lastUserReplied)
     
     prevTime = time.time()
     print("< ", sanae.DATA.sa)
