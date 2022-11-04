@@ -82,7 +82,7 @@ async def speak(result):
     results = result.split("\n")
 
     if sanae.DATA.sa > 15:
-        if "😅" not in Message and "😅" not in sanae.DATA.lastSentenceInput:
+        if "😅" not in sanae.DATA.lastSentenceInput:
             for myname in sanae.DATA.settings["mynames"].split("|"):
                 sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
             sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
