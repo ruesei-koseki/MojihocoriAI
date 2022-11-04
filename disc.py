@@ -130,10 +130,10 @@ async def speak(result):
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
     print('ログインしました')
-    """
+    
     game = discord.Game(f'ヘルプ: 「{sanae.DATA.settings["myname"]}、ヘルプを表示して」')
     await client.change_presence(status=discord.Status.online, activity=game)
-    """
+    
     cron.start()
 
 # メッセージ受信時に動作する処理
@@ -165,7 +165,7 @@ async def on_message(message):
         if message.content == None:
             return
 
-        """
+        
         if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(0)
         if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
@@ -178,8 +178,8 @@ async def on_message(message):
         if bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
-        """
-
+        
+        
         ff = False
         xx = re.split('\n', message.content)
         for x in xx:
