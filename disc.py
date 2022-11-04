@@ -284,6 +284,13 @@ async def cron():
                         await speak(result)
                         messages = []
                 else:
+
+                    if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
+                        if "😅" not in sanae.DATA.lastSentenceInput:
+                            for myname in sanae.DATA.settings["mynames"].split("|"):
+                                sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
+                            sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
+
                     messages = []
         elif mode == 2:
             if len(messages) != 0:
