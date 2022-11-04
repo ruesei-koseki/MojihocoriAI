@@ -54,12 +54,14 @@ def initialize(direcectory, interface_):
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
+    """
     for i in range(len(DATA.data["sentence"])):
         try:
             if "😅" in DATA.data["sentence"][i][0]:
                 del DATA.data["sentence"][i]
         except:
             pass
+    """
 
 def speakFreely(add=True):
     #自由に話す
