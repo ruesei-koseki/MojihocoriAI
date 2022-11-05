@@ -172,7 +172,7 @@ async def on_message(message):
         if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(2)
         if bool(re.search("セーブして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
-            sanae.save()
+            sanae.MEMORY.save()
 
         if bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
@@ -239,9 +239,7 @@ async def on_message(message):
             else:
                 aaa = aaa + person[0] + "|"
         aaa = aaa[0:-1]
-        if (bool(re.search(sanae.DATA.settings["mynames"], message.content)) or (not bool(re.search(aaa, message.content))) and sanae.DATA.myVoice != None):
-            pass
-        elif bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        if (bool(re.search(sanae.DATA.settings["mynames"], message.content)) or (not bool(re.search(aaa, message.content))) and sanae.DATA.myVoice != None and mode == 2):
             pass
         else:
             pss = []
@@ -253,7 +251,7 @@ async def on_message(message):
                     if sanae.DATA.lastUserReplied == message.author.name and restStep == 1 and "😅" not in message.content:
                         sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), "!")
                         print("自分のメッセージとして学習: {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]))))
-                    elif sanae.DATA.lastUserReplied != message.author.name and "😅" not in message.content:
+                    elif sanae.DATA.lastUserReplied != message.author.name:
                         restStep = 1
                         sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), message.author.name)
                         print("他人のメッセージとして学習: {}, {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), message.author.name))
@@ -269,126 +267,108 @@ async def on_message(message):
 i = 0
 @tasks.loop(seconds=1)
 async def cron():
-    try:
-        global persons, prevTime, lastMessage, i, messages, restStep
+    global persons, prevTime, lastMessage, i, messages, restStep
 
-        if mode == 1:
-            if len(messages) != 0:
-                if bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)):
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
-                        await speak(result)
-                        messages = []
+    if mode == 1:
+        if len(messages) != 0:
+            if bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)):
+                result = sanae.speakFreely()
+                if result == None:
+                    messages = []
                 else:
+                    print("{}: {}".format(sanae.DATA.settings["myname"], result))
+                    await speak(result)
+                    messages = []
 
-                    pss = []
-                    for ps in persons:
-                        pss.append(ps[0])
-                    if sanae.DATA.lastUserReplied in pss:
-                        print("> ", sanae.DATA.sa)
-                        if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
-                            if sanae.DATA.lastUserReplied == messages[-1].author.name and restStep == 1 and "😅" not in messages[-1].content:
-                                sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), "!")
-                                print("自分のメッセージとして学習: {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]))))
-                            elif sanae.DATA.lastUserReplied != messages[-1].author.name and "😅" not in messages[-1].content:
-                                restStep = 1
-                                sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), messages[-1].author.name)
-                                print("他人のメッセージとして学習: {}, {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), messages[-1].author.name))
-                            if "😅" in messages[-1].content:
-                                restStep = 0
+    elif mode == 2:
+        if len(messages) != 0:
 
-        elif mode == 2:
-            if len(messages) != 0:
-
-                pss = []
-                for ps in persons:
-                    pss.append(ps[0])
-                aaa = ""
-                for person in pss:
-                    if person[0] == sanae.DATA.settings["myname"]:
-                        pass
-                    else:
-                        aaa = aaa + person[0] + "|"
-                aaa = aaa[0:-1]
-                if (bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content))) and sanae.DATA.myVoice != None):
-
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
-                        await speak(result)
-                        messages = []
-                
-                elif bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)):
-                
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
-                        await speak(result)
-
-            
-
-        nowTime = time.time()
-        #print(nowTime >= prevTime + 15)
-        #print(prevTime + 20 - nowTime)
-        if nowTime >= prevTime + 20:
-            print("沈黙を検知")
-
-            a = []
-            for person in persons:
-                if person[1] < 6:
-                    a.append([person[0], person[1]+1])
-            persons = a
             pss = []
             for ps in persons:
                 pss.append(ps[0])
-            if sanae.DATA.settings["myname"] not in pss:
-                persons.append([sanae.DATA.settings["myname"], 0])
+            aaa = ""
+            for person in pss:
+                if person[0] == sanae.DATA.settings["myname"]:
+                    pass
+                else:
+                    aaa = aaa + person[0] + "|"
+            aaa = aaa[0:-1]
+            if (bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content))) and sanae.DATA.myVoice != None):
 
-            """
-            if i >= 3:
-                persons = [[sanae.DATA.settings["myname"], 0]]
-                i = 0
-            """
+                result = sanae.speakFreely()
+                if result == None:
+                    messages = []
+                else:
+                    print("{}: {}".format(sanae.DATA.settings["myname"], result))
+                    await speak(result)
+                    messages = []
+            
+            elif bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)):
+            
+                result = sanae.speakFreely()
+                if result == None:
+                    messages = []
+                else:
+                    print("{}: {}".format(sanae.DATA.settings["myname"], result))
+                    await speak(result)
 
-            if channel != None and lastMessage != None:
-                if mode == 2:
-                    sanae.receive("!command ignore", lastMessage.author.name)
-                    if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or sanae.DATA.myVoice != None:
-                        
-                        result = sanae.speakFreely()
-                        if result == None:
-                            messages = []
-                        else:
-                            print("{}: {}".format(sanae.DATA.settings["myname"], result))
-                            await speak(result)
-                            messages = []
+        
 
-                       
-                pss = []
-                for ps in persons:
-                    pss.append(ps[0])
-                if sanae.DATA.lastUserReplied in pss:
-                    if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
-                        if sanae.DATA.lastUserReplied == lastMessage.author.name and restStep == 1:
-                            sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
-                            print("自分のメッセージとして学習: {}".format("!command ignore"))
-                        elif sanae.DATA.lastUserReplied != lastMessage.author.name:
-                            restStep = 1
-                            sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
-                            print("他人のメッセージとして学習: {}, {}".format("!command ignore", lastMessage.author.name))
+    nowTime = time.time()
+    #print(nowTime >= prevTime + 15)
+    #print(prevTime + 20 - nowTime)
+    if nowTime >= prevTime + 20:
+        print("沈黙を検知")
 
-            i += 1
-            prevTime = time.time()
-    except:
-        import traceback
-        traceback.print_exc()
+        a = []
+        for person in persons:
+            if person[1] < 6:
+                a.append([person[0], person[1]+1])
+        persons = a
+        pss = []
+        for ps in persons:
+            pss.append(ps[0])
+        if sanae.DATA.settings["myname"] not in pss:
+            persons.append([sanae.DATA.settings["myname"], 0])
+
+        """
+        if i >= 3:
+            persons = [[sanae.DATA.settings["myname"], 0]]
+            i = 0
+        """
+
+        if channel != None and lastMessage != None:
+            if mode == 2:
+                sanae.receive("!command ignore", lastMessage.author.name)
+                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or sanae.DATA.myVoice != None:
+                    
+                    result = sanae.speakFreely()
+                    if result == None:
+                        messages = []
+                    else:
+                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
+                        await speak(result)
+                        messages = []
+            if mode == 1:
+                sanae.receive("!command ignore", lastMessage.author.name)
+
+
+                    
+            pss = []
+            for ps in persons:
+                pss.append(ps[0])
+            if sanae.DATA.lastUserReplied in pss:
+                if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
+                    if sanae.DATA.lastUserReplied == lastMessage.author.name and restStep == 1:
+                        sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
+                        print("自分のメッセージとして学習: {}".format("!command ignore"))
+                    elif sanae.DATA.lastUserReplied != lastMessage.author.name:
+                        restStep = 1
+                        sanae.MEMORY.addSentence("!command ignore", lastMessage.author.name)
+                        print("他人のメッセージとして学習: {}, {}".format("!command ignore", lastMessage.author.name))
+
+        i += 1
+        prevTime = time.time()
 
 """
 import assi
