@@ -284,13 +284,22 @@ async def cron():
                         messages = []
                 else:
 
-                    if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
-                        if "😅" not in sanae.DATA.lastSentenceInput:
-                            for myname in sanae.DATA.settings["mynames"].split("|"):
-                                sanae.DATA.lastSentenceInput = sanae.DATA.lastSentenceInput.replace(myname, sanae.DATA.lastUserReplied)
-                            sanae.MEMORY.addSentence(sanae.DATA.lastSentenceInput, "!")
+                    pss = []
+                    for ps in persons:
+                        pss.append(ps[0])
+                    if sanae.DATA.lastUserReplied in pss:
+                        print("> ", sanae.DATA.sa)
+                        if sanae.DATA.sa > 15 or sanae.DATA.rate == 0.0:
+                            if sanae.DATA.lastUserReplied == messages[-1].author.name and restStep == 1 and "😅" not in messages[-1].content:
+                                sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), "!")
+                                print("自分のメッセージとして学習: {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"]))))
+                            elif sanae.DATA.lastUserReplied != messages[-1].author.name and "😅" not in messages[-1].content:
+                                restStep = 1
+                                sanae.MEMORY.addSentence(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), messages[-1].author.name)
+                                print("他人のメッセージとして学習: {}, {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', messages[-1].content.replace(sanae.DATA.lastUserReplied, sanae.DATA.settings["myname"])), messages[-1].author.name))
+                            if "😅" in messages[-1].content:
+                                restStep = 0
 
-                    messages = []
         elif mode == 2:
             if len(messages) != 0:
 
