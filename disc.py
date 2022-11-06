@@ -112,8 +112,8 @@ async def speak(result):
 
     if Message != "":
         async with channel.typing():
-            if len(Message) / (mode * 2) <= 7:
-                await asyncio.sleep(len(Message) / (mode * 2))
+            if len(Message) / (mode * 3) <= 7:
+                await asyncio.sleep(len(Message) / (mode * 3))
             else:
                 await asyncio.sleep(7)
             await channel.send(Message)
