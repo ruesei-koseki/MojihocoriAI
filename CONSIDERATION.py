@@ -52,6 +52,8 @@ def looking(x, u, reply=True, force=False):
                         
                         if len(cc) >= 2:
                             if (cc[-1] - cc[-2] >= rate or c >= rate) and "l:" in DATA.data["sentence"][i][1]:
+                                if DATA.data["sentence"][i][0] == "!command ignore":
+                                    break
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                                 for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
@@ -131,6 +133,8 @@ def looking(x, u, reply=True, force=False):
                         
                         if len(cc) >= 2:
                             if (cc[-1] - cc[-2] >= rate or c >= rate) and "l:" in DATA.data["sentence"][i][1]:
+                                if DATA.data["sentence"][i][0] == "!command ignore":
+                                    break
                                 print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                                 for iii in range(1):
                                     if i+1+iii >= len(DATA.data["sentence"]):
