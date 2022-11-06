@@ -74,6 +74,7 @@ def speakFreely(add=True):
     if result != None:
         INTELLIGENCE.wordSyori(result)
 
+        """
         if DATA.rate < 0.4:
             results = result.split("\n")
             result = ""
@@ -84,6 +85,7 @@ def speakFreely(add=True):
                 else:
                     result += rslt + "\n"
                 i += 1
+        """
 
 
     #名前置き換え用
