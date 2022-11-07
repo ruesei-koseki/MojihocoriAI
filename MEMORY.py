@@ -10,7 +10,6 @@ def addSentence(x, u, noword=False):
         pass
     else:
         DATA.data["sentence"].append([x, u, list(DATA.wordMemory)])
-        if noword == False: INTELLIGENCE.wordSyori(x)
         maeX = x
 
     if len(DATA.data["sentence"]) >= 120000:

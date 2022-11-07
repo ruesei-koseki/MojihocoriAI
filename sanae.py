@@ -16,7 +16,7 @@ DATA.settings = None #設定
 DATA.direc = None #辞書のディレクトリ
 DATA.actualUser = ["None", "None", "None", "None", "None"] #今話してる人
 DATA.brainUser = ["None", "None", "None", "None", "None"] #過去に似た話をしてたユーザー
-DATA.wordMemory = ["None"]*8 #重要な単語
+DATA.wordMemory = ["None"]*2 #重要な単語
 DATA.heart = None #今の気持ち(ログの座標で表される)
 DATA.replaceWords = True #単語を置き換えるか
 DATA.lastSentence = None #最後のbotの言葉
@@ -72,8 +72,7 @@ def speakFreely(add=True):
     DATA.lastUserReplied = DATA.lastUser
 
     if result != None:
-        INTELLIGENCE.wordSyori(result)
-
+        
         """
         if DATA.rate < 0.4:
             results = result.split("\n")
@@ -86,6 +85,8 @@ def speakFreely(add=True):
                     result += rslt + "\n"
                 i += 1
         """
+        MEMORY.addSentence(result, "!")
+        INTELLIGENCE.wordSyori(result)
 
 
     #名前置き換え用
@@ -112,21 +113,15 @@ def receive(x, u, add=True, force=False):
         DATA.lastUser = u
 
 
+        MEMORY.addSentence(x, u)
+
 
         if x == "×":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!", DATA.wordMemory])
-            
-            result = CONSIDERATION.looking(x, u)
 
 
-
-        xx = re.split('\n', x)
-        for x in xx:
-            if x == "":
-                continue
-            result = CONSIDERATION.looking(x, u, force=force)
-            INTELLIGENCE.wordSyori(x)
-
+        INTELLIGENCE.wordSyori(x)
+        result = CONSIDERATION.looking(x, u, force=force)
 
 
 
@@ -173,12 +168,15 @@ def receive(x, u, add=True, force=False):
         try:
             if DATA.replaceWords:
                 i = len(DATA.data["sentence"][DATA.heart][2]) - 1
+                knockout = []
+                ii = 0
                 while True:
-                    if i == -1:
+                    if ii == i:
                         break
-                    if DATA.wordMemory[i] != "None" or DATA.data["sentence"][DATA.heart][2][i] != "None":
-                        result = result.replace(DATA.data["sentence"][DATA.heart][2][i], DATA.wordMemory[i])
-                    i -= 1
+                    if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
+                        result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
+                        knockout.append(DATA.wordMemory[ii])
+                    ii += 1
         except:
             pass
 
@@ -208,17 +206,17 @@ def receive(x, u, add=True, force=False):
                     try:
                         if DATA.replaceWords:
                             i = len(DATA.data["sentence"][DATA.heart][2]) - 1
+                            knockout = []
+                            ii = 0
                             while True:
-                                if i == -1:
+                                if ii == i:
                                     break
-                                if DATA.wordMemory[i] != "None" or DATA.data["sentence"][DATA.heart][2][i] != "None":
-                                    result = result.replace(DATA.data["sentence"][DATA.heart][2][i], DATA.wordMemory[i])
-                                i -= 1
+                                if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
+                                    result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
+                                    knockout.append(DATA.wordMemory[ii])
+                                ii += 1
                     except:
-                        import traceback
-                        traceback.print_exc()
-                        return None
-
+                        pass
 
 
 
@@ -235,6 +233,11 @@ def receive(x, u, add=True, force=False):
 
         DATA.maeheart = DATA.heart
     
+
+
+        print("rate: ", DATA.rate)
+        print("単語: ", DATA.wordMemory)
+
     except:
         import traceback
         traceback.print_exc()
