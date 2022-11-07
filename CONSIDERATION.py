@@ -10,7 +10,7 @@ def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
 
-        for kaisu in range(6):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -21,8 +21,6 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.76
             if kaisu == 4:
                 rate = 2
-            if kaisu == 5:
-                rate = 0.0
 
 
 
@@ -42,7 +40,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     for iii in range(1):
                         if i+1>= len(DATA.data["sentence"]):
@@ -54,7 +52,7 @@ def looking(x, u, reply=True, force=False):
                                     isMine = True
                             if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
                                 print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                                     print("重要単語による判断です。")
                                 flag = True
                                 for iiiii in range(8):
@@ -97,7 +95,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     for iii in range(1):
                         if i+1>= len(DATA.data["sentence"]):
@@ -109,7 +107,7 @@ def looking(x, u, reply=True, force=False):
                                     isMine = True
                             if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
                                 print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                                     print("重要単語による判断です。")
                                 flag = True
                                 for iiiii in range(8):
@@ -141,7 +139,8 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(6):
+        print("自分のメッセージも使います。")
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -152,8 +151,6 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.76
             if kaisu == 4:
                 rate = 2
-            if kaisu == 5:
-                rate = 0.0
 
 
 
@@ -173,7 +170,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     for iii in range(1):
                         if i+1>= len(DATA.data["sentence"]):
@@ -185,7 +182,7 @@ def looking(x, u, reply=True, force=False):
                                     isMine = True
                             if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
                                 print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                                     print("重要単語による判断です。")
                                 flag = True
                                 for iiiii in range(8):
@@ -228,7 +225,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     for iii in range(1):
                         if i+1>= len(DATA.data["sentence"]):
@@ -240,7 +237,7 @@ def looking(x, u, reply=True, force=False):
                                     isMine = True
                             if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
                                 print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) or rate == 2 ):
+                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
                                     print("重要単語による判断です。")
                                 flag = True
                                 for iiiii in range(8):

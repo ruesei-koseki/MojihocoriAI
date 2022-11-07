@@ -106,6 +106,95 @@ def speakFreely(add=True):
     return result
 
 
+
+
+
+
+
+
+def speakNext(add=True):
+    #自由に話す
+    if INTELLIGENCE.isNextOk():
+        result = DATA.data["sentence"][DATA.heart+1][0]
+
+        DATA.postSpoken = True
+        DATA.lastUserReplied = DATA.lastUser
+
+        print("単語: ", DATA.wordMemory)
+
+        if result != None:
+            
+            """
+            if DATA.rate < 0.4:
+                results = result.split("\n")
+                result = ""
+                i = 0
+                for rslt in results:
+                    if len(results) - 1 == i:
+                        result += rslt + " 😅"
+                    else:
+                        result += rslt + "\n"
+                    i += 1
+            """
+
+
+
+            knockout = []
+            for i in reversed(range(len(DATA.actualUser))):
+                if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout:
+                    knockout.append(DATA.actualUser[i])
+                    if DATA.brainUser[i] == "!" or DATA.brainUser[i] == DATA.settings["myname"]:
+                        for myname in DATA.settings["mynames"].split("|"):
+                            result = result.replace(myname, DATA.actualUser[i])
+                    else:
+                        result = result.replace(DATA.brainUser[i], DATA.actualUser[i])
+
+
+
+            #重要な単語を最大5個置き換える
+            try:
+                if DATA.replaceWords:
+                    i = len(DATA.data["sentence"][DATA.heart][2])
+                    knockout = []
+                    ii = 0
+                    while True:
+                        if ii == i:
+                            break
+                        if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
+                            result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
+                            knockout.append(DATA.wordMemory[ii])
+                        ii += 1
+            except:
+                pass
+
+            MEMORY.addSentence(result, "!")
+            INTELLIGENCE.wordSyori(result)
+
+
+
+        print("DATA.brainUser: {}".format(DATA.brainUser))
+        print("DATA.actualUser: {}".format(DATA.actualUser))
+
+
+        #名前置き換え用
+        DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
+        if len(DATA.brainUser) > 5:
+            DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
+
+        DATA.actualUser.append("!")
+        if len(DATA.actualUser) > 5:
+            DATA.actualUser = [DATA.actualUser[-5], DATA.actualUser[-4], DATA.actualUser[-3], DATA.actualUser[-2], DATA.actualUser[-1]]
+
+
+
+        return result
+
+    else:
+        return False
+
+
+
+
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
@@ -167,7 +256,7 @@ def receive(x, u, add=True, force=False):
         #重要な単語を最大5個置き換える
         try:
             if DATA.replaceWords:
-                i = len(DATA.data["sentence"][DATA.heart][2]) - 1
+                i = len(DATA.data["sentence"][DATA.heart][2])
                 knockout = []
                 ii = 0
                 while True:
@@ -179,53 +268,6 @@ def receive(x, u, add=True, force=False):
                     ii += 1
         except:
             pass
-
-        while True:
-            if INTELLIGENCE.isNextOk():
-                fff = True
-                if DATA.heart+2 < len(DATA.data["sentence"]) - 1:
-                    if DATA.data["sentence"][DATA.heart+2][0] == "×":
-                        fff = False
-
-                if fff:
-                    result = result + "\n" + DATA.data["sentence"][DATA.heart+1][0]
-
-                    knockout = []
-                    for i in reversed(range(len(DATA.actualUser))):
-                        if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout:
-                            knockout.append(DATA.actualUser[i])
-                            if DATA.brainUser[i] == "!" or DATA.brainUser[i] == DATA.settings["myname"]:
-                                for myname in DATA.settings["mynames"].split("|"):
-                                    result = result.replace(myname, DATA.actualUser[i])
-                            else:
-                                result = result.replace(DATA.brainUser[i], DATA.actualUser[i])
-        
-
-
-                    #重要な単語を最大5個置き換える
-                    try:
-                        if DATA.replaceWords:
-                            i = len(DATA.data["sentence"][DATA.heart][2]) - 1
-                            knockout = []
-                            ii = 0
-                            while True:
-                                if ii == i:
-                                    break
-                                if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
-                                    result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
-                                    knockout.append(DATA.wordMemory[ii])
-                                ii += 1
-                    except:
-                        pass
-
-
-
-                    DATA.heart += 1
-                else:
-                    break
-            
-            else:
-                break
 
         DATA.myVoice = result
         DATA.lastSentence = result

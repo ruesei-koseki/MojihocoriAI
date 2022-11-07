@@ -74,7 +74,8 @@ def setMode(x):
 
 async def speak(result):
     global channel, persons, prevTime
-    result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
+    print("{}: {}".format(sanae.DATA.settings["myname"], result))
+    #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
     pattern = re.compile(r"^[!/]command")
     print("users: {}".format(persons))
     results = result.split("\n")
@@ -96,7 +97,7 @@ async def speak(result):
             elif com[1] == "setMode":
                 setMode(int(com[2]))
             elif com[1] == "saveMyData":
-                sanae.save()
+                sanae.MEMORY.save()
         else:
             Message += result + "\n"
     
@@ -113,6 +114,56 @@ async def speak(result):
     
     prevTime = time.time()
     print("< ", sanae.DATA.sa)
+
+
+
+    result = sanae.speakNext()
+    if result:
+        print("{}: {}".format(sanae.DATA.settings["myname"], result))
+        #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
+        pattern = re.compile(r"^[!/]command")
+        print("users: {}".format(persons))
+        results = result.split("\n")
+
+        Message = ""
+        for result in results:
+            if bool(pattern.search(result)):
+                com = result.split(" ")
+                if com[1] == "discMove":
+                    if client.get_channel(int(com[2])) != None:
+                        channel = client.get_channel(int(com[2]))
+                        persons = [[sanae.DATA.settings["myname"], 0]]
+                    try:
+                        print("チャンネルを移動しました: {}".format(channel.name))
+                    except:
+                        print("チャンネルを移動しました: DM")
+                elif com[1] == "ignore":
+                    pass
+                elif com[1] == "setMode":
+                    setMode(int(com[2]))
+                elif com[1] == "saveMyData":
+                    sanae.MEMORY.save()
+            else:
+                Message += result + "\n"
+        
+        Message = Message[:-1]
+
+        if Message != "":
+            async with channel.typing():
+                if len(Message) / (mode * 3) <= 7:
+                    await asyncio.sleep(len(Message) / (mode * 3))
+                else:
+                    await asyncio.sleep(7)
+                await channel.send(Message)
+                restStep = 0
+        
+        prevTime = time.time()
+        print("< ", sanae.DATA.sa)
+
+
+
+
+
 
 
 # 起動時に動作する処理
@@ -176,6 +227,7 @@ async def on_message(message):
             if bool(re.search("(.+): (.+)", x)):
                 ff = True
                 sanae.MEMORY.addSentence(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), x.split(": ")[0])
+                sanae.INTELLIGENCE.wordSyori(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)))
         if ff:
             return
 
@@ -236,7 +288,6 @@ async def cron():
                         if result == None:
                             messages = []
                         else:
-                            print("{}: {}".format(sanae.DATA.settings["myname"], result))
                             await speak(result)
                             messages = []
 
@@ -259,7 +310,6 @@ async def cron():
                     if result == None:
                         messages = []
                     else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
                         await speak(result)
                         messages = []
                 
@@ -269,7 +319,6 @@ async def cron():
                     if result == None:
                         messages = []
                     else:
-                        print("{}: {}".format(sanae.DATA.settings["myname"], result))
                         await speak(result)
 
             
@@ -306,7 +355,6 @@ async def cron():
                         if result == None:
                             messages = []
                         else:
-                            print("{}: {}".format(sanae.DATA.settings["myname"], result))
                             await speak(result)
                             messages = []
                 if mode == 1:
@@ -318,7 +366,6 @@ async def cron():
                             if result == None:
                                 messages = []
                             else:
-                                print("{}: {}".format(sanae.DATA.settings["myname"], result))
                                 await speak(result)
                                 messages = []
 
