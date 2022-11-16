@@ -9,7 +9,7 @@ def addSentence(x, u, noword=False):
     if maeX == x:
         pass
     else:
-        DATA.data["sentence"].append([x, u, list(DATA.wordMemory)])
+        DATA.data["sentence"].append([x, u])
         maeX = x
 
     if len(DATA.data["sentence"]) >= 120000:

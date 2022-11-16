@@ -10,7 +10,7 @@ def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
 
-        for kaisu in range(5):
+        for kaisu in range(9):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -18,9 +18,17 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.76
+                rate = 0.7
             if kaisu == 4:
-                rate = 2
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.0
 
 
 
@@ -39,43 +47,39 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
+                into = u+": "+x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                    for iii in range(1):
-                        if i+1>= len(DATA.data["sentence"]):
-                            break
-                        if reply:
-                            isMine = False
-                            for myname in DATA.settings["mynames"].split("|"):
-                                if DATA.data["sentence"][i+1][1] == myname:
-                                    isMine = True
-                            if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
-                                print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
-                                    print("重要単語による判断です。")
-                                flag = True
-                                for iiiii in range(8):
-                                    if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                        if DATA.data["sentence"][i+1+iiiii][0] == "×":
-                                            flag = False
-                                            break
-                                if flag:
-                                    DATA.sa = ii
-                                    DATA.heart = i+1
-                                    DATA.skip = iii
-                                    DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
-                                    DATA.rate = rate
-                                    return DATA.data["sentence"][i+1][0]
-                            else:
-                                if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                    DATA.sa = ii
-                                    DATA.heart = i
-                                    DATA.rate = rate
-                                    return None
+                    if i+1>= len(DATA.data["sentence"]):
+                        break
+                    if reply:
+                        isMine = False
+                        for myname in DATA.settings["mynames"].split("|"):
+                            if DATA.data["sentence"][i+1][1] == myname:
+                                isMine = True
+                        if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            flag = True
+                            for iiiii in range(8):
+                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                        flag = False
+                                        break
+                            if flag:
+                                DATA.sa = ii
+                                DATA.heart = i+1
+                                DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
+                                DATA.rate = rate
+                                return DATA.data["sentence"][i+1][0]
                         else:
-                            DATA.heart = i
-                            return
+                            if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
+                                DATA.sa = ii
+                                DATA.heart = i
+                                DATA.rate = rate
+                                return None
+                    else:
+                        DATA.heart = i
+                        return
                 i += 1
                 ii += 1
 
@@ -95,42 +99,38 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                    for iii in range(1):
-                        if i+1>= len(DATA.data["sentence"]):
-                            break
-                        if reply:
-                            isMine = False
-                            for myname in DATA.settings["mynames"].split("|"):
-                                if DATA.data["sentence"][i+1][1] == myname:
-                                    isMine = True
-                            if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
-                                print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
-                                    print("重要単語による判断です。")
-                                flag = True
-                                for iiiii in range(8):
-                                    if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                        if DATA.data["sentence"][i+1+iiiii][0] == "×":
-                                            flag = False
-                                            break
-                                if flag:
-                                    DATA.sa = ii
-                                    DATA.heart = i+1
-                                    DATA.skip = iii
-                                    DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
-                                    DATA.rate = rate
-                                    return DATA.data["sentence"][i+1][0]
-                            else:
-                                if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                    DATA.sa = ii
-                                    DATA.heart = i
-                                    DATA.rate = rate
-                                    return None
+                    if i+1>= len(DATA.data["sentence"]):
+                        break
+                    if reply:
+                        isMine = False
+                        for myname in DATA.settings["mynames"].split("|"):
+                            if DATA.data["sentence"][i+1][1] == myname:
+                                isMine = True
+                        if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!":
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            flag = True
+                            for iiiii in range(8):
+                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                        flag = False
+                                        break
+                            if flag:
+                                DATA.sa = ii
+                                DATA.heart = i+1
+                                DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
+                                DATA.rate = rate
+                                return DATA.data["sentence"][i+1][0]
                         else:
-                            DATA.heart = i
-                            return
+                            if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
+                                DATA.sa = ii
+                                DATA.heart = i
+                                DATA.rate = rate
+                                return None
+                    else:
+                        DATA.heart = i
+                        return
                 i += 1
                 ii += 1
 
@@ -140,7 +140,7 @@ def looking(x, u, reply=True, force=False):
 
 
         print("自分のメッセージも使います。")
-        for kaisu in range(5):
+        for kaisu in range(9):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -148,9 +148,17 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.76
+                rate = 0.7
             if kaisu == 4:
-                rate = 2
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.0
 
 
 
@@ -169,43 +177,39 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
+                into = u+": "+x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                    for iii in range(1):
-                        if i+1>= len(DATA.data["sentence"]):
-                            break
-                        if reply:
-                            isMine = False
-                            for myname in DATA.settings["mynames"].split("|"):
-                                if DATA.data["sentence"][i+1][1] == myname:
-                                    isMine = True
-                            if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
-                                print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
-                                    print("重要単語による判断です。")
-                                flag = True
-                                for iiiii in range(8):
-                                    if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                        if DATA.data["sentence"][i+1+iiiii][0] == "×":
-                                            flag = False
-                                            break
-                                if flag:
-                                    DATA.sa = ii
-                                    DATA.heart = i+1
-                                    DATA.skip = iii
-                                    DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
-                                    DATA.rate = rate
-                                    return DATA.data["sentence"][i+1][0]
-                            else:
-                                if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                    DATA.sa = ii
-                                    DATA.heart = i
-                                    DATA.rate = rate
-                                    return None
+                    if i+1>= len(DATA.data["sentence"]):
+                        break
+                    if reply:
+                        isMine = False
+                        for myname in DATA.settings["mynames"].split("|"):
+                            if DATA.data["sentence"][i+1][1] == myname:
+                                isMine = True
+                        if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            flag = True
+                            for iiiii in range(8):
+                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                        flag = False
+                                        break
+                            if flag:
+                                DATA.sa = ii
+                                DATA.heart = i+1
+                                DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
+                                DATA.rate = rate
+                                return DATA.data["sentence"][i+1][0]
                         else:
-                            DATA.heart = i
-                            return
+                            if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
+                                DATA.sa = ii
+                                DATA.heart = i
+                                DATA.rate = rate
+                                return None
+                    else:
+                        DATA.heart = i
+                        return
                 i += 1
                 ii += 1
 
@@ -225,42 +229,38 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate or ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
-                    for iii in range(1):
-                        if i+1>= len(DATA.data["sentence"]):
-                            break
-                        if reply:
-                            isMine = False
-                            for myname in DATA.settings["mynames"].split("|"):
-                                if DATA.data["sentence"][i+1][1] == myname:
-                                    isMine = True
-                            if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
-                                print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
-                                if ((DATA.wordMemory[0] in DATA.data["sentence"][i][2] or DATA.wordMemory[1] in DATA.data["sentence"][i][2]) and rate == 2 ):
-                                    print("重要単語による判断です。")
-                                flag = True
-                                for iiiii in range(8):
-                                    if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                        if DATA.data["sentence"][i+1+iiiii][0] == "×":
-                                            flag = False
-                                            break
-                                if flag:
-                                    DATA.sa = ii
-                                    DATA.heart = i+1
-                                    DATA.skip = iii
-                                    DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
-                                    DATA.rate = rate
-                                    return DATA.data["sentence"][i+1][0]
-                            else:
-                                if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
-                                    DATA.sa = ii
-                                    DATA.heart = i
-                                    DATA.rate = rate
-                                    return None
+                    if i+1>= len(DATA.data["sentence"]):
+                        break
+                    if reply:
+                        isMine = False
+                        for myname in DATA.settings["mynames"].split("|"):
+                            if DATA.data["sentence"][i+1][1] == myname:
+                                isMine = True
+                        if i != len(DATA.data["sentence"]) and DATA.lastSentenceInput != DATA.data["sentence"][i+1][0] and DATA.lastSentence != DATA.data["sentence"][i+1][0] and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1]:
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            flag = True
+                            for iiiii in range(8):
+                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                        flag = False
+                                        break
+                            if flag:
+                                DATA.sa = ii
+                                DATA.heart = i+1
+                                DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
+                                DATA.rate = rate
+                                return DATA.data["sentence"][i+1][0]
                         else:
-                            DATA.heart = i
-                            return
+                            if not bool(re.search(DATA.settings["mynames"], DATA.lastSentenceInput)) and not force:
+                                DATA.sa = ii
+                                DATA.heart = i
+                                DATA.rate = rate
+                                return None
+                    else:
+                        DATA.heart = i
+                        return
                 i += 1
                 ii += 1
 

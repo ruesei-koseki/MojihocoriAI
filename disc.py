@@ -20,7 +20,6 @@ from discord.ext import tasks
 import discord
 import threading
 import asyncio
-import random
 
 
 helpMessage = f"""==sanaeAIヘルプ==
@@ -183,6 +182,8 @@ async def on_message(message):
     global channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime
     
     if message.channel == channel or bool(re.search(sanae.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
+        if message.author.name == "ASMD":
+            return
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
@@ -227,7 +228,6 @@ async def on_message(message):
             if bool(re.search("(.+): (.+)", x)):
                 ff = True
                 sanae.MEMORY.addSentence(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), x.split(": ")[0])
-                sanae.INTELLIGENCE.wordSyori(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)))
         if ff:
             return
 
@@ -236,7 +236,7 @@ async def on_message(message):
         nowTime = time.time()
         if nowTime >= prevTime + 15 and lastMessage != None:
             print("沈黙を検知")
-            sanae.receive("!command ignore", message.author.name)
+            sanae.receive("!command ignore", lastMessage.author.name)
         
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), message.author.name))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
@@ -304,7 +304,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if (bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content))) and sanae.DATA.myVoice != None):
+                if (bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content))) and sanae.DATA.myVoice != None and (random.randint(0, len(persons) - 1) == 0 or len(persons) <= 2) and len(sanae.DATA.data["sentence"]) >= 5000):
 
                     result = sanae.speakFreely()
                     if result == None:
@@ -313,14 +313,6 @@ async def cron():
                         await speak(result)
                         messages = []
                 
-                elif bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)):
-                
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        await speak(result)
-
             
 
         nowTime = time.time()
@@ -349,7 +341,7 @@ async def cron():
             if channel != None and lastMessage != None:
                 if mode == 2:
                     sanae.receive("!command ignore", lastMessage.author.name)
-                    if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or sanae.DATA.myVoice != None:
+                    if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (sanae.DATA.myVoice != None and random.randint(0, len(persons) - 1) == 0)) and len(sanae.DATA.data["sentence"]) >= 5000:
                         
                         result = sanae.speakFreely()
                         if result == None:

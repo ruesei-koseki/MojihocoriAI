@@ -4,19 +4,6 @@ from janome.tokenizer import Tokenizer
 
 t = Tokenizer(wakati=True)
 
-def wordSyori(x):
-    result = list(t.tokenize(x))
-    result.sort(key=len, reverse=True)
-    i = 0
-    for r in result:
-        if i >= 2:
-            break
-        DATA.wordMemory.append(r)
-        i += 1
-    if len(DATA.wordMemory) > 2:
-        DATA.wordMemory = DATA.wordMemory[-2:]
-    
-
 
 def isNextOk():
     if len(DATA.data["sentence"]) - 1 <= DATA.heart:

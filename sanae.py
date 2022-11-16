@@ -16,9 +16,7 @@ DATA.settings = None #設定
 DATA.direc = None #辞書のディレクトリ
 DATA.actualUser = ["None", "None", "None", "None", "None"] #今話してる人
 DATA.brainUser = ["None", "None", "None", "None", "None"] #過去に似た話をしてたユーザー
-DATA.wordMemory = ["None"]*2 #重要な単語
 DATA.heart = None #今の気持ち(ログの座標で表される)
-DATA.replaceWords = True #単語を置き換えるか
 DATA.lastSentence = None #最後のbotの言葉
 DATA.lastSentenceInput = None #最後に聞いた言葉
 DATA.heartLastSpeaker = None #過去に似た話をしてたユーザー
@@ -86,10 +84,10 @@ def speakFreely(add=True):
                 i += 1
         """
         MEMORY.addSentence(result, "!")
-        INTELLIGENCE.wordSyori(result)
 
 
     #名前置き換え用
+    """
     DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
     if len(DATA.brainUser) > 5:
         DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
@@ -97,7 +95,7 @@ def speakFreely(add=True):
     DATA.actualUser.append("!")
     if len(DATA.actualUser) > 5:
         DATA.actualUser = [DATA.actualUser[-5], DATA.actualUser[-4], DATA.actualUser[-3], DATA.actualUser[-2], DATA.actualUser[-1]]
-
+    """
 
     print("DATA.brainUser: {}".format(DATA.brainUser))
     print("DATA.actualUser: {}".format(DATA.actualUser))
@@ -116,11 +114,11 @@ def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
+        DATA.heart += 1
 
         DATA.postSpoken = True
         DATA.lastUserReplied = DATA.lastUser
 
-        print("単語: ", DATA.wordMemory)
 
         if result != None:
             
@@ -139,6 +137,25 @@ def speakNext(add=True):
 
 
 
+
+            #名前置き換え用
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart+1][1].replace("l:", ""))
+            if len(DATA.brainUser) > 5:
+                DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
+
+            DATA.actualUser.append("!")
+            DATA.actualUser.append(DATA.lastUserReplied)
+            if len(DATA.actualUser) > 5:
+                DATA.actualUser = [DATA.actualUser[-5], DATA.actualUser[-4], DATA.actualUser[-3], DATA.actualUser[-2], DATA.actualUser[-1]]
+
+
+
+
+
+
+
+
             knockout = []
             for i in reversed(range(len(DATA.actualUser))):
                 if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout:
@@ -150,25 +167,7 @@ def speakNext(add=True):
                         result = result.replace(DATA.brainUser[i], DATA.actualUser[i])
 
 
-
-            #重要な単語を最大5個置き換える
-            try:
-                if DATA.replaceWords:
-                    i = len(DATA.data["sentence"][DATA.heart][2])
-                    knockout = []
-                    ii = 0
-                    while True:
-                        if ii == i:
-                            break
-                        if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
-                            result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
-                            knockout.append(DATA.wordMemory[ii])
-                        ii += 1
-            except:
-                pass
-
             MEMORY.addSentence(result, "!")
-            INTELLIGENCE.wordSyori(result)
 
 
 
@@ -206,19 +205,17 @@ def receive(x, u, add=True, force=False):
 
 
         if x == "×":
-            DATA.data["sentence"].insert(DATA.heart+1, ["×", "!", DATA.wordMemory])
+            DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
 
 
-        INTELLIGENCE.wordSyori(x)
         result = CONSIDERATION.looking(x, u, force=force)
-
 
 
         if result == None:
             DATA.myVoice = None
         
             #名前置き換え用
-            DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart-1][1].replace("l:", ""))
             if len(DATA.brainUser) > 5:
                 DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
 
@@ -233,12 +230,19 @@ def receive(x, u, add=True, force=False):
 
             #名前置き換え用
             DATA.brainUser.append(DATA.data["sentence"][DATA.heart-1][1].replace("l:", ""))
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart][1].replace("l:", ""))
+            DATA.brainUser.append(DATA.data["sentence"][DATA.heart+1][1].replace("l:", ""))
             if len(DATA.brainUser) > 5:
                 DATA.brainUser = [DATA.brainUser[-5], DATA.brainUser[-4], DATA.brainUser[-3], DATA.brainUser[-2], DATA.brainUser[-1]]
 
             DATA.actualUser.append(u)
+            DATA.actualUser.append("!")
+            DATA.actualUser.append(u)
             if len(DATA.actualUser) > 5:
                 DATA.actualUser = [DATA.actualUser[-5], DATA.actualUser[-4], DATA.actualUser[-3], DATA.actualUser[-2], DATA.actualUser[-1]]
+
+
+
 
 
         knockout = []
@@ -253,22 +257,6 @@ def receive(x, u, add=True, force=False):
 
 
 
-        #重要な単語を最大5個置き換える
-        try:
-            if DATA.replaceWords:
-                i = len(DATA.data["sentence"][DATA.heart][2])
-                knockout = []
-                ii = 0
-                while True:
-                    if ii == i:
-                        break
-                    if DATA.wordMemory[ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] != "None" and DATA.data["sentence"][DATA.heart][2][ii] not in knockout:
-                        result = result.replace(DATA.data["sentence"][DATA.heart][2][ii], DATA.wordMemory[ii])
-                        knockout.append(DATA.wordMemory[ii])
-                    ii += 1
-        except:
-            pass
-
         DATA.myVoice = result
         DATA.lastSentence = result
 
@@ -278,7 +266,6 @@ def receive(x, u, add=True, force=False):
 
 
         print("rate: ", DATA.rate)
-        print("単語: ", DATA.wordMemory)
 
     except:
         import traceback
