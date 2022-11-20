@@ -1,4 +1,5 @@
 # sanaeAI
+Discrodで動く会話AIです。
 
 ## インストール
 1. ```git clone https://github.com/ruesei-koseki/sanaeAI/```
