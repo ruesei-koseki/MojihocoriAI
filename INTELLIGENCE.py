@@ -1,8 +1,5 @@
 import DATA
 import re
-from janome.tokenizer import Tokenizer
-
-t = Tokenizer(wakati=True)
 
 
 def isNextOk():
