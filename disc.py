@@ -31,22 +31,22 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 このbotはほかのユーザーのメッセージから学習しています。
 手動では、この方法で学習します。
 ```
-wadaAkiko; こんにちは
-{sanae.DATA.settings["myname"]}; あらこんにちは、wadaAkiko
+wadaAkiko: こんにちは
+{sanae.DATA.settings["myname"]}: あらこんにちは、wadaAkiko
 ```
 現在のチャンネルに移動させることを覚えさせるには、botを呼んでから
 ```
-{sanae.DATA.settings["myname"]}; !command discMove !this-channel-id
-{sanae.DATA.settings["myname"]}; !command discMove !tci
+{sanae.DATA.settings["myname"]}: !command discMove !this-channel-id
+{sanae.DATA.settings["myname"]}: !command discMove !tci
 ```
 沈黙することは
 ```
-{sanae.DATA.settings["myname"]}; !command ignore
+{sanae.DATA.settings["myname"]}: !command ignore
 ```
 沈黙に対する反応は
 ```
-wadaAkiko; !command ignore
-{sanae.DATA.settings["myname"]}; 沈黙するなしwadaAkiko
+wadaAkiko: !command ignore
+{sanae.DATA.settings["myname"]}: 沈黙するなしwadaAkiko
 ```
 です。
 =配慮コマンドについて=
@@ -304,7 +304,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if (bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content))) and sanae.DATA.myVoice != None and (random.randint(0, len(persons) - 1) == 0 or len(persons) <= 2) and len(sanae.DATA.data["sentence"]) >= 5000):
+                if bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content)) and (random.randint(0, 10) <= 3 or len(persons) <= 2)) and sanae.DATA.myVoice != None and len(sanae.DATA.data["sentence"]) >= 2000:
 
                     result = sanae.speakFreely()
                     if result == None:
@@ -341,8 +341,7 @@ async def cron():
             if channel != None and lastMessage != None:
                 if mode == 2:
                     sanae.receive("!command ignore", lastMessage.author.name)
-                    if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (sanae.DATA.myVoice != None and random.randint(0, len(persons) - 1) == 0)) and len(sanae.DATA.data["sentence"]) >= 5000:
-                        
+                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (random.randint(0, 10) <= 3 or len(persons) <= 2) and sanae.DATA.myVoice != None and len(sanae.DATA.data["sentence"]) >= 2000:
                         result = sanae.speakFreely()
                         if result == None:
                             messages = []

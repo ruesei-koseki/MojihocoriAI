@@ -10,7 +10,7 @@ def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
 
-        for kaisu in range(9):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -24,10 +24,6 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
-                rate = 0.4
-            if kaisu == 7:
-                rate = 0.3
-            if kaisu == 8:
                 rate = 0.0
 
 
@@ -47,8 +43,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                into = x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -98,8 +94,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                into = x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -140,7 +136,7 @@ def looking(x, u, reply=True, force=False):
 
 
         print("自分のメッセージも使います。")
-        for kaisu in range(9):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -154,10 +150,6 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
-                rate = 0.4
-            if kaisu == 7:
-                rate = 0.3
-            if kaisu == 8:
                 rate = 0.0
 
 
@@ -177,8 +169,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                into = x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -228,8 +220,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = u+": "+x
-                if Levenshtein.ratio(into, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                into = x
+                if Levenshtein.ratio(into, DATA.data["sentence"][i][0]) >= rate:
                     print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break

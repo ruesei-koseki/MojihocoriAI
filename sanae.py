@@ -101,6 +101,22 @@ def speakFreely(add=True):
     print("DATA.actualUser: {}".format(DATA.actualUser))
 
 
+
+
+
+    if len(DATA.data["sentence"]) >= 120000:
+        i = 0
+        while len(DATA.data["sentence"]) >= 120000:
+            del DATA.data["sentence"][0]
+            DATA.heart -= 1
+            DATA.maeheart -= 1
+            i += 1
+        DATA.heart -= 1
+        DATA.maeheart -= 1
+
+
+
+
     return result
 
 
@@ -157,9 +173,12 @@ def speakNext(add=True):
 
 
             knockout = []
+            for myname in DATA.settings["mynames"].split("|"):
+                result = result.replace(myname, DATA.lastUser)
             for i in reversed(range(len(DATA.actualUser))):
-                if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout:
+                if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout and DATA.actualUser[i] not in knockout and len(DATA.brainUser[i]) != 1:
                     knockout.append(DATA.actualUser[i])
+                    knockout.append(DATA.brainUser[i])
                     if DATA.brainUser[i] == "!" or DATA.brainUser[i] == DATA.settings["myname"]:
                         for myname in DATA.settings["mynames"].split("|"):
                             result = result.replace(myname, DATA.actualUser[i])
@@ -246,9 +265,12 @@ def receive(x, u, add=True, force=False):
 
 
         knockout = []
+        for myname in DATA.settings["mynames"].split("|"):
+            result = result.replace(myname, DATA.lastUser)
         for i in reversed(range(len(DATA.actualUser))):
-            if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout:
+            if DATA.actualUser[i] != "!" and DATA.actualUser[i] != "_BRAIN_" and DATA.actualUser[i] != "None" and DATA.brainUser[i] not in knockout and DATA.actualUser[i] not in knockout and len(DATA.brainUser[i]) != 1:
                 knockout.append(DATA.actualUser[i])
+                knockout.append(DATA.brainUser[i])
                 if DATA.brainUser[i] == "!" or DATA.brainUser[i] == DATA.settings["myname"]:
                     for myname in DATA.settings["mynames"].split("|"):
                         result = result.replace(myname, DATA.actualUser[i])
