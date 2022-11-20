@@ -31,8 +31,8 @@ def looking(x, u, reply=True, force=False):
             #今の気持ちから考える
             f = DATA.heart+1
 
-            if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
-                t = DATA.heart+1
+            if DATA.heart+2 < len(DATA.data["sentence"]) - 1:
+                t = DATA.heart+2
             else:
                 t = len(DATA.data["sentence"]) - 1
             
@@ -104,8 +104,8 @@ def looking(x, u, reply=True, force=False):
             #今の気持ちから考える
             f = DATA.heart+1
 
-            if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
-                t = DATA.heart+1
+            if DATA.heart+2 < len(DATA.data["sentence"]) - 1:
+                t = DATA.heart+2
             else:
                 t = len(DATA.data["sentence"]) - 1
             
