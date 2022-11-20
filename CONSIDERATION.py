@@ -12,7 +12,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(4):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -20,7 +20,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.75
+                rate = 0.7
+            if kaisu == 4:
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
 
 
 
@@ -85,7 +89,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(4):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -93,7 +97,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.75
+                rate = 0.7
+            if kaisu == 4:
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
 
 
 
@@ -176,7 +184,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -184,11 +192,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.75
-            if kaisu == 4:
                 rate = 0.7
+            if kaisu == 4:
+                rate = 0.6
             if kaisu == 5:
-                rate = 0.65
+                rate = 0.5
 
 
 
