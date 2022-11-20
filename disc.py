@@ -182,8 +182,7 @@ async def on_message(message):
     global channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime
     
     if message.channel == channel or bool(re.search(sanae.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
-        if message.author.name == "ASMD":
-            return
+        nowTime = time.time()
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
@@ -191,7 +190,7 @@ async def on_message(message):
                 print("チャンネルを移動しました: {}のDM".format(message.author.name))
             channel = message.channel
             persons = [[sanae.DATA.settings["myname"], 0]]
-            sanae.receive("!command discMove {}".format(message.channel.id), message.author.name)
+            sanae.receive("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), message.author.name)
         if message.author == client.user:
             return
         pss = []
@@ -236,7 +235,6 @@ async def on_message(message):
 
             
 
-        nowTime = time.time()
         if nowTime >= prevTime + 15 and lastMessage != None:
             print("沈黙を検知")
             sanae.receive("!command ignore", lastMessage.author.name)
