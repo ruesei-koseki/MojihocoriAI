@@ -228,6 +228,9 @@ async def on_message(message):
             if bool(re.search("(.+): (.+)", x)):
                 ff = True
                 sanae.MEMORY.addSentence(x.split(": ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), x.split(": ")[0])
+            if bool(re.search("(.+); (.+)", x)):
+                ff = True
+                sanae.MEMORY.addSentence(x.split("; ")[1].replace("!this-channel-id", "{}".format(message.channel.id)).replace("!tci", "{}".format(message.channel.id)), "l:"+x.split("; ")[0])
         if ff:
             return
 
@@ -304,7 +307,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or (not bool(re.search(aaa, messages[-1].content)) and (random.randint(0, 10) <= 3 or len(persons) <= 2)) and sanae.DATA.myVoice != None and len(sanae.DATA.data["sentence"]) >= 2000:
+                if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (bool(re.search(aaa, lastMessage.content)) and (random.randint(0, 10) <= 3 or len(persons) <= 2) and len(sanae.DATA.data["sentence"]) >= 3500)) and sanae.DATA.myVoice != None:
 
                     result = sanae.speakFreely()
                     if result == None:
@@ -341,7 +344,7 @@ async def cron():
             if channel != None and lastMessage != None:
                 if mode == 2:
                     sanae.receive("!command ignore", lastMessage.author.name)
-                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (random.randint(0, 10) <= 3 or len(persons) <= 2) and sanae.DATA.myVoice != None and len(sanae.DATA.data["sentence"]) >= 2000:
+                if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or ((random.randint(0, 10) <= 3 or len(persons) <= 2) and len(sanae.DATA.data["sentence"]) >= 3500)) and sanae.DATA.myVoice != None:
                         result = sanae.speakFreely()
                         if result == None:
                             messages = []
