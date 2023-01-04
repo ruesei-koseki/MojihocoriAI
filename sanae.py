@@ -1,10 +1,11 @@
-
+import random
 import re
 import json
 import random
 import time
 
 import CONSIDERATION
+import HCONSIDERATION
 import DATA
 import MEMORY
 import INTELLIGENCE
@@ -15,8 +16,9 @@ DATA.data = None #別途読み込むデータ
 DATA.settings = None #設定
 DATA.direc = None #辞書のディレクトリ
 DATA.heart = None #今の気持ち(ログの座標で表される)
-DATA.lastSentence = None #最後のbotの言葉
-DATA.lastSentenceInput = None #最後に聞いた言葉
+DATA.lastSentence = "" #最後のbotの言葉
+DATA.lastSentenceHeart = "" #最後のbotのベース発言
+DATA.lastSentenceInput = "" #最後に聞いた言葉
 DATA.heartLastSpeaker = None #過去に似た話をしてたユーザー
 DATA.maeheart = 0 #一つ前の気持ち
 DATA.interface = 0 #クライアントの種類
@@ -25,14 +27,26 @@ DATA.lastUserReplied = "あんた" #最後に返信したユーザー
 DATA.postSpoken = False #自分が喋った直後
 DATA.myVoice = None #心の中の声
 DATA.rate = 0
+DATA.times = 0
 DATA.sa = 0
 
+DATA.HheartLastSpeaker = None
+DATA.Hheart = None
+DATA.Hrate = 0
+DATA.Hsa = 0
+DATA.Htimes = 0
+DATA.userLog = [None] * 10
+DATA.mode = 0
 
 
-def initialize(direcectory, interface_):
+
+
+
+def initialize(directory, interface_):
     #初期化
-    DATA.direc = direcectory
+    DATA.direc = directory
     DATA.interface = interface_
+
     try:
         with open(DATA.direc+"/data.json", "r", encoding="utf8") as f:
             DATA.data = json.load(f)
@@ -46,18 +60,11 @@ def initialize(direcectory, interface_):
         with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
             json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
     DATA.heart = len(DATA.data["sentence"]) - 1
+    DATA.Hheart = len(DATA.data["sentenceHumanity"]) - 1
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
-    try:
-        DATA.data["RL"]
-    except:
-        DATA.data["RL"] = []
-    try:
-        DATA.data["sentence"]
-    except:
-        DATA.data["sentence"] = []
 
 def speakFreely(add=True):
     #自由に話す
@@ -65,12 +72,17 @@ def speakFreely(add=True):
     result = DATA.myVoice
 
     DATA.postSpoken = True
-    DATA.lastUserReplied = DATA.lastUser
+    if "!" not in DATA.lastUser:
+        DATA.lastUserReplied = DATA.lastUser
 
+    DATA.userLog.append("!")
+    DATA.userLog.pop(0)
+
+    
     if result != None:
         
         """
-        if DATA.rate < 0.4:
+        if DATA.rate < 0.4 or len(DATA.data["sentence"]) < 300:
             results = result.split("\n")
             result = ""
             i = 0
@@ -81,6 +93,7 @@ def speakFreely(add=True):
                     result += rslt + "\n"
                 i += 1
         """
+
         MEMORY.addSentence(result, "!")
 
 
@@ -109,45 +122,73 @@ def speakFreely(add=True):
 
 def speakNext(add=True):
     #自由に話す
-    if INTELLIGENCE.isNextOk():
-        result = DATA.data["sentence"][DATA.heart+1][0]
-        DATA.heart += 1
+    
+    if DATA.mode == 0:
+        if INTELLIGENCE.isNextOk():
+            result = DATA.data["sentence"][DATA.heart+1][0]
+            DATA.heart += 1
 
-        DATA.postSpoken = True
-        DATA.lastUserReplied = DATA.lastUser
+            DATA.postSpoken = True
+            if "!" not in DATA.lastUser:
+                DATA.lastUserReplied = DATA.lastUser
+            DATA.lastSentenceHeart = result
 
 
-        if result != None:
-            
-            """
-            if DATA.rate < 0.4:
-                results = result.split("\n")
-                result = ""
-                i = 0
-                for rslt in results:
-                    if len(results) - 1 == i:
-                        result += rslt + " 😅"
-                    else:
-                        result += rslt + "\n"
-                    i += 1
-            """
+            DATA.userLog.append("!")
+            DATA.userLog.pop(0)
+
+
+            if result != None:
+       
 
 
 
 
 
 
+                result = result.replace("[YOU]", DATA.lastUser)
+                result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+
+                MEMORY.addSentence(result, "!")
 
 
 
-            for myname in DATA.settings["mynames"].split("|"):
-                result = result.replace(myname, DATA.lastUser)
-
-            MEMORY.addSentence(result, "!")
+            return result
 
 
 
-        return result
+    elif DATA.mode == 1:
+        if INTELLIGENCE.hIsNextOk():
+            result = DATA.data["sentenceHumanity"][DATA.hheart+1][0]
+            DATA.hheart += 1
+
+            DATA.postSpoken = True
+            if "!" not in DATA.lastUser:
+                DATA.lastUserReplied = DATA.lastUser
+            DATA.lastSentenceHeart = result
+
+
+            DATA.userLog.append("!")
+            DATA.userLog.pop(0)
+
+
+            if result != None:
+                
+
+
+
+
+
+
+
+                result = result.replace("[YOU]", DATA.lastUser)
+                result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+
+                MEMORY.addSentence(result, "!")
+
+
+
+            return result
 
     else:
         return False
@@ -158,9 +199,12 @@ def speakNext(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
+        
         DATA.lastSentenceInput = x
         DATA.lastUser = u
 
+        DATA.userLog.append(u)
+        DATA.userLog.pop(0)
 
         MEMORY.addSentence(x, u)
 
@@ -169,7 +213,21 @@ def receive(x, u, add=True, force=False):
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
 
 
-        result = CONSIDERATION.looking(x, u, force=force)
+        result1 = CONSIDERATION.looking(x, u, force=force)
+        result2 = HCONSIDERATION.looking(x, u, force=force)
+        if DATA.Hrate > DATA.rate:
+            result = result2
+            print("人格データを採用")
+        elif DATA.Hrate < DATA.rate:
+            result = result1
+            print("経験データを採用")
+        else:
+            if 0 == random.randint(0,2):
+                result = result1
+                print("経験データを採用")
+            else:
+                result = result2
+                print("人格データを採用")
 
 
         if result == None:
@@ -179,10 +237,13 @@ def receive(x, u, add=True, force=False):
 
 
 
+        result = result.replace("[YOU]", DATA.lastUser)
+        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
 
 
-        for myname in DATA.settings["mynames"].split("|"):
-            result = result.replace(myname, DATA.lastUser)
+
+
+        DATA.lastSentenceHeart = result
 
 
 
@@ -193,8 +254,9 @@ def receive(x, u, add=True, force=False):
         DATA.maeheart = DATA.heart
     
 
-
-        print("rate: ", DATA.rate)
+        print("座標: {}".format(DATA.heart))
+        print("人格座標: {}".format(DATA.Hheart))
+        print("ログ: {}".format(DATA.userLog))
 
     except:
         import traceback
