@@ -21,6 +21,9 @@ from discord.ext import tasks
 import discord
 import threading
 import asyncio
+import Levenshtein
+
+import datetime
 
 
 helpMessage = f"""==sanaeAIヘルプ==
@@ -28,32 +31,6 @@ helpMessage = f"""==sanaeAIヘルプ==
 話している人数に応じて返信頻度を下げます。
 botの名前を呼ぶとそのチャンネルに来てくれます。
 メンションでは呼べません。
-=学習について=
-このbotはほかのユーザーのメッセージから学習しています。
-手動では、この方法で学習します。
-```
-wadaAkiko: こんにちは
-{sanae.DATA.settings["myname"]}; あらこんにちは、wadaAkiko
-```
-現在のチャンネルに移動させることを覚えさせるには、botを呼んでから
-```
-{sanae.DATA.settings["myname"]}; !command discMove !this-channel
-```
-DMの場合は
-```
-{sanae.DATA.settings["myname"]}; !command discMove !this-dm
-```
-沈黙することは
-```
-{sanae.DATA.settings["myname"]}; !command ignore
-```
-沈黙に対する反応は
-```
-wadaAkiko: !command ignore
-{sanae.DATA.settings["myname"]}; 沈黙するなしwadaAkiko
-```
-です。
-
 
 =配慮コマンドについて=
 botに「静かにして」というと「寡黙モード」になり、メッセージにbotの名前が含まれない限り返信しなくなります。
@@ -70,10 +47,13 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(sanae.DATA.data["sentence"]) >= 3500:
-    mode = 1
-else:
-    mode = 2
+mode = 2
+yet = False
+
+print("mode: {}".format(mode))
+print("yet: {}".format(yet))
+print("sentences: {}".format(len(sanae.DATA.data["sentence"])))
+
 
 def setMode(x):
     global mode, channel, restStep
@@ -81,52 +61,8 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 async def speak(result):
-    global channel, persons, prevTime
-    print("{}: {}".format(sanae.DATA.settings["myname"], result))
-    #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
-    pattern = re.compile(r"^[!/]command")
-    print("users: {}".format(persons))
-    results = result.split("\n")
-
-    Message = ""
-    for result in results:
-        if bool(pattern.search(result)):
-            com = result.split(" ")
-            if com[1] == "discMove":
-                if client.get_channel(int(com[2])) != None:
-                    channel = client.get_channel(int(com[2]))
-                    persons = [[sanae.DATA.settings["myname"], 0]]
-                try:
-                    print("チャンネルを移動しました: {}".format(channel.name))
-                except:
-                    print("チャンネルを移動しました: DM")
-            elif com[1] == "ignore":
-                pass
-            elif com[1] == "setMode":
-                setMode(int(com[2]))
-            elif com[1] == "saveMyData":
-                sanae.MEMORY.save()
-        else:
-            Message += result + "\n"
-    
-    Message = Message[:-1]
-
-    if Message != "":
-        async with channel.typing():
-            if len(Message) / (mode * 3) <= 7:
-                await asyncio.sleep(len(Message) / (mode * 3))
-            else:
-                await asyncio.sleep(7)
-            await channel.send(Message)
-            restStep = 0
-    
-    prevTime = time.time()
-    print("< ", sanae.DATA.sa)
-
-
-
-    result = sanae.speakNext()
-    if result:
+    global channel, persons, prevTime, mode, yet
+    try:
         print("{}: {}".format(sanae.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
         pattern = re.compile(r"^[!/]command")
@@ -139,7 +75,10 @@ async def speak(result):
                 com = result.split(" ")
                 if com[1] == "discMove":
                     if client.get_channel(int(com[2])) != None:
-                        channel = client.get_channel(int(com[2]))
+                        try:
+                            channel = client.get_channel(int(com[2]))
+                        except:
+                            print("チャンネルが存在しません")
                         persons = [[sanae.DATA.settings["myname"], 0]]
                     try:
                         print("チャンネルを移動しました: {}".format(channel.name))
@@ -164,11 +103,30 @@ async def speak(result):
                     await asyncio.sleep(7)
                 await channel.send(Message)
                 restStep = 0
-        
+
+
         prevTime = time.time()
         print("< ", sanae.DATA.sa)
 
 
+
+        result = sanae.speakNext()
+        if result:
+            await speak(result)
+
+        
+        if len(sanae.DATA.data["sentence"]) >= 300 and yet:
+            mode = 2
+            yet = False
+            print("おめでとうございます！自発的にしゃべるようになりました！")
+        elif yet:
+            print("まだ自発的にしゃべれません")
+        
+
+    except:
+        import traceback
+        traceback.print_exc()
+        sanae.receive("エラー: このチャンネルに入る権限がありません", "!system")
 
 
 
@@ -185,13 +143,26 @@ async def on_ready():
     
     cron.start()
 
+
+ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername
+    global channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     
+    try:
+        if message.channel.id == 1049365514251677807:
+            prevTime = time.time()
+            if bool(re.search("> (.+)", message.content)):
+                sanae.MEMORY.learnSentence(message.content.replace("> ", ""), message.author.name)
+            else:
+                sanae.MEMORY.learnSentence(message.content, sanae.DATA.settings["myname"])
+            return
+    except:
+        pass
+
     if message.channel == channel or bool(re.search(sanae.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
-        nowTime = time.time()
+        prevTime = time.time()
         username = message.author.name.split("#")[0]
         if message.channel != channel:
             try:
@@ -214,20 +185,19 @@ async def on_message(message):
         if message.content == None:
             return
 
+
         
         if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(0)
+            return
         if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(1)
-            sanae.receive("!command setMode {}".format(1), "!")
+            sanae.receive("!command setMode {}".format(1), username)
+            return
         if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(2)
-            sanae.receive("!command setMode {}".format(2), "!")
-        if bool(re.search("セーブして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
-            sanae.receive("!command saveMyData", "!")
-            print("セーブします")
-            sanae.MEMORY.save()
-            print("完了")
+            sanae.receive("!command setMode {}".format(2), username)
+            return
 
         if bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
@@ -238,11 +208,16 @@ async def on_message(message):
         xx = re.split('\n', message.content)
         for x in xx:
             if bool(re.search("(.+): (.+)", x)):
+                sanae.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
                 ff = True
-                sanae.MEMORY.addSentence(x.split("; ")[1].replace("!this-channel", "!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic)).replace("!this-dm","!command discMove {} | 誰のDMか: {}".format(message.channel.id, username)), x.split("; ")[0])
-            if bool(re.search("(.+); (.+)", x)):
+            elif bool(re.search("(.+)=>(.+)", x)):
+                sanae.MEMORY.learnSentence(x.split("=>")[0], "!input")
+                sanae.MEMORY.learnSentence(x.split("=>")[1], "!")
                 ff = True
-                sanae.MEMORY.addSentence(x.split("; ")[1].replace("!this-channel", "!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic)).replace("!this-dm","!command discMove {} | 誰のDMか: {}".format(message.channel.id, username)), "l:"+x.split("; ")[0])
+            elif bool(re.search("=>(.+)", x)):
+                sanae.MEMORY.learnSentence(sanae.DATA.lastSentenceInput, sanae.DATA.lastUser)
+                sanae.MEMORY.learnSentence(x.replace("=>", ""), "!")
+                ff = True
         if ff:
             return
 
@@ -250,17 +225,12 @@ async def on_message(message):
         for attachment in message.attachments:
             additional += "\n" + attachment.url
             
-
-        if nowTime >= prevTime + 15 and lastMessage != None:
-            print("沈黙を検知")
-            sanae.receive("!command ignore", lastUsername)
         
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
             sanae.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username, force=True)
         else:
             sanae.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username)
-
 
         a = []
         for person in persons:
@@ -275,33 +245,21 @@ async def on_message(message):
 
 
 
-        aaa = ""
-        pss = []
-        for ps in persons:
-            pss.append(ps[0])
-        for person in pss:
-            if person[0] == sanae.DATA.settings["myname"]:
-                pass
-            else:
-                aaa = aaa + person[0] + "|"
-        aaa = aaa[0:-1]
-        
-        lastMessage = message
+        lastMessage = [message.content, message.author.name]
         lastUsername = username
         prevTime = time.time()
-        messages.append(message)
+        messages.append([message.content, message.author.name])
 
 
 
-i = 0
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages, restSteplastUsername
+    global persons, prevTime, lastMessage, i, messages
     try:
         if mode == 1:
             if len(messages) != 0:
                 if sanae.DATA.myVoice != None:
-                    if bool(re.search(sanae.DATA.settings["mynames"], messages[-1].content)) or "!command" in sanae.DATA.myVoice:
+                    if bool(re.search(sanae.DATA.settings["mynames"], messages[-1][0])):
                         result = sanae.speakFreely()
                         if result == None:
                             messages = []
@@ -310,7 +268,7 @@ async def cron():
                             messages = []
 
         elif mode == 2:
-            if len(messages) != 0:
+            if len(messages) != 0 and lastMessage != None:
 
                 pss = []
                 for ps in persons:
@@ -322,7 +280,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (bool(re.search(aaa, lastMessage.content)) and random.randint(0, 10) <= 3 or len(persons) <= 2)) and sanae.DATA.myVoice != None:
+                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and (random.random() < 0.4 or len(persons) <= 2) and sanae.DATA.myVoice != None):
 
                     result = sanae.speakFreely()
                     if result == None:
@@ -339,6 +297,9 @@ async def cron():
         if nowTime >= prevTime + 20:
             print("沈黙を検知")
 
+            dt_now = datetime.datetime.now()
+            sanae.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+
             a = []
             for person in persons:
                 if person[1] < 6:
@@ -350,16 +311,10 @@ async def cron():
             if sanae.DATA.settings["myname"] not in pss:
                 persons.append([sanae.DATA.settings["myname"], 0])
 
-            """
-            if i >= 3:
-                persons = [[sanae.DATA.settings["myname"], 0]]
-                i = 0
-            """
-
-            if channel != None and lastMessage != None:
+            if channel != None and lastMessage != []:
                 if mode == 2:
                     sanae.receive("!command ignore", lastUsername)
-                if (bool(re.search(sanae.DATA.settings["mynames"], lastMessage.content)) or (random.randint(0, 10) <= 3 or len(persons) <= 2)) and sanae.DATA.myVoice != None:
+                    if (sanae.DATA.myVoice != None and random.random() < 0.35):
                         result = sanae.speakFreely()
                         if result == None:
                             messages = []
@@ -368,29 +323,13 @@ async def cron():
                             messages = []
                 if mode == 1:
                     sanae.receive("!command ignore", lastUsername)
-                    if sanae.DATA.myVoice != None:
-                        if "!command" in sanae.DATA.myVoice:
-                            
-                            result = sanae.speakFreely()
-                            if result == None:
-                                messages = []
-                            else:
-                                await speak(result)
-                                messages = []
-
-
-                
-            i += 1
             prevTime = time.time()
 
     except:
         import traceback
         traceback.print_exc()
 
-"""
-import assi
 
-listen = threading.Thread(target=assi.listen)
-listen.start()
-"""
+
 client.run(TOKEN)
+
