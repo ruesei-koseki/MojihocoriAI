@@ -32,9 +32,19 @@ helpMessage = f"""==sanaeAIヘルプ==
 botの名前を呼ぶとそのチャンネルに来てくれます。
 メンションでは呼べません。
 
+=学習方法=
+チャットのメッセージからも学習しますが、コマンドでの学習のほうが効力が強いです。
+```
+哲学ユートピア: {sanae.DATA.settings["mynames"].split("|")[0]}、おいで
+{sanae.DATA.settings["mynames"].split("|")[0]}: どうしましたか？
+哲学ユートピア: ただよんだだけ
+{sanae.DATA.settings["mynames"].split("|")[0]}: そうなのかい
+```
+
 =配慮コマンドについて=
 botに「静かにして」というと「寡黙モード」になり、メッセージにbotの名前が含まれない限り返信しなくなります。
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
+モードを切り替えるタイミングも、学習します。
 このbotの作成者: 笑いのユートピア#8254
 """
 
@@ -207,6 +217,9 @@ async def on_message(message):
         ff = False
         xx = re.split('\n', message.content)
         for x in xx:
+            sanae.MEMORY.learnSentence("!command ignore", "!someone")
+            sanae.MEMORY.learnSentence("!command ignore", "!someone")
+            sanae.MEMORY.learnSentence("!command ignore", "!someone")
             if bool(re.search("(.+): (.+)", x)):
                 sanae.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
                 ff = True
