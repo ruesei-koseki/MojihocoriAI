@@ -222,7 +222,7 @@ def receive(x, u, add=True, force=False):
             result = result1
             print("経験データを採用")
         else:
-            if 0 == random.randint(0,2):
+            if 0 == random.randint(0,1):
                 result = result1
                 print("経験データを採用")
             else:
