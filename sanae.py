@@ -5,7 +5,6 @@ import random
 import time
 
 import CONSIDERATION
-import HCONSIDERATION
 import DATA
 import MEMORY
 import INTELLIGENCE
@@ -29,14 +28,7 @@ DATA.myVoice = None #心の中の声
 DATA.rate = 0
 DATA.times = 0
 DATA.sa = 0
-
-DATA.HheartLastSpeaker = None
-DATA.Hheart = None
-DATA.Hrate = 0
-DATA.Hsa = 0
-DATA.Htimes = 0
 DATA.userLog = [None] * 10
-DATA.mode = 0
 
 
 
@@ -122,73 +114,32 @@ def speakFreely(add=True):
 
 def speakNext(add=True):
     #自由に話す
+
+    if INTELLIGENCE.isNextOk():
+        result = DATA.data["sentence"][DATA.heart+1][0]
+        DATA.heart += 1
+
+        DATA.postSpoken = True
+        if "!" not in DATA.lastUser:
+            DATA.lastUserReplied = DATA.lastUser
+        DATA.lastSentenceHeart = result
+
+
+        DATA.userLog.append("!")
+        DATA.userLog.pop(0)
+
+
+        if result != None:
     
-    if DATA.mode == 0:
-        if INTELLIGENCE.isNextOk():
-            result = DATA.data["sentence"][DATA.heart+1][0]
-            DATA.heart += 1
+            result = result.replace("[YOU]", DATA.lastUser)
+            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
 
-            DATA.postSpoken = True
-            if "!" not in DATA.lastUser:
-                DATA.lastUserReplied = DATA.lastUser
-            DATA.lastSentenceHeart = result
-
-
-            DATA.userLog.append("!")
-            DATA.userLog.pop(0)
-
-
-            if result != None:
-       
+            MEMORY.addSentence(result, "!")
 
 
 
+        return result
 
-
-
-                result = result.replace("[YOU]", DATA.lastUser)
-                result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-
-                MEMORY.addSentence(result, "!")
-
-
-
-            return result
-
-
-
-    elif DATA.mode == 1:
-        if INTELLIGENCE.hIsNextOk():
-            result = DATA.data["sentenceHumanity"][DATA.Hheart+1][0]
-            DATA.Hheart += 1
-
-            DATA.postSpoken = True
-            if "!" not in DATA.lastUser:
-                DATA.lastUserReplied = DATA.lastUser
-            DATA.lastSentenceHeart = result
-
-
-            DATA.userLog.append("!")
-            DATA.userLog.pop(0)
-
-
-            if result != None:
-                
-
-
-
-
-
-
-
-                result = result.replace("[YOU]", DATA.lastUser)
-                result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-
-                MEMORY.addSentence(result, "!")
-
-
-
-            return result
 
     else:
         return False
@@ -213,21 +164,7 @@ def receive(x, u, add=True, force=False):
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
 
 
-        result1 = CONSIDERATION.looking(x, u, force=force)
-        result2 = HCONSIDERATION.looking(x, u, force=force)
-        if DATA.Hrate > DATA.rate:
-            result = result2
-            print("人格データを採用")
-        elif DATA.Hrate < DATA.rate:
-            result = result1
-            print("経験データを採用")
-        else:
-            if 0 == random.randint(0,1):
-                result = result1
-                print("経験データを採用")
-            else:
-                result = result2
-                print("人格データを採用")
+        result = CONSIDERATION.looking(x, u, force=force)
 
 
         if result == None:

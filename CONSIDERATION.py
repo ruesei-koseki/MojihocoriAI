@@ -62,26 +62,26 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1
@@ -116,26 +116,26 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1
@@ -203,26 +203,26 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1
@@ -257,26 +257,26 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1
@@ -330,14 +330,14 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -345,12 +345,12 @@ def looking(x, u, reply=True, force=False):
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
                                 DATA.times = kaisu
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1
@@ -383,26 +383,26 @@ def looking(x, u, reply=True, force=False):
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] == "!" and "!system" not in DATA.data["sentence"][i+1][1]:
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            iii = 0
+                            iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 2:
+                            if iii <= 1:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
                                 DATA.rate = rate
-                                DATA.mode = 0
                                 return DATA.data["sentence"][i+1][0]
                         else:
                             pass
                     else:
                         DATA.heart = i
+                        DATA.rate = rate
                         return
                 i += 1
                 ii += 1

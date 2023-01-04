@@ -36,9 +36,9 @@ def learnSentence(x, u, noword=False):
     #言葉を脳に記録する
     if maeX2 != x:
         if u in DATA.settings["mynames"].split("|"):
-            DATA.data["sentenceHumanity"].append([x, "!"])
+            DATA.data["sentence"].append([x, "!"])
         else:
-            DATA.data["sentenceHumanity"].append([x, u])
+            DATA.data["sentence"].append([x, u])
     maeX2 = x
 
 

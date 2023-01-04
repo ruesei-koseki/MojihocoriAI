@@ -243,18 +243,8 @@ async def on_message(message):
         ff = False
         xx = re.split('\n', message.content)
         for x in xx:
-            sanae.MEMORY.learnSentence("!command ignore", "!someone")
-            sanae.MEMORY.learnSentence("!command ignore", "!someone")
             if bool(re.search("(.+): (.+)", x)):
                 sanae.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
-                ff = True
-            elif bool(re.search("(.+)=>(.+)", x)):
-                sanae.MEMORY.learnSentence(x.split("=>")[0], "!input")
-                sanae.MEMORY.learnSentence(x.split("=>")[1], "!")
-                ff = True
-            elif bool(re.search("=>(.+)", x)):
-                sanae.MEMORY.learnSentence(sanae.DATA.lastSentenceInput, sanae.DATA.lastUser)
-                sanae.MEMORY.learnSentence(x.replace("=>", ""), "!")
                 ff = True
         if ff:
             return
