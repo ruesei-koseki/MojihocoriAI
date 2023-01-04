@@ -15,6 +15,7 @@ lastMessage = None
 lastUsername = None
 messages = []
 prevTime = time.time()
+pin = False
 
 
 from discord.ext import tasks
@@ -47,7 +48,9 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 =配慮コマンドについて=
 botに「静かにして」というと「寡黙モード」になり、メッセージにbotの名前が含まれない限り返信しなくなります。
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
-モードを切り替えるタイミングも、学習します。
+botに「じっとしてて」というと、チャンネルを動かなくなります。
+botに「動いて」というと、チャンネルを動けるようになります。
+これらのコマンドのタイミングも、学習します。
 このbotの作成者: 笑いのユートピア#8254
 """
 
@@ -74,7 +77,7 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 async def speak(result):
-    global channel, persons, prevTime, mode, yet
+    global channel, persons, prevTime, mode, yet, pin
     try:
         print("{}: {}".format(sanae.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
@@ -86,7 +89,7 @@ async def speak(result):
         for result in results:
             if bool(pattern.search(result)):
                 com = result.split(" ")
-                if com[1] == "discMove":
+                if com[1] == "discMove" and not pin:
                     if client.get_channel(int(com[2])) != None:
                         try:
                             channel = client.get_channel(int(com[2]))
@@ -101,6 +104,12 @@ async def speak(result):
                     pass
                 elif com[1] == "setMode":
                     setMode(int(com[2]))
+                elif com[1] == "saveMyData":
+                    sanae.MEMORY.save()
+                elif com[1] == "pin":
+                    pin = True
+                elif com[1] == "unpin":
+                    pin = False
                 elif com[1] == "saveMyData":
                     sanae.MEMORY.save()
             else:
@@ -161,7 +170,7 @@ ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
+    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     
     try:
         if message.channel.id == 1049365514251677807:
@@ -200,21 +209,33 @@ async def on_message(message):
 
 
         
-        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        if bool(re.search("沈黙モード|黙っ|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
-        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(1)
             sanae.receive("!command setMode {}".format(1), username)
             sanae.MEMORY.learnSentence("!command setMode {}".format(1), "!")
             return
-        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(2)
             sanae.receive("!command setMode {}".format(2), username)
             sanae.MEMORY.learnSentence("!command setMode {}".format(2), "!")
             return
 
-        if bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("じっとしてて|じっとしていて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+            pin = True
+            sanae.receive("!command pin", username)
+            sanae.MEMORY.learnSentence("!command pin", "!")
+            return
+
+        elif bool(re.search("うごいて|動いて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+            pin = False
+            sanae.receive("!command unpin", username)
+            sanae.MEMORY.learnSentence("!command unpin", "!")
+            return
+
+        elif bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
         
@@ -222,7 +243,6 @@ async def on_message(message):
         ff = False
         xx = re.split('\n', message.content)
         for x in xx:
-            sanae.MEMORY.learnSentence("!command ignore", "!someone")
             sanae.MEMORY.learnSentence("!command ignore", "!someone")
             sanae.MEMORY.learnSentence("!command ignore", "!someone")
             if bool(re.search("(.+): (.+)", x)):

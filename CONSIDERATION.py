@@ -15,7 +15,7 @@ def looking(x, u, reply=True, force=False):
         print("思考中...")
 
 
-        for kaisu in range(5):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -26,6 +26,10 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.7
             if kaisu == 4:
                 rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
 
 
 
@@ -59,13 +63,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -113,13 +117,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -152,7 +156,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(5):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -162,7 +166,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 3:
                 rate = 0.7
             if kaisu == 4:
-                rate = 0.65
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
 
 
 
@@ -196,13 +204,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -250,13 +258,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -323,13 +331,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -376,13 +384,13 @@ def looking(x, u, reply=True, force=False):
                             #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 0
-                            for iiiii in range(7):
+                            for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "×":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii <= 3:
+                            if iii <= 2:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
