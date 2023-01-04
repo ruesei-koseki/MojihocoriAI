@@ -65,7 +65,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -119,7 +119,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -202,7 +202,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -256,7 +256,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -329,7 +329,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
@@ -382,7 +382,7 @@ def looking(x, u, reply=True, force=False):
                                         flag = False
                                         iii = iiiii
                                         break
-                            if iii == 0:
+                            if iii <= 3:
                                 return "×"
                             if flag:
                                 DATA.sa = ii
