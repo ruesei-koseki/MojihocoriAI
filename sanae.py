@@ -159,8 +159,8 @@ def speakNext(add=True):
 
     elif DATA.mode == 1:
         if INTELLIGENCE.hIsNextOk():
-            result = DATA.data["sentenceHumanity"][DATA.hheart+1][0]
-            DATA.hheart += 1
+            result = DATA.data["sentenceHumanity"][DATA.Hheart+1][0]
+            DATA.Hheart += 1
 
             DATA.postSpoken = True
             if "!" not in DATA.lastUser:
@@ -209,7 +209,7 @@ def receive(x, u, add=True, force=False):
         MEMORY.addSentence(x, u)
 
 
-        if x == "×":
+        if x == "×" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
 
 
