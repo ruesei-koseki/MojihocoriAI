@@ -206,10 +206,12 @@ async def on_message(message):
         if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(1)
             sanae.receive("!command setMode {}".format(1), username)
+            sanae.MEMORY.learnSentence("!command setMode {}".format(1), "!")
             return
         if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(2)
             sanae.receive("!command setMode {}".format(2), username)
+            sanae.MEMORY.learnSentence("!command setMode {}".format(2), "!")
             return
 
         if bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
