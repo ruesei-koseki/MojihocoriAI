@@ -52,7 +52,6 @@ def initialize(directory, interface_):
         with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
             json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
     DATA.heart = len(DATA.data["sentence"]) - 1
-    DATA.Hheart = len(DATA.data["sentenceHumanity"]) - 1
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
@@ -86,7 +85,7 @@ def speakFreely(add=True):
                 i += 1
         """
 
-        MEMORY.addSentence(result, "!")
+        MEMORY.learnSentence(result, "!")
 
 
 
@@ -134,7 +133,7 @@ def speakNext(add=True):
             result = result.replace("[YOU]", DATA.lastUser)
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
 
-            MEMORY.addSentence(result, "!")
+            MEMORY.learnSentence(result, "!")
 
 
 
@@ -157,7 +156,7 @@ def receive(x, u, add=True, force=False):
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
 
-        MEMORY.addSentence(x, u)
+        MEMORY.learnSentence(x, u)
 
 
         if x == "×" or x == "❌":
@@ -192,7 +191,6 @@ def receive(x, u, add=True, force=False):
     
 
         print("座標: {}".format(DATA.heart))
-        print("人格座標: {}".format(DATA.Hheart))
         print("ログ: {}".format(DATA.userLog))
 
     except:
