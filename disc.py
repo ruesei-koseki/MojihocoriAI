@@ -343,7 +343,7 @@ async def cron():
         if nowTime >= prevTime + 20:
             print("沈黙を検知")
 
-            if i >= 4:
+            if i >= 2:
                 i = -1
             elif i == -1:
                 pass
