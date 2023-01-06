@@ -156,7 +156,8 @@ def receive(x, u, add=True, force=False):
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
 
-        MEMORY.learnSentence(x, u)
+        if add:
+            MEMORY.learnSentence(x, u)
 
 
         if x == "×" or x == "❌":

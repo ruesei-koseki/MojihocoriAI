@@ -65,7 +65,7 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(sanae.DATA.data["sentence"]) >= 2000:
+if len(sanae.DATA.data["sentence"]) >= 200000:
     mode = 2
     yet = 2
 if len(sanae.DATA.data["sentence"]) >= 300:
@@ -348,7 +348,7 @@ async def cron():
                 i += 1
 
             add = True
-            if i != -1:
+            if i == -1:
                 add = False
 
             dt_now = datetime.datetime.now()
@@ -375,7 +375,7 @@ async def cron():
                         else:
                             await speak(result)
                             messages = []
-                if mode == 1:
+                if mode <= 1:
                     sanae.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
 
