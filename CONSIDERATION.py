@@ -49,7 +49,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -58,7 +58,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):
@@ -101,7 +101,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -110,7 +110,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):
@@ -184,7 +184,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -193,7 +193,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):
@@ -236,7 +236,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -245,7 +245,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):
@@ -307,7 +307,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -316,7 +316,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):
@@ -358,7 +358,7 @@ def looking(x, u, reply=True, force=False):
                     break
                 into = "{}: ".format(u)+x
                 if Levenshtein.ratio(into,  "{}: ".format(DATA.data["sentence"][i][1])+DATA.data["sentence"][i][0]) >= rate:
-                    #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
+                    print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
                     if reply:
@@ -367,7 +367,7 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.ratio(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i][1] != DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             iii = 100
                             for iiiii in range(4):

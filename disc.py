@@ -52,6 +52,8 @@ botに「じっとしてて」というと、チャンネルを動かなくな�
 botに「動いて」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも、学習します。
 このbotの作成者: 笑いのユートピア#8254
+
+**また、300メッセージ学習するまで何もしゃべらず、20万メッセージ学習するまで自発的に話しません。**
 """
 
 
@@ -63,8 +65,15 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-mode = 2
-yet = False
+if len(sanae.DATA.data["sentence"]) >= 2000:
+    mode = 2
+    yet = 2
+if len(sanae.DATA.data["sentence"]) >= 300:
+    mode = 1
+    yet = 1
+else:
+    mode = 0
+    yet = 0
 
 print("mode: {}".format(mode))
 print("yet: {}".format(yet))
@@ -137,12 +146,16 @@ async def speak(result):
             await speak(result)
 
         
-        if len(sanae.DATA.data["sentence"]) >= 300 and yet:
+        if len(sanae.DATA.data["sentence"]) >= 200000 and yet == 1:
             mode = 2
-            yet = False
-            print("おめでとうございます！自発的にしゃべるようになりました！")
-        elif yet:
-            print("まだ自発的にしゃべれません")
+            yet = 2
+            print("自分からしゃべれるようになりました")
+        elif len(sanae.DATA.data["sentence"]) >= 300 and yet == 0:
+            mode = 1
+            yet = 1
+            print("しゃべれるようになりました")
+        else:
+            pass
         
 
     except:
@@ -280,12 +293,14 @@ async def on_message(message):
 
 
 
+i = 0
 @tasks.loop(seconds=1)
 async def cron():
     global persons, prevTime, lastMessage, i, messages
     try:
         if mode == 1:
             if len(messages) != 0:
+                i = 0
                 if sanae.DATA.myVoice != None:
                     if bool(re.search(sanae.DATA.settings["mynames"], messages[-1][0])):
                         result = sanae.speakFreely()
@@ -297,7 +312,7 @@ async def cron():
 
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
-
+                i = 0
                 pss = []
                 for ps in persons:
                     pss.append(ps[0])
@@ -325,8 +340,19 @@ async def cron():
         if nowTime >= prevTime + 20:
             print("沈黙を検知")
 
+            if i >= 4:
+                i = -1
+            elif i == -1:
+                pass
+            else:
+                i += 1
+
+            add = True
+            if i != -1:
+                add = False
+
             dt_now = datetime.datetime.now()
-            sanae.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+            sanae.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
 
             a = []
             for person in persons:
@@ -341,7 +367,7 @@ async def cron():
 
             if channel != None and lastMessage != []:
                 if mode == 2:
-                    sanae.receive("!command ignore", lastUsername)
+                    sanae.receive("!command ignore", lastUsername, add=add)
                     if (sanae.DATA.myVoice != None and random.random() < 0.35):
                         result = sanae.speakFreely()
                         if result == None:
@@ -350,7 +376,7 @@ async def cron():
                             await speak(result)
                             messages = []
                 if mode == 1:
-                    sanae.receive("!command ignore", lastUsername)
+                    sanae.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
 
     except:
