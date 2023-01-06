@@ -219,6 +219,13 @@ async def on_message(message):
             return
         if message.content == None:
             return
+        
+
+        
+        additional = ""
+        for attachment in message.attachments:
+            additional += "\n" + attachment.url
+        message.content+"\n"+additional
 
 
         
@@ -262,10 +269,6 @@ async def on_message(message):
         if ff:
             return
 
-        additional = ""
-        for attachment in message.attachments:
-            additional += "\n" + attachment.url
-            
         
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
