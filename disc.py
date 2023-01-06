@@ -225,7 +225,7 @@ async def on_message(message):
         additional = ""
         for attachment in message.attachments:
             additional += "\n" + attachment.url
-        message.content += "\n"+additional
+        message.content += additional
 
 
         
