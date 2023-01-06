@@ -15,7 +15,7 @@ def looking(x, u, reply=True, force=False):
         print("思考中...")
 
 
-        for kaisu in range(5):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -25,7 +25,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 3:
                 rate = 0.7
             if kaisu == 4:
-                rate = 0.66
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
 
 
 
@@ -148,7 +152,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-        for kaisu in range(5):
+        for kaisu in range(7):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -158,7 +162,11 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 3:
                 rate = 0.7
             if kaisu == 4:
-                rate = 0.66
+                rate = 0.6
+            if kaisu == 5:
+                rate = 0.5
+            if kaisu == 6:
+                rate = 0.4
 
 
 
