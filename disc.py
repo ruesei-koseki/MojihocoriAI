@@ -299,7 +299,7 @@ async def on_message(message):
 i = 0
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages
+    global persons, prevTime, lastMessage, i, messages, add
     try:
         if mode == 1:
             if len(messages) != 0:

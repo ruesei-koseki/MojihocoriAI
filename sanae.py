@@ -85,7 +85,8 @@ def speakFreely(add=True):
                 i += 1
         """
 
-        MEMORY.learnSentence(result, "!")
+        if add:
+            MEMORY.learnSentence(result, "!")
 
 
 
@@ -133,7 +134,8 @@ def speakNext(add=True):
             result = result.replace("[YOU]", DATA.lastUser)
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
 
-            MEMORY.learnSentence(result, "!")
+            if add:
+                MEMORY.learnSentence(result, "!")
 
 
 
@@ -168,12 +170,11 @@ def receive(x, u, add=True, force=False):
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
 
 
-        if add:
-            if x.count("\n") >= 1:
-                for xx in x.split("\n"):
-                    result = CONSIDERATION.looking(xx, u, force=force)
-            else:
-                result = CONSIDERATION.looking(x, u, force=force)
+        if x.count("\n") >= 1:
+            for xx in x.split("\n"):
+                result = CONSIDERATION.looking(xx, u, force=force)
+        else:
+            result = CONSIDERATION.looking(x, u, force=force)
         
 
 
