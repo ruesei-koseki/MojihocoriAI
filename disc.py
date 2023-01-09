@@ -146,17 +146,6 @@ async def speak(result):
             await speak(result)
 
         
-        if len(sanae.DATA.data["sentence"]) >= 200000 and yet == 1:
-            mode = 2
-            yet = 2
-            print("自分からしゃべれるようになりました")
-        elif len(sanae.DATA.data["sentence"]) >= 300 and yet == 0:
-            mode = 1
-            yet = 1
-            print("しゃべれるようになりました")
-        else:
-            pass
-        
 
     except:
         import traceback
@@ -299,7 +288,7 @@ async def on_message(message):
 i = 0
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages, add
+    global persons, prevTime, lastMessage, i, messages, add, mode, yet
     try:
         if mode == 1:
             if len(messages) != 0:
@@ -381,6 +370,22 @@ async def cron():
                 if mode <= 1:
                     sanae.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
+
+
+
+        
+        if len(sanae.DATA.data["sentence"]) >= 200000 and yet == 1:
+            mode = 2
+            yet = 2
+            print("自分からしゃべれるようになりました")
+        elif len(sanae.DATA.data["sentence"]) >= 300 and yet == 0:
+            mode = 1
+            yet = 1
+            print("しゃべれるようになりました")
+        else:
+            pass
+
+
 
     except:
         import traceback
