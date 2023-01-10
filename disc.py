@@ -361,7 +361,7 @@ async def cron():
         
             if mode == 2:
                 sanae.receive("!command ignore", lastUsername, add=add)
-                if (sanae.DATA.myVoice != None and random.random() < 0.45):
+                if (sanae.DATA.myVoice != None and (len(persons) <= 2 or random.random() < 0.45)):
                     result = sanae.speakFreely()
                     if result == None:
                         messages = []
