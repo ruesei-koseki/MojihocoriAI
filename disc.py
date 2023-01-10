@@ -394,5 +394,73 @@ async def cron():
 
 
 
+
+
+
+import speech_recognition as sr
+
+r = sr.Recognizer()
+mic = sr.Microphone()
+
+into = "こんにちは"
+
+
+def listen():
+    global messages, persons, prevTime, lastMessage
+    while True:
+        
+        print("聞き取っています...")
+        
+        with mic as source:
+            r.adjust_for_ambient_noise(source) #雑音対策
+            audio = r.listen(source, phrase_time_limit=60)
+
+        print ("解析中...")
+
+        try:
+            into = r.recognize_google(audio, language=sanae.DATA.settings["languageHear"])
+            print(into)
+
+            if Levenshtein.ratio(into, sanae.DATA.lastSentence) < 0.85:
+
+
+                pss = []
+                for ps in persons:
+                    pss.append(ps[0])
+                if "あなた" not in pss:
+                    persons.append(["あなた", 0])
+
+
+
+                if bool(re.search("セーブして", into)) and bool(re.search(sanae.DATA.settings["mynames"], into)):
+                    sanae.receive("!command saveMyData", "あなた")
+                    print("セーブします")
+                    sanae.MEMORY.save()
+                    print("完了")
+                
+                else:
+
+
+
+                    lastMessage = [into, "あなた"]
+                    prevTime = time.time()
+                    sanae.receive(into, "あなた")
+                    messages.append([into, "あなた"])
+
+
+
+
+        # 以下は認識できなかったときに止まらないように。
+        except sr.UnknownValueError:
+            pass
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+
+
+import threading
+cronThread = threading.Thread(target=listen, daemon=True)
+cronThread.start()
+
 client.run(TOKEN)
 
