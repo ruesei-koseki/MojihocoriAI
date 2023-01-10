@@ -51,9 +51,36 @@ botに「話して」というと「通常モード」になり、メッセー�
 botに「じっとしてて」というと、チャンネルを動かなくなります。
 botに「動いて」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも、学習します。
-このbotの作成者: 笑いのユートピア#8254
 
 **また、200000メッセージ学習するまでは沈黙モードで、1000000メッセージ学習するまでは寡黙モードでbotが起動します。。**
+
+
+==SanaeAI Help==
+This bot is an AI that replies to user's messages at its own will.
+It will reply less frequently depending on the number of people talking to it.
+If you call the bot's name, it will come to that channel.
+You can't call it by Menshon.
+
+Learning method ==.
+It can learn from chat messages, but learning by command is more effective.
+````
+Philosophy Utopia: {sanae.DATA.settings["mynames"].split("|")[0]}, come
+{sanae.DATA.settings["mynames"].split("|")[0]}: what's up?
+Philosophical Utopia: just read it
+{sanae.DATA.settings["mynames"].split("|")[0]}: I see
+````
+
+= Reinforcement Learning=
+Sending ``x'' and ``❌'' messages can teach ``this message is bad.
+
+= For consideration commands=.
+If you tell the bot to "silent mode" it will go into "only for mention mode" and will not reply unless the message contains the bot's name.
+If you ask the bot to "normal mode", it will enter "normal mode" and will reply with different frequency depending on the number of people in the message, even if the bot's name is not included in the message as usual.
+If you ask the bot to "pin" it will stop moving in the channel.
+When you tell the bot to "unpin" it will be able to move through the channel.
+It also learns the timing of these commands.
+
+**Also, the bot will start in silent mode until it learns 200000 messages, and in reticent mode until it learns 1000000 messages. **
 """
 
 
@@ -220,33 +247,33 @@ async def on_message(message):
 
 
         
-        if bool(re.search("沈黙モード|黙っ|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        if bool(re.search("silent mode|沈黙モード|黙っ|だま", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
-        elif bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("only for mention mode|寡黙モード|静かに|しずかに", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(1)
             sanae.receive("!command setMode {}".format(1), username)
             sanae.MEMORY.learnSentence("!command setMode {}".format(1), "!")
             return
-        elif bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("normal mode|通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             setMode(2)
             sanae.receive("!command setMode {}".format(2), username)
             sanae.MEMORY.learnSentence("!command setMode {}".format(2), "!")
             return
 
-        elif bool(re.search("じっとしてて|じっとしていて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("pin|じっとしてて|じっとしていて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             pin = True
             sanae.receive("!command pin", username)
             sanae.MEMORY.learnSentence("!command pin", "!")
             return
 
-        elif bool(re.search("うごいて|動いて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("inpin|うごいて|動いて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             pin = False
             sanae.receive("!command unpin", username)
             sanae.MEMORY.learnSentence("!command unpin", "!")
             return
 
-        elif bool(re.search("、(ヘルプを表示|ヘルプ表示)して", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
         
