@@ -267,7 +267,7 @@ async def on_message(message):
             sanae.MEMORY.learnSentence("!command pin", "!")
             return
 
-        elif bool(re.search("inpin|うごいて|動いて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("unpin|うごいて|動いて", message.content)) and bool(re.search(sanae.DATA.settings["mynames"], message.content)):
             pin = False
             sanae.receive("!command unpin", username)
             sanae.MEMORY.learnSentence("!command unpin", "!")

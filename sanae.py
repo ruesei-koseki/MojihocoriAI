@@ -153,7 +153,8 @@ def receive(x, u, add=True, force=False):
         if x == None or u == None: return
         
         DATA.lastSentenceInput = x
-        DATA.lastUser = u
+        if "!system" not in u:
+            DATA.lastUser = u
 
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
