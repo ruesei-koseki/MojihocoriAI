@@ -65,7 +65,7 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(sanae.DATA.data["sentence"]) >= 200000:
+if len(sanae.DATA.data["sentence"]) >= 1000:
     mode = 2
     yet = 2
 if len(sanae.DATA.data["sentence"]) >= 300:
@@ -105,10 +105,12 @@ async def speak(result):
                         except:
                             print("チャンネルが存在しません")
                         persons = [[sanae.DATA.settings["myname"], 0]]
-                    try:
-                        print("チャンネルを移動しました: {}".format(channel.name))
-                    except:
-                        print("チャンネルを移動しました: DM")
+                        try:
+                            print("チャンネルを移動しました: {}".format(channel.name))
+                        except:
+                            print("チャンネルを移動しました: DM")
+                    else:
+                        sanae.receive("エラー: あなたは固定されています。", "!system")
                 elif com[1] == "ignore":
                     pass
                 elif com[1] == "setMode":
@@ -297,10 +299,9 @@ async def cron():
                     if bool(re.search(sanae.DATA.settings["mynames"], messages[-1][0])):
                         result = sanae.speakFreely()
                         if result == None:
-                            messages = []
+                            pass
                         else:
                             await speak(result)
-                            messages = []
 
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
@@ -319,12 +320,12 @@ async def cron():
 
                     result = sanae.speakFreely()
                     if result == None:
-                        messages = []
+                        pass
                     else:
                         await speak(result)
-                        messages = []
                 
-            
+    
+        messages = []
 
         nowTime = time.time()
         #print(nowTime >= prevTime + 15)
@@ -374,7 +375,7 @@ async def cron():
 
 
         
-        if len(sanae.DATA.data["sentence"]) >= 200000 and yet == 1:
+        if len(sanae.DATA.data["sentence"]) >= 1000 and yet == 1:
             mode = 2
             yet = 2
             print("自分からしゃべれるようになりました")
