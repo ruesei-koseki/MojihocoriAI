@@ -61,19 +61,19 @@ It will reply less frequently depending on the number of people talking to it.
 If you call the bot's name, it will come to that channel.
 You can't call it by Menshon.
 
-Learning method ==.
+=Learning method=.
 It can learn from chat messages, but learning by command is more effective.
-````
+```
 Philosophy Utopia: {sanae.DATA.settings["mynames"].split("|")[0]}, come
 {sanae.DATA.settings["mynames"].split("|")[0]}: what's up?
 Philosophical Utopia: just read it
 {sanae.DATA.settings["mynames"].split("|")[0]}: I see
-````
+```
 
-= Reinforcement Learning=
+=Reinforcement Learning=
 Sending ``x'' and ``❌'' messages can teach ``this message is bad.
 
-= For consideration commands=.
+=For consideration commands=.
 If you tell the bot to "silent mode" it will go into "only for mention mode" and will not reply unless the message contains the bot's name.
 If you ask the bot to "normal mode", it will enter "normal mode" and will reply with different frequency depending on the number of people in the message, even if the bot's name is not included in the message as usual.
 If you ask the bot to "pin" it will stop moving in the channel.
