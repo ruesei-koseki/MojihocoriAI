@@ -53,7 +53,7 @@ botに「動いて」というと、チャンネルを動けるようになり�
 これらのコマンドのタイミングも、学習します。
 このbotの作成者: 笑いのユートピア#8254
 
-**また、10000メッセージ学習するまでは沈黙モードで、200000メッセージ学習するまでは寡黙モードでbotが起動します。。**
+**また、200000メッセージ学習するまでは沈黙モードで、1000000メッセージ学習するまでは寡黙モードでbotが起動します。。**
 """
 
 
@@ -65,10 +65,10 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(sanae.DATA.data["sentence"]) >= 200000:
+if len(sanae.DATA.data["sentence"]) >= 1000000:
     mode = 2
     yet = 2
-if len(sanae.DATA.data["sentence"]) >= 10000:
+if len(sanae.DATA.data["sentence"]) >= 200000:
     mode = 1
     yet = 1
 else:
@@ -375,11 +375,11 @@ async def cron():
 
 
         
-        if len(sanae.DATA.data["sentence"]) >= 200000 and yet == 1:
+        if len(sanae.DATA.data["sentence"]) >= 1000000 and yet == 1:
             mode = 2
             yet = 2
             print("自分からしゃべれるようになりました")
-        elif len(sanae.DATA.data["sentence"]) >= 10000 and yet == 0:
+        elif len(sanae.DATA.data["sentence"]) >= 200000 and yet == 0:
             mode = 1
             yet = 1
             print("しゃべれるようになりました")
