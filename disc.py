@@ -152,7 +152,7 @@ async def speak(result):
     except:
         import traceback
         traceback.print_exc()
-        sanae.receive("エラー: このチャンネルに入る権限がありません", "!system")
+        sanae.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
 
 
 
@@ -358,18 +358,18 @@ async def cron():
             if sanae.DATA.settings["myname"] not in pss:
                 persons.append([sanae.DATA.settings["myname"], 0])
 
-            if channel != None and lastMessage != []:
-                if mode == 2:
-                    sanae.receive("!command ignore", lastUsername, add=add)
-                    if (sanae.DATA.myVoice != None and random.random() < 0.45):
-                        result = sanae.speakFreely()
-                        if result == None:
-                            messages = []
-                        else:
-                            await speak(result)
-                            messages = []
-                if mode <= 1:
-                    sanae.receive("!command ignore", lastUsername, add=add)
+        
+            if mode == 2:
+                sanae.receive("!command ignore", lastUsername, add=add)
+                if (sanae.DATA.myVoice != None and random.random() < 0.45):
+                    result = sanae.speakFreely()
+                    if result == None:
+                        messages = []
+                    else:
+                        await speak(result)
+                        messages = []
+            if mode <= 1:
+                sanae.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
 
 
