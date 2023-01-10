@@ -316,7 +316,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and (random.random() < 0.4 or len(persons) <= 2) and sanae.DATA.myVoice != None):
+                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and (random.random() < 0.5 or len(persons) <= 2) and sanae.DATA.myVoice != None):
 
                     result = sanae.speakFreely()
                     if result == None:
