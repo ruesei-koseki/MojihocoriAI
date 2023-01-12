@@ -52,35 +52,7 @@ botに「じっとしてて」というと、チャンネルを動かなくな�
 botに「動いて」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも、学習します。
 
-**また、200000メッセージ学習するまでは沈黙モードで、1000000メッセージ学習するまでは寡黙モードでbotが起動します。。**
-
-
-==SanaeAI Help==
-This bot is an AI that replies to user's messages at its own will.
-It will reply less frequently depending on the number of people talking to it.
-If you call the bot's name, it will come to that channel.
-You can't call it by Menshon.
-
-=Learning method=.
-It can learn from chat messages, but learning by command is more effective.
-```
-Philosophy Utopia: {sanae.DATA.settings["mynames"].split("|")[0]}, come
-{sanae.DATA.settings["mynames"].split("|")[0]}: what's up?
-Philosophical Utopia: just read it
-{sanae.DATA.settings["mynames"].split("|")[0]}: I see
-```
-
-=Reinforcement Learning=
-Sending ``x'' and ``❌'' messages can teach ``this message is bad.
-
-=For consideration commands=.
-If you tell the bot to "silent mode" it will go into "only for mention mode" and will not reply unless the message contains the bot's name.
-If you ask the bot to "normal mode", it will enter "normal mode" and will reply with different frequency depending on the number of people in the message, even if the bot's name is not included in the message as usual.
-If you ask the bot to "pin" it will stop moving in the channel.
-When you tell the bot to "unpin" it will be able to move through the channel.
-It also learns the timing of these commands.
-
-**Also, the bot will start in silent mode until it learns 200000 messages, and in reticent mode until it learns 1000000 messages. **
+**また、1000メッセージ学習するまでは寡黙モードでbotが起動します。。**
 """
 
 
@@ -92,10 +64,10 @@ TOKEN = sanae.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(sanae.DATA.data["sentence"]) >= 1000000:
+if len(sanae.DATA.data["sentence"]) >= 1000:
     mode = 2
     yet = 2
-if len(sanae.DATA.data["sentence"]) >= 200000:
+elif len(sanae.DATA.data["sentence"]) >= 10:
     mode = 1
     yet = 1
 else:
@@ -138,6 +110,7 @@ async def speak(result):
                             print("チャンネルを移動しました: DM")
                     else:
                         sanae.receive("エラー: あなたは固定されています。", "!system")
+                        print("エラー: あなたは固定されています。")
                 elif com[1] == "ignore":
                     pass
                 elif com[1] == "setMode":
@@ -157,16 +130,15 @@ async def speak(result):
 
         if Message != "":
             async with channel.typing():
-                if len(Message) / (mode * 3) <= 7:
+                if len(Message) / (mode * 3) <= 1:
                     await asyncio.sleep(len(Message) / (mode * 3))
                 else:
-                    await asyncio.sleep(7)
+                    await asyncio.sleep(1)
                 await channel.send(Message)
                 restStep = 0
 
 
         prevTime = time.time()
-        print("< ", sanae.DATA.sa)
 
 
 
@@ -177,8 +149,7 @@ async def speak(result):
         
 
     except:
-        import traceback
-        traceback.print_exc()
+        print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
         sanae.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
 
 
@@ -315,6 +286,7 @@ async def on_message(message):
 
 
 i = 0
+add = True
 @tasks.loop(seconds=1)
 async def cron():
     global persons, prevTime, lastMessage, i, messages, add, mode, yet
@@ -343,24 +315,25 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and (random.random() < 0.5 or len(persons) <= 2) and sanae.DATA.myVoice != None):
 
+                if bool(re.search(sanae.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-1) == 0 and sanae.DATA.myVoice != None):
                     result = sanae.speakFreely()
                     if result == None:
                         pass
                     else:
                         await speak(result)
+
+        elif len(messages) != 0:
+            i = 0
                 
     
         messages = []
 
         nowTime = time.time()
-        #print(nowTime >= prevTime + 15)
-        #print(prevTime + 20 - nowTime)
-        if nowTime >= prevTime + 20:
+        if nowTime >= prevTime + 5:
             print("沈黙を検知")
 
-            if i >= 2:
+            if i >= 1:
                 i = -1
             elif i == -1:
                 pass
@@ -388,13 +361,14 @@ async def cron():
         
             if mode == 2:
                 sanae.receive("!command ignore", lastUsername, add=add)
-                if (sanae.DATA.myVoice != None and (len(persons) <= 2 or random.random() < 0.45)):
-                    result = sanae.speakFreely()
-                    if result == None:
-                        messages = []
-                    else:
-                        await speak(result)
-                        messages = []
+                if sanae.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
+                    if sanae.DATA.myVoice != None:
+                        result = sanae.speakFreely()
+                        if result == None:
+                            messages = []
+                        else:
+                            await speak(result)
+                            messages = []
             if mode <= 1:
                 sanae.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
@@ -402,14 +376,16 @@ async def cron():
 
 
         
-        if len(sanae.DATA.data["sentence"]) >= 1000000 and yet == 1:
+        if len(sanae.DATA.data["sentence"]) >= 1000 and yet == 1:
             mode = 2
             yet = 2
             print("自分からしゃべれるようになりました")
-        elif len(sanae.DATA.data["sentence"]) >= 200000 and yet == 0:
+            speak("自分からしゃべれるようになりました")
+        if len(sanae.DATA.data["sentence"]) >= 10 and yet == 0:
             mode = 1
             yet = 1
             print("しゃべれるようになりました")
+            speak("しゃべれるようになりました")
         else:
             pass
 
@@ -421,9 +397,7 @@ async def cron():
 
 
 
-
-
-
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -433,7 +407,7 @@ into = "こんにちは"
 
 
 def listen():
-    global messages, persons, prevTime, lastMessage
+    global messages, persons, prevTime, lastMessage, i
     while True:
         
         print("聞き取っています...")
@@ -468,10 +442,11 @@ def listen():
                 else:
 
 
-
+                    i = 0
                     lastMessage = [into, "あなた"]
                     prevTime = time.time()
                     sanae.receive(into, "あなた")
+                    lastUsername = "あなた"
                     messages.append([into, "あなた"])
 
 
@@ -488,6 +463,10 @@ def listen():
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
+"""
+
+
+
 
 client.run(TOKEN)
 

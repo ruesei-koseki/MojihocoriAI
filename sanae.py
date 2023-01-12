@@ -29,6 +29,7 @@ DATA.rate = 0
 DATA.times = 0
 DATA.sa = 0
 DATA.userLog = [None] * 10
+DATA.imitateUser = None
 
 
 

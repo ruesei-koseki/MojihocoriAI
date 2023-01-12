@@ -9,7 +9,7 @@ else:
 data = []
 with open(sys.argv[2], "r", encoding="utf-8") as f:
     for line in f:
-        data.append([line.split(",")[0], line.split(",")[1]])
+        data.append([line.split(",")[0].replace("-br ", "\n"), line.split(",")[1]])
 
 
 
