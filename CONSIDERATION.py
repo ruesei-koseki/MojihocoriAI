@@ -2,11 +2,8 @@ import re
 import json
 import random
 import time
-
 import DATA
 import Levenshtein
-
-
 def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
@@ -15,9 +12,6 @@ def looking(x, u, reply=True, force=False):
             if DATA.imitateUser == None:
                 if "!system" not in  u:
                     DATA.imitateUser = u
-
-
-
             for kaisu in range(4):
                 if kaisu == 0:
                     rate = 1
@@ -27,22 +21,11 @@ def looking(x, u, reply=True, force=False):
                     rate = 0.8
                 if kaisu == 3:
                     rate = 0.75
-
-
-
-
-
-
-
                 #今の気持ちから考える
                 f = DATA.heart+1
-
                 t = len(DATA.data["sentence"]) - 1
-                
                 i = f
                 ii = 0
-
-
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
@@ -80,21 +63,11 @@ def looking(x, u, reply=True, force=False):
                             return
                     i += 1
                     ii += 1
-
-
-
-
-
-
-
                 #今の気持ちから考える
                 f = 0
-                
                 t = DATA.heart-1
-
                 i = f
                 ii = 0
-
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
@@ -132,24 +105,7 @@ def looking(x, u, reply=True, force=False):
                             return
                     i += 1
                     ii += 1
-
-
-
-
-
-
-
-
     except:
         import traceback
         traceback.print_exc()
-
-
-
-
-
     return None
-
-
-
-

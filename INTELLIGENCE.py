@@ -1,7 +1,5 @@
 import DATA
 import re
-
-
 def isNextOk():
     for iiiii in range(7):
         if DATA.heart+1+iiiii < len(DATA.data["sentence"]) - 1:
