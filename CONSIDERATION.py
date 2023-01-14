@@ -12,7 +12,7 @@ def looking(x, u, reply=True, force=False):
             if DATA.imitateUser == None:
                 if "!system" not in  u:
                     DATA.imitateUser = u
-            for kaisu in range(4):
+            for kaisu in range(7):
                 if kaisu == 0:
                     rate = 1
                 if kaisu == 1:
@@ -20,7 +20,13 @@ def looking(x, u, reply=True, force=False):
                 if kaisu == 2:
                     rate = 0.8
                 if kaisu == 3:
-                    rate = 0.75
+                    rate = 0.7
+                if kaisu == 4:
+                    rate = 0.6
+                if kaisu == 5:
+                    rate = 0.5
+                if kaisu == 6:
+                    rate = 0.4
                 #今の気持ちから考える
                 f = DATA.heart+1
                 t = len(DATA.data["sentence"]) - 1
