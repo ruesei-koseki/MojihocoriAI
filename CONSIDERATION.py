@@ -9,9 +9,6 @@ def looking(x, u, reply=True, force=False):
     try:
         for time in range(3):
             print("思考中...")
-            if DATA.imitateUser == None:
-                if "!system" not in  u:
-                    DATA.imitateUser = u
             for kaisu in range(10):
                 if kaisu == 0:
                     rate = 1

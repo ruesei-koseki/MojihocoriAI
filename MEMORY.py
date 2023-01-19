@@ -1,12 +1,18 @@
 import DATA
 import INTELLIGENCE
 import json
-def learnSentence(x, u, noword=False):
+import copy
+def learnSentence(x, u):
     #名前置き換え
     if u != "!":
         x = x.replace(u, "[I]")
     for myname in DATA.settings["mynames"].split("|"):
         x = x.replace(myname, "[YOU]")
+    #言葉を脳に記録する
+    if u in DATA.settings["mynames"].split("|"):
+        DATA.data["sentence"].append([x, "!"])
+    else:
+        DATA.data["sentence"].append([x, u])
 def save():
     if len(DATA.data["sentence"]) >= 10000000:
         while len(DATA.data["sentence"]) >= 10000000:
