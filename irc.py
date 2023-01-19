@@ -153,9 +153,6 @@ def setMode(x):
 
 
 
-from bouyomi import BouyomiChan4P
-bouyomi = BouyomiChan4P()
-
 import Levenshtein
 def speak(result):
     global nowChannel, persons, restStep, restStep, yet
@@ -249,9 +246,7 @@ def cron():
                 
 
             nowTime = time.time()
-            #print(nowTime >= prevTime + 15)
-            #print(prevTime + 20 - nowTime)
-            if nowTime >= prevTime + 20:
+            if nowTime >= prevTime + 5:
                 print("沈黙を検知")
                 if i >= 1:
                     i = -1
