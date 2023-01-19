@@ -114,8 +114,9 @@ messages = []
 prevTime = time.time()
 
 
+mode = 2
+
 print("mode: {}".format(mode))
-print("yet: {}".format(yet))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
 
 
@@ -148,7 +149,7 @@ def setMode(x):
 
 import Levenshtein
 def speak(result):
-    global nowChannel, persons, restStep, restStep, yet
+    global nowChannel, persons, restStep, restStep
     if result:
         print("users: {}".format(persons))
         pattern = re.compile(r"^!command")
@@ -181,14 +182,6 @@ def speak(result):
         if result:
             speak(result)
             #pass
-
-
-        if len(blob.DATA.data["sentence"]) >= 3500 and yet:
-            mode = 2
-            yet = False
-            print("おめでとうございます！自発的にしゃべるようになりました！")
-        elif yet:
-            print("まだ自発的にしゃべれません")
 
 
 
