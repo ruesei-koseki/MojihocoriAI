@@ -114,13 +114,6 @@ messages = []
 prevTime = time.time()
 
 
-if len(blob.DATA.data["sentence"]) >= 3500:
-    mode = 2
-    yet = False
-else:
-    mode = 1
-    yet = True
-
 print("mode: {}".format(mode))
 print("yet: {}".format(yet))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
