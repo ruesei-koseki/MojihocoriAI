@@ -423,7 +423,7 @@ def onMessage(user, message, channel, a):
         xx = re.split('\n', message)
         for x in xx:
             if bool(re.search("(.+): (.+)", x)):
-                blob.MEMORY.addSentence(x.split(": ")[1], x.split(": ")[0])
+                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
                 ff = True
         if ff:
             return
