@@ -57,7 +57,7 @@ class IRC(object):
 
 
             msg_buf = self.server.recv(BUF_SIZE) #受信
-            msg_buf = msg_buf.decode('utf-8', 'ignore').strip()
+            msg_buf = msg_buf.decode('utf-8').strip()
             print(msg_buf)
             ## ここからメッセージ処理 ##
             prefix = None
@@ -65,7 +65,7 @@ class IRC(object):
                 p = msg_buf.find(" ")
                 prefix = msg_buf[1:p]
                 msg_buf = msg_buf[(p + 1):]
-
+            
             p = msg_buf.find(":")
             if p != -1: #":"から始まるパラメータがまだあった場合
                 last_param = msg_buf[(p + 1):]
@@ -79,7 +79,6 @@ class IRC(object):
             params = messages[1:] #今回は無視
 
             if command == "PING":
-                print(last_param)
                 self.pong(last_param) #PINGが来たらすぐPONGを返す
             elif command == "PRIVMSG":
                 text = last_param #PRIVMSGコマンドで送られてきたメッセージ
@@ -87,9 +86,9 @@ class IRC(object):
                 func(prefix.split("!")[0], text.split("\n")[0], params[0], "PRIVMSG")
             elif command == "INVITE":
                 if params[0] == self.nickname:
-                    func(prefix.split("!")[0], last_param, "invite", "INVITE")
+                    func(prefix.split("!")[0], params[1], "invite", "INVITE")
             elif command == "TOPIC":
-                func(prefix.split("!")[0], last_param, params[0], "TOPIC")
+                func(prefix.split("!")[0], params[1], params[0], "TOPIC")
 
 
 
@@ -296,7 +295,7 @@ cronThread1.start()
 
 ##########################################
 
-
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -347,6 +346,7 @@ def listen():
                     blob.receive(into, "あなた")
                     lastUsername = "あなた"
                     messages.append([into, "あなた"])
+                    
 
 
 
@@ -359,7 +359,7 @@ def listen():
 
 cronThread2 = threading.Thread(target=listen, daemon=True)
 cronThread2.start()
-
+"""
 
 
 
