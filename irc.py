@@ -108,9 +108,10 @@ blob.initialize(sys.argv[1], "irc")
 persons = [[blob.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
-lastMessage = None
+lastUsername = None
 messages = []
 prevTime = time.time()
+
 
 
 mode = 2
