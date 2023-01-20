@@ -253,18 +253,17 @@ def cron():
                 if blob.DATA.settings["myname"] not in pss:
                     persons.append([blob.DATA.settings["myname"], 0])
 
-                if channel != None and lastMessage != []:
-                    if mode == 2:
-                        blob.receive("!command ignore", lastUsername, add=add)
-                        if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (blob.DATA.myVoice != None and random.random() < 0.35):
-                                result = blob.speakFreely()
-                                if result == None:
-                                    messages = []
-                                else:
-                                    speak(result)
-                                    messages = []
-                    if mode == 1:
-                        blob.receive("!command ignore", lastUsername, add=add)
+                if mode == 2:
+                    blob.receive("!command ignore", lastUsername, add=add)
+                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (blob.DATA.myVoice != None and random.random() < 0.35):
+                            result = blob.speakFreely()
+                            if result == None:
+                                messages = []
+                            else:
+                                speak(result)
+                                messages = []
+                if mode == 1:
+                    blob.receive("!command ignore", lastUsername, add=add)
                 prevTime = time.time()
         except:
             import traceback
