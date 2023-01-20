@@ -204,7 +204,7 @@ def cron():
                             if result == None:
                                 pass
                             else:
-                                await speak(result)
+                                speak(result)
             elif mode == 2:
                 if len(messages) != 0 and lastMessage != None:
                     i = 0
@@ -223,7 +223,7 @@ def cron():
                         if result == None:
                             pass
                         else:
-                            await speak(result)
+                            speak(result)
             elif len(messages) != 0:
                 i = 0
                 
