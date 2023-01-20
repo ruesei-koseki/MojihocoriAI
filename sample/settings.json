@@ -9,6 +9,11 @@
     ],
     "myname": "sanae",
     "mynames": "sanae|Sanae|早苗",
+    "irc":{
+        "host": "localhost",
+        "port": 6667,
+        "defaultChannel": "#博麗神社"
+    },
     "discToken": "TOKEN",
     "voice": 2,
     "language": "ja",
