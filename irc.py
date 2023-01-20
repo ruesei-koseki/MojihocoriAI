@@ -197,18 +197,17 @@ def cron():
         try:
             if mode == 1:
                 if len(messages) != 0:
+                    i = 0
                     if blob.DATA.myVoice != None:
                         if bool(re.search(blob.DATA.settings["mynames"], messages[-1][0])):
                             result = blob.speakFreely()
                             if result == None:
-                                messages = []
+                                pass
                             else:
-                                speak(result)
-                                messages = []
-
+                                await speak(result)
             elif mode == 2:
                 if len(messages) != 0 and lastMessage != None:
-
+                    i = 0
                     pss = []
                     for ps in persons:
                         pss.append(ps[0])
@@ -220,14 +219,13 @@ def cron():
                             aaa = aaa + person[0] + "|"
                     aaa = aaa[0:-1]
                     if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-1) == 0 and blob.DATA.myVoice != None):
-
                         result = blob.speakFreely()
                         if result == None:
-                            messages = []
+                            pass
                         else:
-                            speak(result)
-                            messages = []
-                    
+                            await speak(result)
+            elif len(messages) != 0:
+                i = 0
                 
 
             nowTime = time.time()
