@@ -1,5 +1,9 @@
 import DATA
 import re
+import random
+from janome.tokenizer import Tokenizer
+t_wakati = Tokenizer(wakati=True)
+
 def isNextOk():
     for iiiii in range(7):
         if DATA.heart+1+iiiii < len(DATA.data["sentence"]) - 1:

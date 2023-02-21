@@ -49,7 +49,7 @@ botに「じっとしてて」というと、チャンネルを動かなくな�
 botに「動いて」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも、学習します。
 
-**また、1000メッセージ学習するまでは寡黙モードでbotが起動します。。**
+**また、12メッセージ学習するまでは寡黙モードでbotが起動します。。**
 """
 
 # 自分のBotのアクセストークンに置き換えてください
@@ -57,7 +57,7 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-if len(blob.DATA.data["sentence"]) >= 1000:
+if len(blob.DATA.data["sentence"]) >= 12:
     mode = 2
     yet = 2
 elif len(blob.DATA.data["sentence"]) >= 10:
@@ -314,7 +314,7 @@ async def cron():
             if mode <= 1:
                 blob.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
-        if len(blob.DATA.data["sentence"]) >= 1000 and yet == 1:
+        if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
             mode = 2
             yet = 2
             print("自分からしゃべれるようになりました")
@@ -347,7 +347,7 @@ def listen():
         
         with mic as source:
             r.adjust_for_ambient_noise(source) #雑音対策
-            audio = r.listen(source, phrase_time_limit=60)
+            audio = r.listen(source)
 
         print ("解析中...")
 
