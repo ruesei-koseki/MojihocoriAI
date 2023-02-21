@@ -1,8 +1,6 @@
 import DATA
 import re
 import random
-from janome.tokenizer import Tokenizer
-t_wakati = Tokenizer(wakati=True)
 
 def isNextOk():
     for iiiii in range(7):
