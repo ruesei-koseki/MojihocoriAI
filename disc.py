@@ -330,7 +330,7 @@ async def cron():
         import traceback
         traceback.print_exc()
 
-
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -396,6 +396,6 @@ def listen():
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
-
+"""
 
 client.run(TOKEN)
