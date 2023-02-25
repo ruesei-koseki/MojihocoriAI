@@ -568,7 +568,7 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "!command ignore" or DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
                                         iii = iiiii
                                         break
