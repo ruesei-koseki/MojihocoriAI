@@ -31,7 +31,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -73,7 +73,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -127,7 +127,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -169,7 +169,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -223,7 +223,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -265,7 +265,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -321,7 +321,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -363,7 +363,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 into = "{}: {}".format(u, x)
-                if Levenshtein.ratio(into,  "{}: {}".formt(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                if Levenshtein.ratio(into,  "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
