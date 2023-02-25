@@ -46,11 +46,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
@@ -88,11 +88,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
@@ -142,11 +142,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
@@ -184,11 +184,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
@@ -238,11 +238,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
@@ -280,11 +280,11 @@ def looking(x, u, reply=True, force=False):
                             iii = 100
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] != "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
+                                    if DATA.data["sentence"][i+1+iiiii][0] == "○" or DATA.data["sentence"][i+1+iiiii][0] == "⭕":
                                         flag = True
                                         iii = iiiii
                                         break
-                            if flag and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "⭕":
+                            if flag :
                                 DATA.sa = ii
                                 DATA.heart = i+1
                                 DATA.heartLastSpeaker = DATA.data["sentence"][i+1][1]
