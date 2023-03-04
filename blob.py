@@ -53,7 +53,7 @@ def initialize(directory, interface_):
 def speakFreely(add=True):
     #自由に話す
     result = DATA.myVoice
-    DATA.lastSentence = result
+    DATA.lastSentenceHeart = result
     DATA.postSpoken = True
     if "!" not in DATA.lastUser:
         DATA.lastUserReplied = DATA.lastUser
@@ -75,13 +75,14 @@ def speakFreely(add=True):
         if add:
             MEMORY.learnSentence(result, "!")
 
+    DATA.lastSentence = result
     return result
 
 def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
-        DATA.lastSentence = result
+        DATA.lastSentenceHeart = result
         DATA.heart += 1
         DATA.postSpoken = True
         if "!" not in DATA.lastUser:
@@ -94,6 +95,7 @@ def speakNext(add=True):
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
             if add:
                 MEMORY.learnSentence(result, "!")
+        DATA.lastSentence = result
         return result
     else:
         return False
@@ -122,7 +124,6 @@ def receive(x, u, add=True, force=False):
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
-        DATA.lastSentence = result
         DATA.maeheart = DATA.heart
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))
