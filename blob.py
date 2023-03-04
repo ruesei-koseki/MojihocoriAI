@@ -74,7 +74,7 @@ def speakFreely(add=True):
         if add:
             MEMORY.learnSentence(result, "!")
 
-
+    DATA.lastSentence = result
     return result
 
 def speakNext(add=True):
@@ -93,6 +93,7 @@ def speakNext(add=True):
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
             if add:
                 MEMORY.learnSentence(result, "!")
+        DATA.lastSentence = result
         return result
     else:
         return False
