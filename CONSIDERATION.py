@@ -11,7 +11,7 @@ def looking(x, u, reply=True, force=False):
     try:
         #print("思考中...")
         """
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -22,6 +22,8 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.7
             if kaisu == 5:
                 rate = 0.6
+            if kaisu == 6:
+                rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
@@ -107,7 +109,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
         """
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -118,6 +120,8 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.7
             if kaisu == 5:
                 rate = 0.6
+            if kaisu == 6:
+                rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
@@ -203,7 +207,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -214,6 +218,8 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.7
             if kaisu == 5:
                 rate = 0.6
+            if kaisu == 6:
+                rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
