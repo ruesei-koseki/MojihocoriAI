@@ -10,7 +10,7 @@ def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
         #print("思考中...")
-
+        """
         for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
@@ -106,7 +106,7 @@ def looking(x, u, reply=True, force=False):
                         return
                 i += 1
                 ii += 1
-
+        """
         for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
