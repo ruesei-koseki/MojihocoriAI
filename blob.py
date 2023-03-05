@@ -108,7 +108,7 @@ def speakNext(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        if len(x) <= 8:
+        if len(x) <= 10:
             MEMORY.learnWord(x)
         DATA.lastSentenceInput = x
         if "!system" not in u:
