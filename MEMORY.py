@@ -26,4 +26,5 @@ def save():
 
 def learnWord(x):
     DATA.data["words"].append([x, [DATA.heart]])
+    print("新しい単語: {}".format(x))
     save()

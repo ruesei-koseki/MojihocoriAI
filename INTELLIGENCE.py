@@ -15,11 +15,11 @@ def isNextOk():
 def replaceWords(x1, x2):
     result = x2
     while True:
-        for beforeWord in random.sample(DATA.data["words"], len(DATA.data["words"])):
-            if beforeWord[0] in x1:
-                for afterWord in random.sample(DATA.data["words"], len(DATA.data["words"])):
-                    if afterWord[0] in x2:
+        for afterWord in random.sample(DATA.data["words"], len(DATA.data["words"])):
+            if afterWord[0] in x1:
+                for beforeWord in random.sample(DATA.data["words"], len(DATA.data["words"])):
+                    if beforeWord[0] in x2:
                         result = result.replace(beforeWord[0], afterWord[0])
-        if random.random() >= 0.5:
+        if random.random() > 0.5:
             break
     return result
