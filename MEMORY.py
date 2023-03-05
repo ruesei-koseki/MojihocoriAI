@@ -25,6 +25,11 @@ def save():
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
 def learnWord(x):
-    DATA.data["words"].append([x, [DATA.heart]])
-    print("新しい単語: {}".format(x))
-    save()
+    a = False
+    for word in DATA.data["words"]:
+        if word[0] == x:
+            a = True
+    if a:
+        DATA.data["words"].append([x, [DATA.heart]])
+        print("新しい単語: {}".format(x))
+        save()
