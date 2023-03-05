@@ -1,7 +1,8 @@
 import DATA
 import INTELLIGENCE
 import json
-import copy
+import random
+
 def learnSentence(x, u):
     #名前置き換え
     if u != "!":
@@ -22,3 +23,7 @@ def save():
             del DATA.data["sentence"][0]
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+
+def learnWord(x):
+    DATA.data["words"].append([x, [DATA.heart]])
+    save()

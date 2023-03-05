@@ -21,7 +21,7 @@ from discord.ext import tasks
 import discord
 import threading
 import asyncio
-import Levenshtein
+from rapidfuzz.distance import Levenshtein
 import datetime
 
 helpMessage = f"""==blobAIヘルプ==
@@ -217,6 +217,11 @@ async def on_message(message):
             if bool(re.search("(.+): (.+)", x)):
                 blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
                 ff = True
+        """
+        for x in xx:
+            if bool(re.search("> (.+)", x)):
+                blob.MEMORY.learnWord(x.replace("> ", "", 1))
+        """
         if ff:
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
@@ -318,12 +323,12 @@ async def cron():
             mode = 2
             yet = 2
             print("自分からしゃべれるようになりました")
-            speak("自分からしゃべれるようになりました")
+            await speak("自分からしゃべれるようになりました")
         if len(blob.DATA.data["sentence"]) >= 10 and yet == 0:
             mode = 1
             yet = 1
             print("しゃべれるようになりました")
-            speak("しゃべれるようになりました")
+            await speak("しゃべれるようになりました")
         else:
             pass
     except:
@@ -355,7 +360,7 @@ def listen():
             into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
             print(into)
 
-            if Levenshtein.ratio(into, blob.DATA.lastSentence) < 0.85:
+            if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
 
 
                 pss = []

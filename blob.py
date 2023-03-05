@@ -48,6 +48,10 @@ def initialize(directory, interface_):
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+    try:
+        DATA.data["words"]
+    except:
+        DATA.data["words"] = []
 
 
 def speakFreely(add=True):
@@ -82,6 +86,7 @@ def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
+        result = INTELLIGENCE.replaceWords(DATA.lastSentenceInput, result)
         DATA.lastSentenceHeart = result
         DATA.heart += 1
         DATA.postSpoken = True
@@ -103,6 +108,8 @@ def speakNext(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
+        if len(x) <= 5:
+            MEMORY.learnWord(x)
         DATA.lastSentenceInput = x
         if "!system" not in u:
             DATA.lastUser = u
@@ -120,6 +127,7 @@ def receive(x, u, add=True, force=False):
         if result == None:
             DATA.myVoice = None
             return
+        result = INTELLIGENCE.replaceWords(x, result)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.lastSentenceHeart = result
