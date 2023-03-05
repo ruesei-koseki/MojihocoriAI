@@ -29,7 +29,7 @@ def learnWord(x):
     for word in DATA.data["words"]:
         if word[0] == x:
             a = True
-    if a:
+    if not a:
         DATA.data["words"].append([x, [DATA.heart]])
         print("新しい単語: {}".format(x))
         save()
