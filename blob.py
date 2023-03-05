@@ -86,6 +86,8 @@ def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
+        if len(x) <= 10:
+            MEMORY.learnWord(result)
         result = INTELLIGENCE.replaceWords(DATA.lastSentenceInput, result)
         DATA.lastSentenceHeart = result
         DATA.heart += 1
@@ -133,6 +135,8 @@ def receive(x, u, add=True, force=False):
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
         DATA.maeheart = DATA.heart
+        if len(x) <= 10:
+            MEMORY.learnWord(result)
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))
     except:
