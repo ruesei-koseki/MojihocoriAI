@@ -18,5 +18,6 @@ def replaceWords(x1, x2):
         if afterWord[0] in x1:
             for beforeWord in random.sample(DATA.data["words"], len(DATA.data["words"])):
                 if beforeWord[0] in x2:
-                    result = result.replace(beforeWord[0], afterWord[0])
+                    if x1 != x2:
+                        result = result.replace(beforeWord[0], afterWord[0])
     return result
