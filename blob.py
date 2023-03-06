@@ -84,9 +84,6 @@ def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
-        if len(result) <= 10:
-            MEMORY.learnWord(result)
-        result = INTELLIGENCE.replaceWords(DATA.lastSentenceInput, result)
         DATA.lastSentenceHeart = result
         DATA.heart += 1
         if "!" not in DATA.lastUser:
@@ -107,8 +104,6 @@ def speakNext(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        if len(x) <= 10:
-            MEMORY.learnWord(x)
         DATA.lastSentenceInput = x
         if "!system" not in u:
             DATA.lastUser = u
@@ -126,14 +121,11 @@ def receive(x, u, add=True, force=False):
         if result == None:
             DATA.myVoice = None
             return
-        result = INTELLIGENCE.replaceWords(x, result)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
         DATA.maeheart = DATA.heart
-        if len(result) <= 10:
-            MEMORY.learnWord(result)
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))
     except:
