@@ -214,7 +214,7 @@ async def on_message(message):
         ff = False
         xx = re.split('\n', message.content)
         for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
+            if bool(re.search("(.*?): (.*?)", x)):
                 blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
                 ff = True
         """
@@ -260,6 +260,7 @@ async def cron():
                             pass
                         else:
                             await speak(result)
+                        messages = []
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
                 i = 0
@@ -279,11 +280,11 @@ async def cron():
                         pass
                     else:
                         await speak(result)
+                    messages = []
         elif len(messages) != 0:
             i = 0
-        messages = []
         nowTime = time.time()
-        if nowTime >= prevTime + 5:
+        if nowTime >= prevTime + 20:
             print("沈黙を検知")
             if i >= 1:
                 i = -1

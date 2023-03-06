@@ -21,7 +21,6 @@ DATA.maeheart = 0 #一つ前の気持ち
 DATA.interface = 0 #クライアントの種類
 DATA.lastUser = "あんた" #最後に話したユーザー
 DATA.lastUserReplied = "あんた" #最後に返信したユーザー
-DATA.postSpoken = False #自分が喋った直後
 DATA.myVoice = None #心の中の声
 DATA.times = 0
 DATA.sa = 0
@@ -58,7 +57,6 @@ def speakFreely(add=True):
     #自由に話す
     result = DATA.myVoice
     DATA.lastSentenceHeart = result
-    DATA.postSpoken = True
     if "!" not in DATA.lastUser:
         DATA.lastUserReplied = DATA.lastUser
     DATA.userLog.append("!")
@@ -86,12 +84,11 @@ def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
-        if len(x) <= 10:
+        if len(result) <= 10:
             MEMORY.learnWord(result)
         result = INTELLIGENCE.replaceWords(DATA.lastSentenceInput, result)
         DATA.lastSentenceHeart = result
         DATA.heart += 1
-        DATA.postSpoken = True
         if "!" not in DATA.lastUser:
             DATA.lastUserReplied = DATA.lastUser
         DATA.lastSentenceHeart = result
@@ -135,7 +132,7 @@ def receive(x, u, add=True, force=False):
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
         DATA.maeheart = DATA.heart
-        if len(x) <= 10:
+        if len(result) <= 10:
             MEMORY.learnWord(result)
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))
