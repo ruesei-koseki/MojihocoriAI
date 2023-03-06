@@ -20,4 +20,6 @@ def replaceWords(x1, x2):
                 if beforeWord[0] in x2:
                     if result.replace(beforeWord[0], afterWord[0]) != afterWord[0]:
                         result = result.replace(beforeWord[0], afterWord[0])
+                        break
+        break
     return result
