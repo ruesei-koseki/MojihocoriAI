@@ -115,7 +115,7 @@ def receive(x, u, add=True, force=False):
                     MEMORY.learnSentence(xx, u)
             else:
                 MEMORY.learnSentence(x, u)
-        if x == "×" or x == "❌":
+        if x == "×" or x == "☓" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
         result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
