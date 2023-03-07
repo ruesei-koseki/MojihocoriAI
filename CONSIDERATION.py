@@ -141,6 +141,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -181,6 +183,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -233,6 +237,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -273,6 +279,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -325,6 +333,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -365,6 +375,8 @@ def looking(x, u, reply=True, force=False):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!command ignore" or DATA.data["sentence"][i+1+iiiii][0] == "☓" or DATA.data["sentence"][i+1+iiiii][0] == "×" or DATA.data["sentence"][i+1+iiiii][0] == "❌":
                                         flag = False
+                                        if iiiii == 0:
+                                            return "×"
                                         break
                             if flag:
                                 DATA.sa = ii
