@@ -105,7 +105,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
         """
-        for kaisu in range(7):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -113,10 +113,8 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.7
-            if kaisu == 5:
-                rate = 0.6
-            if kaisu == 6:
+                rate = 0.75
+            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
@@ -136,7 +134,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
@@ -176,7 +174,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
@@ -199,7 +197,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -207,10 +205,8 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.7
-            if kaisu == 5:
-                rate = 0.6
-            if kaisu == 6:
+                rate = 0.75
+            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
@@ -230,7 +226,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
@@ -270,7 +266,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
@@ -293,7 +289,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -301,10 +297,8 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 2:
                 rate = 0.8
             if kaisu == 3:
-                rate = 0.7
-            if kaisu == 5:
-                rate = 0.6
-            if kaisu == 6:
+                rate = 0.75
+            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
@@ -324,7 +318,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
@@ -364,7 +358,7 @@ def looking(x, u, reply=True, force=False):
                         for myname in DATA.settings["mynames"].split("|"):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
-                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇":
+                        if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and "!system" not in DATA.data["sentence"][i+1][1] and DATA.data["sentence"][i+1][0] != "☓" and DATA.data["sentence"][i+1][0] != "×" and DATA.data["sentence"][i+1][0] != "❌" and DATA.data["sentence"][i+1][0] != "⭕" and DATA.data["sentence"][i+1][0] != "○" and DATA.data["sentence"][i+1][0] != "〇" and DATA.data["sentence"][i+1][0] != "!command ignore":
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
