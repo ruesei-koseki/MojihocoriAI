@@ -23,13 +23,3 @@ def save():
             del DATA.data["sentence"][0]
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
-
-def learnWord(x):
-    a = False
-    for word in DATA.data["words"]:
-        if word[0] == x:
-            a = True
-    if not a:
-        DATA.data["words"].append([x, [DATA.heart]])
-        print("新しい単語: {}".format(x))
-        save()
