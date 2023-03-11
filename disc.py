@@ -334,8 +334,6 @@ async def cron():
                             messages = []
             if mode <= 1:
                 blob.receive("!command ignore", lastUsername, add=add)
-                if add:
-                    blob.MEMORY.learnSentence("!command ignore", lastUsername)
             prevTime = time.time()
         if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
             mode = 2
