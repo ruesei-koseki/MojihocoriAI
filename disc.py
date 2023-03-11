@@ -13,6 +13,7 @@ persons = [[blob.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
 lastUsername = None
+lastRepliedUserName = None
 messages = []
 prevTime = time.time()
 pin = False
@@ -77,7 +78,7 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 async def speak(result):
-    global channel, persons, prevTime, mode, yet, pin
+    global channel, persons, prevTime, mode, yet, pin, lastRepliedUserName
     try:
         print("{}: {}".format(blob.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
@@ -126,6 +127,8 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
                 restStep = 0
+            lastRepliedUserName = lastUsername
+            blob.MEMORY.learnSentence(Message, lastRepliedUserName)
         prevTime = time.time()
         result = blob.speakNext()
         if result:
@@ -147,7 +150,7 @@ ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
+    global lastRepliedUserName, pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     try:
         if message.channel.id == 1049365514251677807:
             prevTime = time.time()
@@ -164,10 +167,18 @@ async def on_message(message):
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
-                blob.receive("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), username)
+                if lastRepliedUserName != None:
+                    if message.author.name == lastRepliedUserName:
+                        blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), "!")
+                    else:
+                        blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), message.author.name)
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
-                blob.receive("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), username)
+                if lastRepliedUserName != None:
+                    if message.author.name == lastRepliedUserName:
+                        blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), "!")
+                    else:
+                        blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), message.author.name)
             channel = message.channel
             persons = [[blob.DATA.settings["myname"], 0]]
         if message.author == client.user:
@@ -191,22 +202,18 @@ async def on_message(message):
         elif bool(re.search("only for mention mode|寡黙モード|静かに|しずかに", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(1)
             blob.receive("!command setMode {}".format(1), username)
-            blob.MEMORY.learnSentence("!command setMode {}".format(1), "!")
             return
         elif bool(re.search("normal mode|通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(2)
             blob.receive("!command setMode {}".format(2), username)
-            blob.MEMORY.learnSentence("!command setMode {}".format(2), "!")
             return
         elif bool(re.search("pin|じっとしてて|じっとしていて", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = True
             blob.receive("!command pin", username)
-            blob.MEMORY.learnSentence("!command pin", "!")
             return
         elif bool(re.search("unpin|うごいて|動いて", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = False
             blob.receive("!command unpin", username)
-            blob.MEMORY.learnSentence("!command unpin", "!")
             return
         elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
@@ -243,6 +250,12 @@ async def on_message(message):
         lastUsername = username
         prevTime = time.time()
         messages.append([message.content, message.author.name])
+
+        if lastRepliedUserName != None:
+            if message.author.name == lastRepliedUserName:
+                blob.MEMORY.learnSentence(message.content, "!")
+            else:
+                blob.MEMORY.learnSentence(message.content, message.author.name)
 
 i = 0
 add = True
@@ -309,6 +322,8 @@ async def cron():
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
                 blob.receive("!command ignore", lastUsername, add=add)
+                if add:
+                    blob.MEMORY.learnSentence("!command ignore", lastUsername)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
@@ -319,6 +334,8 @@ async def cron():
                             messages = []
             if mode <= 1:
                 blob.receive("!command ignore", lastUsername, add=add)
+                if add:
+                    blob.MEMORY.learnSentence("!command ignore", lastUsername)
             prevTime = time.time()
         if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
             mode = 2
