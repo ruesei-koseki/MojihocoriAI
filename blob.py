@@ -80,6 +80,9 @@ def speakFreely(add=True):
 
 def speakNext(add=True):
     #自由に話す
+    if random.randint(0,4) == 0:
+        DATA.heart = random.randint(0, len(DATA.DATA["sentence"])) 
+        CONSIDERATION.looking(DATA.lastSentenceInput, DATA.lastUser)
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
         DATA.lastSentenceHeart = result
@@ -99,6 +102,8 @@ def speakNext(add=True):
 
 def receive(x, u, add=True, force=False):
     try:
+        if random.randint(0,4) == 0:
+            DATA.heart = random.randint(0, len(DATA.DATA["sentence"])) 
         if x == None or u == None: return
         DATA.lastSentenceInput = x
         if "!system" not in u:
