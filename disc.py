@@ -12,7 +12,7 @@ else:
 persons = [[blob.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
-lastUsername = None
+lastUsername = "誰か"
 lastRepliedUserName = None
 messages = []
 prevTime = time.time()
@@ -127,8 +127,6 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
                 restStep = 0
-            lastRepliedUserName = lastUsername
-            blob.MEMORY.learnSentence(Message, lastRepliedUserName)
         prevTime = time.time()
         result = blob.speakNext()
         if result:
@@ -251,12 +249,6 @@ async def on_message(message):
         prevTime = time.time()
         messages.append([message.content, message.author.name])
 
-        if lastRepliedUserName != None:
-            if message.author.name == lastRepliedUserName:
-                blob.MEMORY.learnSentence(message.content, "!")
-            else:
-                blob.MEMORY.learnSentence(message.content, message.author.name)
-
 i = 0
 add = True
 @tasks.loop(seconds=1)
@@ -297,7 +289,7 @@ async def cron():
         elif len(messages) != 0:
             i = 0
         nowTime = time.time()
-        if nowTime >= prevTime + 20:
+        if nowTime >= prevTime + 6:
             print("沈黙を検知")
             if i >= 1:
                 i = -1
@@ -322,8 +314,6 @@ async def cron():
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
                 blob.receive("!command ignore", lastUsername, add=add)
-                if add:
-                    blob.MEMORY.learnSentence("!command ignore", lastUsername)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
