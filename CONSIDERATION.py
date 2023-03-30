@@ -11,7 +11,7 @@ def looking(x, u, reply=True, force=False):
     try:
         print("思考中...")
 
-        for kaisu in range(7):
+        for kaisu in range(10):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -25,7 +25,13 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
-                rate = 0.0
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
@@ -111,7 +117,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(10):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -125,7 +131,13 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
-                rate = 0.0
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
@@ -211,8 +223,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-
-        for kaisu in range(7):
+        for kaisu in range(10):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -226,7 +237,13 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
-                rate = 0.0
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
