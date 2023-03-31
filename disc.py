@@ -289,7 +289,7 @@ async def cron():
         elif len(messages) != 0:
             i = 0
         nowTime = time.time()
-        if nowTime >= prevTime + 6:
+        if nowTime >= prevTime + 20:
             print("沈黙を検知")
             if i >= 1:
                 i = -1
