@@ -13,7 +13,6 @@ persons = [[blob.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
 lastUsername = "誰か"
-lastRepliedUserName = None
 messages = []
 prevTime = time.time()
 pin = False
@@ -78,7 +77,8 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 async def speak(result):
-    global channel, persons, prevTime, mode, yet, pin, lastRepliedUserName
+    global channel, persons, prevTime, mode, yet, pin
+    global lastMessage, prevTime, messages
     try:
         print("{}: {}".format(blob.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
@@ -103,6 +103,9 @@ async def speak(result):
                             print("チャンネルを移動しました: DM")
                     else:
                         blob.receive("エラー: あなたは固定されています。", "!system")
+                        lastMessage = ["エラー: あなたは固定されています。", "!system"]
+                        messages.append(["エラー: あなたは固定されています。", "!system"])
+                        prevTime = time.time()
                         print("エラー: あなたは固定されています。")
                 elif com[1] == "ignore":
                     pass
@@ -132,23 +135,30 @@ async def speak(result):
         if result:
             await speak(result)
     except:
-        print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
+        lastMessage = ["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"]
+        messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
+        prevTime = time.time()
+        print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
 
 # 起動時に動作する処理
 @client.event
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
+    global lastMessage, prevTime, messages
     print('ログインしました')
     cron.start()
     blob.receive("通知: 貴方は目を覚ましました。", "!system")
+    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
+    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
+    prevTime = time.time()
     print("通知: 貴方は目を覚ましました。")
 
 ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global lastRepliedUserName, pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
+    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     try:
         if message.channel.id == 1049365514251677807:
             prevTime = time.time()
@@ -165,18 +175,10 @@ async def on_message(message):
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
-                if lastRepliedUserName != None:
-                    if message.author.name == lastRepliedUserName:
-                        blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), "!")
-                    else:
-                        blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), message.author.name)
+                blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), "!")
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
-                if lastRepliedUserName != None:
-                    if message.author.name == lastRepliedUserName:
-                        blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), "!")
-                    else:
-                        blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), message.author.name)
+                blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), "!")
             channel = message.channel
             persons = [[blob.DATA.settings["myname"], 0]]
         if message.author == client.user:
