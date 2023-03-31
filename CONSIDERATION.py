@@ -40,8 +40,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -82,8 +82,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -146,8 +146,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -188,8 +188,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -252,8 +252,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
@@ -294,8 +294,8 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                into = "{}: {}".format(u, x)
-                if Levenshtein.normalized_similarity(into, "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
+                into = x
+                if Levenshtein.normalized_similarity(into,  DATA.data["sentence"][i][0]) >= rate:
                     #print("類似: {}, {}".format(DATA.data["sentence"][i][0], i))
                     if i+1>= len(DATA.data["sentence"]):
                         break
