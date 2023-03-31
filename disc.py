@@ -140,9 +140,9 @@ async def speak(result):
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
     print('ログインしました')
-    game = discord.Game(f'ヘルプ: 「{blob.DATA.settings["myname"]}、ヘルプを表示して」')
-    await client.change_presence(status=discord.Status.online, activity=game)
     cron.start()
+    blob.receive("通知: 貴方は目を覚ましました。", "!system")
+    print("通知: 貴方は目を覚ましました。")
 
 ii = 0
 # メッセージ受信時に動作する処理

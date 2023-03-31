@@ -14,7 +14,6 @@ def learnSentence(x, u):
         DATA.data["sentence"].append([x, "!"])
     else:
         DATA.data["sentence"].append([x, u])
-    
     save()
 
 def save():
