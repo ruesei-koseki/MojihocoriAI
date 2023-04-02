@@ -98,9 +98,6 @@ async def speak(result):
                             print("チャンネルを移動しました: DM")
                     else:
                         blob.receive("エラー: あなたは固定されています。", "!system")
-                        lastMessage = ["エラー: あなたは固定されています。", "!system"]
-                        messages.append(["エラー: あなたは固定されています。", "!system"])
-                        prevTime = time.time()
                         print("エラー: あなたは固定されています。")
                 elif com[1] == "ignore":
                     pass
@@ -131,9 +128,6 @@ async def speak(result):
             await speak(result)
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
-        lastMessage = ["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"]
-        messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
-        prevTime = time.time()
         print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
 
 # 起動時に動作する処理
@@ -144,9 +138,6 @@ async def on_ready():
     print('ログインしました')
     cron.start()
     blob.receive("通知: 貴方は目を覚ましました。", "!system")
-    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
-    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
-    prevTime = time.time()
     print("通知: 貴方は目を覚ましました。")
 
 ii = 0
