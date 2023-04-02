@@ -5,10 +5,20 @@ import random
 
 def learnSentence(x, u):
     #名前置き換え
-    if u != "!":
-        x = x.replace(u, "[I]")
-    for myname in DATA.settings["mynames"].split("|"):
-        x = x.replace(myname, "[YOU]")
+    if u == "!input":
+        for myname in DATA.settings["mynames"].split("|"):
+            x = x.replace(myname, "[YOU]")
+    elif u == "!output":
+        for myname in DATA.settings["mynames"].split("|"):
+            x = x.replace(myname, "[I]")
+    elif u != "!":
+        x = x.replace(DATA.lastUser, "[I]")
+        for myname in DATA.settings["mynames"].split("|"):
+            x = x.replace(myname, "[YOU]")
+    else:
+        for myname in DATA.settings["mynames"].split("|"):
+            x = x.replace(myname, "[I]")
+        x = x.replace(DATA.lastUser, "[YOU]")
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
         DATA.data["sentence"].append([x, "!"])

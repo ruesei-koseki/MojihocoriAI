@@ -31,13 +31,11 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 メンションでは呼べません。
 
 =学習方法=
-チャットのメッセージからも学習しますが、コマンドでの学習のほうが効力が強いです。
+チャットのメッセージからも学習しますが、コマンドでの学習のほうが便利です。
 ```
-哲学ユートピア: {blob.DATA.settings["mynames"].split("|")[0]}、おいで
-{blob.DATA.settings["mynames"].split("|")[0]}: どうしましたか？
-哲学ユートピア: ただよんだだけ
-{blob.DATA.settings["mynames"].split("|")[0]}: そうなのかい
+さとみちゃん！ぎゅー！===ちょっと[YOU]！えっち！
 ```
+[YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
 
 =強化学習=
 「×」「❌」とメッセージを送ると、「このメッセージは悪い」と教えることができます。
@@ -47,10 +45,7 @@ botに「静かにして」というと「寡黙モード」になり、メッ�
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
 botに「じっとしてて」というと、チャンネルを動かなくなります。
 botに「動いて」というと、チャンネルを動けるようになります。
-これらのコマンドのタイミングも、学習します。
-
-**また、12メッセージ学習するまでは寡黙モードでbotが起動します。。**
-"""
+これらのコマンドのタイミングも学習します。"""
 
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = blob.DATA.settings["discToken"]
@@ -159,16 +154,13 @@ ii = 0
 @client.event
 async def on_message(message):
     global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
-    try:
-        if message.channel.id == 1049365514251677807:
-            prevTime = time.time()
-            if bool(re.search("> (.+)", message.content)):
-                blob.MEMORY.learnSentence(message.content.replace("> ", ""), message.author.name)
-            else:
-                blob.MEMORY.learnSentence(message.content, blob.DATA.settings["myname"])
-            return
-    except:
-        pass
+    ff = False
+    if bool(re.search("(.*?)===(.*?)", message.content)):
+        blob.MEMORY.learnSentence(message.content.split("===")[0], "!input")
+        blob.MEMORY.learnSentence(message.content.split("===")[1], "!output")
+        ff = True
+    if ff:
+        return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
         username = message.author.name.split("#")[0]
@@ -217,19 +209,6 @@ async def on_message(message):
             return
         elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
-            return
-        ff = False
-        xx = re.split('\n', message.content)
-        for x in xx:
-            if bool(re.search("(.*?): (.*?)", x)):
-                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
-                ff = True
-        """
-        for x in xx:
-            if bool(re.search("> (.+)", x)):
-                blob.MEMORY.learnWord(x.replace("> ", "", 1))
-        """
-        if ff:
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
