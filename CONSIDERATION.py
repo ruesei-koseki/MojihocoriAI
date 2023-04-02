@@ -11,7 +11,7 @@ def looking(x, u, reply=True, force=False):
     try:
         print("思考中: {}".format(x))
 
-        for kaisu in range(6):
+        for kaisu in range(4):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -20,10 +20,6 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.8
             if kaisu == 3:
                 rate = 0.7
-            if kaisu == 4:
-                rate = 0.65
-            if kaisu == 5:
-                rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
             t = len(DATA.data["sentence"]) - 1
@@ -109,7 +105,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(11):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -123,6 +119,14 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
+            if kaisu == 10:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
@@ -209,7 +213,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(11):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -223,6 +227,14 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
+            if kaisu == 10:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
@@ -309,7 +321,7 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(7):
+        for kaisu in range(11):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -323,6 +335,14 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 5:
                 rate = 0.5
             if kaisu == 6:
+                rate = 0.4
+            if kaisu == 7:
+                rate = 0.3
+            if kaisu == 8:
+                rate = 0.2
+            if kaisu == 9:
+                rate = 0.1
+            if kaisu == 10:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart+1
