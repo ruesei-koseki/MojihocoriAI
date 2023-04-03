@@ -146,10 +146,12 @@ ii = 0
 async def on_message(message):
     global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     ff = False
-    if bool(re.search("(.*?)===(.*?)", message.content)):
-        blob.MEMORY.learnSentence(message.content.split("===")[0], "!input")
-        blob.MEMORY.learnSentence(message.content.split("===")[1], "!output")
-        ff = True
+    parts = message.content.split("\n")
+    for part in parts:
+        if bool(re.search("(.*?)===(.*?)", part)):
+            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
+            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
+            ff = True
     if ff:
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
