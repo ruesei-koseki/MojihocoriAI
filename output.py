@@ -9,4 +9,4 @@ else:
 data = []
 with open(sys.argv[2], "w", encoding="utf-8") as f:
     for sentence in blob.DATA.data["sentence"]:
-        f.write("{}, {}\n".format(sentence[1], sentence[0].replace("\n", "-br")))
+        f.write("{},{}\n".format(sentence[1], sentence[0].replace("\n", "-br")))
