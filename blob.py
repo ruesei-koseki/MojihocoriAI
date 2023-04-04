@@ -53,7 +53,7 @@ def initialize(directory, interface_):
         DATA.data["words"] = []
 
 
-def speakFreely(add=True):
+def speakFreely():
     #自由に話す
     result = DATA.myVoice
     DATA.lastSentenceHeart = result
@@ -74,13 +74,11 @@ def speakFreely(add=True):
                     result += rslt + "\n"
                 i += 1
         """
-        if add:
-            MEMORY.learnSentence(result, "!")
 
     DATA.lastSentence = result
     return result
 
-def speakNext(add=True):
+def speakNext():
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
@@ -94,14 +92,12 @@ def speakNext(add=True):
         if result != None:
             result = result.replace("[YOU]", DATA.lastUser)
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-            if add:
-                MEMORY.learnSentence(result, "!")
         DATA.lastSentence = result
         return result
     else:
         return False
 
-def receive(x, u, add=True, force=False):
+def receive(x, u, force=False):
     try:
         if x == None or u == None: return
         #名前置き換え
@@ -118,12 +114,6 @@ def receive(x, u, add=True, force=False):
             DATA.lastUser = u
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
-        if add:
-            if x.count("\n") >= 1:
-                for xx in x.split("\n"):
-                    MEMORY.learnSentence(xx, u)
-            else:
-                MEMORY.learnSentence(x, u)
         if x == "×" or x == "☓" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
         if x.count("\n") >= 1:
