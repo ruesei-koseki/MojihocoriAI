@@ -99,19 +99,8 @@ def receive(x, u, force=False):
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
         if x.count("\n") >= 1:
             result = ""
-            i = 0
             for xx in x.split("\n"):
-                y = CONSIDERATION.looking(xx, u, force=force)
-                if y != None:
-                    if x.count("\n") == i:
-                        result += y
-                    else:
-                        result += y + "\n"
-                i += 1
-            if result == "":
-                result = None
-            else:
-                result = result.replace("\n\n", "\n")[:-1]
+                result = CONSIDERATION.looking(xx, u, force=force)
         else:
             result = CONSIDERATION.looking(x, u, force=force)
         if result == None:

@@ -49,7 +49,7 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-mode = 2
+mode = 3
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -111,8 +111,8 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
         if mode == 3:
-            draft = "出力ドラフト: {}".format(result)
-            for i in range(random.randint(0,6)):
+            draft = "入力: {}\n出力ドラフト: {}".format(lastMessage, result)
+            for i in range(random.randint(0,4)):
                 blob.receive(draft, "!system")
                 result = blob.speakFreely()
                 async with channel.typing():
@@ -121,7 +121,7 @@ async def speak(result):
                     else:
                         await asyncio.sleep(1)
                     await channel.send(result)
-                draft = "出力ドラフト: {}".format(result)
+                draft += "\n"+result
             draft = ""
         prevTime = time.time()
     except:
@@ -151,12 +151,12 @@ async def on_message(message):
             learnMemory = ""
             blob.MEMORY.learnSentence(part.split("===")[0], "!input")
             blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-            learnMemory = "出力ドラフト: {}".format(part.split("===")[1])
+            learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], part.split("===")[1])
             ff = True
         if bool(re.search("\+==(.*?)", part)):
             blob.MEMORY.learnSentence(learnMemory, "!input")
             blob.MEMORY.learnSentence(part.replace("+==", ""), "!output")
-            learnMemory = "出力ドラフト: {}".format(part.replace("+==", ""))
+            learnMemory += "\n" + part.replace("+==", "")
             ff = True
     learnMemory = ""
     if ff:
