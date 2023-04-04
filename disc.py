@@ -112,7 +112,7 @@ async def speak(result):
                 await channel.send(Message)
         if mode == 3:
             draft = "入力: {}\n出力ドラフト: {}".format(lastMessage, result)
-            for i in range(random.randint(0,4)):
+            for i in range(random.randint(0,7)):
                 blob.receive(draft, "!system")
                 result = blob.speakFreely()
                 async with channel.typing():
