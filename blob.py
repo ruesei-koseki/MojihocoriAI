@@ -132,7 +132,7 @@ def receive(x, u, add=True, force=False):
             for xx in x.split("\n"):
                 y = CONSIDERATION.looking(xx, u, force=force)
                 if y != None:
-                    if x.count("\n") - 1 == i:
+                    if x.count("\n") == i:
                         result += y
                     else:
                         result += y + "\n"
