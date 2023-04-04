@@ -111,8 +111,8 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
         if mode == 3:
-            draft = "入力: {}\n出力ドラフト: {}".format(lastMessage, result)
-            for i in range(random.randint(0,10)):
+            draft = "出力ドラフト: {}".format(result)
+            for i in range(random.randint(0,6)):
                 blob.receive(draft, "!system")
                 result = blob.speakFreely()
                 async with channel.typing():
@@ -121,7 +121,7 @@ async def speak(result):
                     else:
                         await asyncio.sleep(1)
                     await channel.send(result)
-                draft += "\n"+result
+                draft = "出力ドラフト: {}".format(result)
             draft = ""
         prevTime = time.time()
     except:
@@ -151,12 +151,12 @@ async def on_message(message):
             learnMemory = ""
             blob.MEMORY.learnSentence(part.split("===")[0], "!input")
             blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-            learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], part.split("===")[1])
+            learnMemory = "出力ドラフト: {}".format(part.split("===")[1])
             ff = True
         if bool(re.search("\+==(.*?)", part)):
             blob.MEMORY.learnSentence(learnMemory, "!input")
             blob.MEMORY.learnSentence(part.replace("+==", ""), "!output")
-            learnMemory += "\n" + part.replace("+==", "")
+            learnMemory = "出力ドラフト: {}".format(part.replace("+==", ""))
             ff = True
     learnMemory = ""
     if ff:

@@ -111,7 +111,7 @@ def receive(x, u, force=False):
             if result == "":
                 result = None
             else:
-                result = result.replace("\n\n", "\n")
+                result = result.replace("\n\n", "\n")[:-1]
         else:
             result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
