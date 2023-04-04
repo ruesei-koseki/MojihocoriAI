@@ -133,9 +133,9 @@ def receive(x, u, add=True, force=False):
                 y = CONSIDERATION.looking(xx, u, force=force)
                 if y != None:
                     if x.count("\n") - 1 == i:
-                        result += y + "\n"
-                    else:
                         result += y
+                    else:
+                        result += y + "\n"
                 i += 1
             if result == "":
                 result = None
