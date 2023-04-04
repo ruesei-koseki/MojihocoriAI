@@ -154,6 +154,13 @@ async def on_message(message):
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
         username = message.author.name.split("#")[0]
+        if message.channel != channel:
+            try:
+                print("チャンネルを移動しました: {}".format(message.channel.name))
+            except:
+                print("チャンネルを移動しました: {}のDM".format(username))
+            channel = message.channel
+            persons = [[blob.DATA.settings["myname"], 0]]
         if message.author == client.user:
             return
         pss = []
