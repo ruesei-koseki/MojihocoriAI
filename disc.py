@@ -34,6 +34,8 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 以下のコマンドで学習します。
 ```
 さとみちゃん！ぎゅー！===ちょっと[YOU]！えっち！
++==そんなことほかの子にしたら嫌われるよ？
++==私は...いいけどね...//
 ```
 [YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
 
@@ -307,7 +309,7 @@ async def cron():
                 pss.append(ps[0])
             if blob.DATA.settings["myname"] not in pss:
                 persons.append([blob.DATA.settings["myname"], 0])
-            if mode == 2:
+            if mode == 2 or mode == 3:
                 blob.receive("!command ignore", lastUsername)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
