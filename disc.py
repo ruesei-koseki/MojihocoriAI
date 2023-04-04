@@ -112,9 +112,11 @@ async def speak(result):
                 await channel.send(Message)
         if mode == 3:
             draft = "入力: {}\n出力ドラフト: {}".format(lastMessage, result)
-            for i in range(random.randint(0,7)):
+            for i in range(random.randint(0,19)):
                 blob.receive(draft, "!system")
                 result = blob.speakFreely()
+                if result == "EOS":
+                    break
                 async with channel.typing():
                     if len(result) / (mode * 3) <= 1:
                         await asyncio.sleep(len(result) / (mode * 3))
@@ -148,6 +150,8 @@ async def on_message(message):
     parts = message.content.split("\n")
     for part in parts:
         if bool(re.search("(.*?)===(.*?)", part)):
+            if learnMemory != "":
+                blob.MEMORY.learnSentence("EOS", "!output")
             learnMemory = ""
             blob.MEMORY.learnSentence(part.split("===")[0], "!input")
             blob.MEMORY.learnSentence(part.split("===")[1], "!output")
@@ -158,6 +162,8 @@ async def on_message(message):
             blob.MEMORY.learnSentence(part.replace("+==", ""), "!output")
             learnMemory += "\n" + part.replace("+==", "")
             ff = True
+    if len(parts) >= 2:
+        blob.MEMORY.learnSentence("EOS", "!output")
     learnMemory = ""
     if ff:
         return
