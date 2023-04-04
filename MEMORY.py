@@ -20,8 +20,12 @@ def learnSentence(x, u):
             x = x.replace(myname, "[I]")
         x = x.replace(DATA.lastUser, "[YOU]")
     #言葉を脳に記録する
-    if u in DATA.settings["mynames"].split("|"):
-        DATA.data["sentence"].append([x, "!"])
+    if x.count("\n") >= 1:
+        for xx in x.split("\n"):
+            if u in DATA.settings["mynames"].split("|"):
+                DATA.data["sentence"].append([xx, "!"])
+            else:
+                DATA.data["sentence"].append([xx, u])
     else:
         DATA.data["sentence"].append([x, u])
     save()
