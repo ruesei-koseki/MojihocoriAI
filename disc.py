@@ -375,12 +375,12 @@ def listen():
             pass
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
-"""
+
 
 
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
-
+"""
 
 client.run(TOKEN)
