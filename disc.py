@@ -64,6 +64,10 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
+        if result == "EOS":
+            while result == "EOS":
+                result = blob.receive(lastMessage[0], lastMessage[1])
+                result = blob.speakFreely()
         print("{}: {}".format(blob.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
         pattern = re.compile(r"^[!/]command")
@@ -151,6 +155,7 @@ async def on_message(message):
     for part in parts:
         if bool(re.search("(.*?)===(.*?)", part)):
             if learnMemory != "":
+                blob.MEMORY.learnSentence(learnMemory, "!input")
                 blob.MEMORY.learnSentence("EOS", "!output")
             learnMemory = ""
             blob.MEMORY.learnSentence(part.split("===")[0], "!input")
@@ -163,6 +168,7 @@ async def on_message(message):
             learnMemory += "\n" + part.replace("+==", "")
             ff = True
     if len(parts) >= 2:
+        blob.MEMORY.learnSentence(learnMemory, "!input")
         blob.MEMORY.learnSentence("EOS", "!output")
     learnMemory = ""
     if ff:
