@@ -44,6 +44,7 @@ botに「静かにして」というと「寡黙モード」になり、メッ�
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
 botに「じっとしてて」というと、チャンネルを動かなくなります。
 botに「動いて」というと、チャンネルを動けるようになります。
+botに「アドバイスモード」というと、ChatGPTのような動作をするようになります。
 """
 
 # 自分のBotのアクセストークンに置き換えてください
@@ -145,6 +146,8 @@ async def on_ready():
     cron.start()
     blob.receive("通知: 貴方は目を覚ましました。", "!system")
     print("通知: 貴方は目を覚ましました。")
+    game = discord.Game(f'ヘルプ: 「{blob.DATA.settings["myname"]}、ヘルプを表示して」')
+    await client.change_presence(status=discord.Status.online, activity=game)
 
 ii = 0
 learnMemory = ""
