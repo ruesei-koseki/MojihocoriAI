@@ -309,7 +309,7 @@ async def cron():
                 pss.append(ps[0])
             if blob.DATA.settings["myname"] not in pss:
                 persons.append([blob.DATA.settings["myname"], 0])
-            if mode == 2 or mode == 3:
+            if mode == 2:
                 blob.receive("!command ignore", lastUsername)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
