@@ -44,7 +44,6 @@ botに「静かにして」というと「寡黙モード」になり、メッ�
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
 botに「じっとしてて」というと、チャンネルを動かなくなります。
 botに「動いて」というと、チャンネルを動けるようになります。
-botに「アドバイスモード」というと、ChatGPTのような動作をするようになります。
 """
 
 # 自分のBotのアクセストークンに置き換えてください
@@ -52,7 +51,7 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-mode = 3
+mode = 2
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -176,10 +175,6 @@ async def on_message(message):
             setMode(2)
             blob.receive("!command setMode {}".format(2), username)
             return
-        elif bool(re.search("advice mode|アドバイスモード|アドバイスして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
-            setMode(3)
-            blob.receive("!command setMode {}".format(2), username)
-            return
         elif bool(re.search("pin|じっとしてて|じっとしていて", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = True
             blob.receive("!command pin", username)
@@ -228,7 +223,7 @@ async def cron():
                         else:
                             await speak(result)
                         messages = []
-        elif mode == 2 or mode == 3:
+        elif mode == 2 :
             if len(messages) != 0 and lastMessage != None:
                 i = 0
                 pss = []
