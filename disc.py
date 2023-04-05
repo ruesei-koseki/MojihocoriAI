@@ -70,7 +70,7 @@ async def speak(result):
         print("users: {}".format(persons))
         draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
         Message = result
-        for i in range(random.randint(0, 2500)):
+        for i in range(random.randint(0, 100000)):
             blob.receive(draft, "!system")
             result = blob.speakFreely()
             if result == "EOS":
