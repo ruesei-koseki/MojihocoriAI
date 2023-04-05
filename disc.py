@@ -67,71 +67,19 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
-        if result == "EOS":
-            while result == "EOS":
-                result = blob.receive(lastMessage[0], lastMessage[1])
-                result = blob.speakFreely()
         print("{}: {}".format(blob.DATA.settings["myname"], result))
-        #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
-        pattern = re.compile(r"^[!/]command")
         print("users: {}".format(persons))
-        results = result.split("\n")
-
-        Message = ""
-        for result in results:
-            if bool(pattern.search(result)):
-                com = result.split(" ")
-                if com[1] == "discMove" and not pin:
-                    if client.get_channel(int(com[2])) != None:
-                        try:
-                            channel = client.get_channel(int(com[2]))
-                        except:
-                            print("チャンネルが存在しません")
-                        persons = [[blob.DATA.settings["myname"], 0]]
-                        try:
-                            print("チャンネルを移動しました: {}".format(channel.name))
-                        except:
-                            print("チャンネルを移動しました: DM")
-                    else:
-                        blob.receive("エラー: あなたは固定されています。", "!system")
-                        print("エラー: あなたは固定されています。")
-                elif com[1] == "ignore":
-                    pass
-                elif com[1] == "setMode":
-                    setMode(int(com[2]))
-                elif com[1] == "saveMyData":
-                    blob.MEMORY.save()
-                elif com[1] == "pin":
-                    pin = True
-                elif com[1] == "unpin":
-                    pin = False
-                elif com[1] == "saveMyData":
-                    blob.MEMORY.save()
-            else:
-                Message += result + "\n"
-        Message = Message[:-1]
-        if Message != "":
-            async with channel.typing():
-                if len(Message) / (mode * 3) <= 1:
-                    await asyncio.sleep(len(Message) / (mode * 3))
-                else:
-                    await asyncio.sleep(1)
-                await channel.send(Message)
-        if mode == 3:
-            draft = "入力: {}\n出力ドラフト: {}".format(lastMessage, result)
-            for i in range(random.randint(0,19)):
-                blob.receive(draft, "!system")
-                result = blob.speakFreely()
-                if result == "EOS":
-                    break
-                async with channel.typing():
-                    if len(result) / (mode * 3) <= 1:
-                        await asyncio.sleep(len(result) / (mode * 3))
-                    else:
-                        await asyncio.sleep(1)
-                    await channel.send(result)
-                draft += "\n"+result
-            draft = ""
+        draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
+        Message = result
+        for i in range(random.randint(0, 2500)):
+            blob.receive(draft, "!system")
+            result = blob.speakFreely()
+            if result == "EOS":
+                break
+            Message += result
+            draft += result
+        draft = ""
+        await channel.send(Message)
         prevTime = time.time()
     except:
         import traceback
@@ -162,21 +110,35 @@ async def on_message(message):
             if learnMemory != "":
                 blob.MEMORY.learnSentence(learnMemory, "!input")
                 blob.MEMORY.learnSentence("EOS", "!output")
-            learnMemory = ""
+                learnMemory = ""
             blob.MEMORY.learnSentence(part.split("===")[0], "!input")
-            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-            learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], part.split("===")[1])
-            ff = True
-        if bool(re.search("\+==(.*?)", part)):
+            i = 0
+            for letter in part.split("===")[1]:
+                if i != 0:
+                    blob.MEMORY.learnSentence(learnMemory, "!input")
+                    blob.MEMORY.learnSentence(letter, "!output")
+                    learnMemory += letter
+                else:
+                    blob.MEMORY.learnSentence(letter, "!output")
+                    learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], letter)
+                i += 1
             blob.MEMORY.learnSentence(learnMemory, "!input")
-            blob.MEMORY.learnSentence(part.replace("+==", ""), "!output")
-            learnMemory += "\n" + part.replace("+==", "")
+            blob.MEMORY.learnSentence("\n", "!output")
+            learnMemory += "\n"
             ff = True
-    if len(parts) >= 2:
+        elif bool(re.search("\+==(.*?)", part)):
+            for letter in part.replace("+==", ""):
+                blob.MEMORY.learnSentence(learnMemory, "!input")
+                blob.MEMORY.learnSentence(letter, "!output")
+                learnMemory += letter
+            blob.MEMORY.learnSentence(learnMemory, "!input")
+            blob.MEMORY.learnSentence("\n", "!output")
+            learnMemory += "\n"
+            ff = True
+    if ff:
         blob.MEMORY.learnSentence(learnMemory, "!input")
         blob.MEMORY.learnSentence("EOS", "!output")
-    learnMemory = ""
-    if ff:
+        learnMemory = ""
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()

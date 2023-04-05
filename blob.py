@@ -97,12 +97,7 @@ def receive(x, u, force=False):
         DATA.userLog.pop(0)
         if x == "×" or x == "☓" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
-        if x.count("\n") >= 1:
-            result = ""
-            for xx in x.split("\n"):
-                result = CONSIDERATION.looking(xx, u, force=force)
-        else:
-            result = CONSIDERATION.looking(x, u, force=force)
+        result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
             DATA.myVoice = None
             return
