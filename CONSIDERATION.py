@@ -9,7 +9,7 @@ import INTELLIGENCE
 def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
-        print("思考中: {}".format(x))
+        #print("思考中: {}".format(x))
 
         for kaisu in range(11):
             if kaisu == 0:
@@ -52,8 +52,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -94,8 +94,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -160,8 +160,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -202,8 +202,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != DATA.data["sentence"][i][1] and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -268,8 +268,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -310,8 +310,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!" and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -376,8 +376,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
@@ -418,8 +418,8 @@ def looking(x, u, reply=True, force=False):
                             if DATA.data["sentence"][i+1][1] == myname:
                                 isMine = True
                         if i != len(DATA.data["sentence"]) and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentence) < 0.75 and Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceHeart) < 0.75 and DATA.data["sentence"][i+1][1] != "!input" and "!system" not in DATA.data["sentence"][i+1][1]:
-                            print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
-                            print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
+                            #print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
+                            #print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
                             for iiiii in range(4):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
