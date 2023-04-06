@@ -66,7 +66,7 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
-        draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
+        draft = "出力ドラフト: {}".format(result)
         if len(draft) > 10:
             draft = draft[-10:]
         Message = result
@@ -124,7 +124,7 @@ async def on_message(message):
                         learnMemory = learnMemory[-10:]
                 else:
                     blob.MEMORY.learnSentence(letter, "!output")
-                    learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], letter)
+                    learnMemory = "出力ドラフト: {}".format(letter)
                     if len(learnMemory) > 10:
                         learnMemory = learnMemory[-10:]
                 i += 1
