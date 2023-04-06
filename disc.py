@@ -66,20 +66,24 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
-        draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
-        Message = result
-        print(Message)
-        for i in range(random.randint(0, 100000)):
-            blob.receive(draft, "!system")
-            result = blob.speakFreely()
-            if result == "EOS":
-                break
-            Message += result
-            draft += result
-            print(Message)
-        draft = ""
-        await channel.send(Message)
-        prevTime = time.time()
+        async with channel.typing():
+            draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
+            if len(draft) > 10:
+                draft = draft[-10:]
+            Message = result
+            for i in range(random.randint(0, 100000)):
+                blob.receive(draft, "!system")
+                result = blob.speakFreely()
+                if result == "EOS":
+                    break
+                Message += result
+                draft += result
+                if len(draft) > 10:
+                    draft = draft[-10:]
+                print("ドラフト: {}".format(Message))
+            draft = ""
+            await channel.send(Message)
+            prevTime = time.time()
     except:
         import traceback
         traceback.print_exc()
@@ -117,22 +121,32 @@ async def on_message(message):
                     blob.MEMORY.learnSentence(learnMemory, "!input")
                     blob.MEMORY.learnSentence(letter, "!output")
                     learnMemory += letter
+                    if len(learnMemory) > 10:
+                        learnMemory = learnMemory[-10:]
                 else:
                     blob.MEMORY.learnSentence(letter, "!output")
                     learnMemory = "入力: {}\n出力ドラフト: {}".format(part.split("===")[0], letter)
+                    if len(learnMemory) > 10:
+                        learnMemory = learnMemory[-10:]
                 i += 1
             blob.MEMORY.learnSentence(learnMemory, "!input")
             blob.MEMORY.learnSentence("\n", "!output")
             learnMemory += "\n"
+            if len(learnMemory) > 10:
+                learnMemory = learnMemory[-10:]
             ff = True
         elif bool(re.search("\+==(.*?)", part)):
             for letter in part.replace("+==", ""):
                 blob.MEMORY.learnSentence(learnMemory, "!input")
                 blob.MEMORY.learnSentence(letter, "!output")
                 learnMemory += letter
+                if len(learnMemory) > 10:
+                    learnMemory = learnMemory[-10:]
             blob.MEMORY.learnSentence(learnMemory, "!input")
             blob.MEMORY.learnSentence("\n", "!output")
             learnMemory += "\n"
+            if len(learnMemory) > 10:
+                learnMemory = learnMemory[-10:]
             ff = True
     if ff:
         blob.MEMORY.learnSentence(learnMemory, "!input")

@@ -23,7 +23,7 @@ def learnSentence(x, u):
     DATA.data["sentence"].append([x, u])
 
 def save():
-    if len(DATA.data["sentence"]) >= 100000000:
+    if len(DATA.data["sentence"]) >= 1000000000:
         while len(DATA.data["sentence"]) >= 100000000:
             del DATA.data["sentence"][0]
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
