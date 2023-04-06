@@ -106,8 +106,8 @@ def receive(x, u, force=False):
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
         DATA.maeheart = DATA.heart
-        print("座標: {}".format(DATA.heart))
-        print("ログ: {}".format(DATA.userLog))
+        #print("座標: {}".format(DATA.heart))
+        #print("ログ: {}".format(DATA.userLog))
     except:
         import traceback
         traceback.print_exc()

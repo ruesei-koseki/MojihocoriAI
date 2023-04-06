@@ -66,8 +66,6 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
-        print("{}: {}".format(blob.DATA.settings["myname"], result))
-        print("users: {}".format(persons))
         draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
         Message = result
         for i in range(random.randint(0, 100000)):
