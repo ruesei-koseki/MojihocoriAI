@@ -66,24 +66,23 @@ async def speak(result):
     global channel, persons, prevTime, mode, pin, draft
     global lastMessage, prevTime, messages
     try:
-        async with channel.typing():
-            draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
+        draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
+        if len(draft) > 10:
+            draft = draft[-10:]
+        Message = result
+        for i in range(random.randint(0, 100000)):
+            blob.receive(draft, "!system")
+            result = blob.speakFreely()
+            if result == "EOS":
+                break
+            Message += result
+            draft += result
             if len(draft) > 10:
                 draft = draft[-10:]
-            Message = result
-            for i in range(random.randint(0, 100000)):
-                blob.receive(draft, "!system")
-                result = blob.speakFreely()
-                if result == "EOS":
-                    break
-                Message += result
-                draft += result
-                if len(draft) > 10:
-                    draft = draft[-10:]
-                print("ドラフト: {}".format(Message))
-            draft = ""
-            await channel.send(Message)
-            prevTime = time.time()
+            print("ドラフト: {}".format(Message))
+        draft = ""
+        await channel.send(Message)
+        prevTime = time.time()
     except:
         import traceback
         traceback.print_exc()
