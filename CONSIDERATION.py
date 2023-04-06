@@ -15,7 +15,7 @@ def looking(x, u, reply=True, force=False):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
-                rate = 0.5
+                rate = 0.75
             if kaisu == 2:
                 rate = 0.5
             if kaisu == 3:
