@@ -68,6 +68,7 @@ async def speak(result):
     try:
         draft = "入力: {}\n出力ドラフト: {}".format(lastMessage[0], result)
         Message = result
+        print(Message)
         for i in range(random.randint(0, 100000)):
             blob.receive(draft, "!system")
             result = blob.speakFreely()
@@ -75,6 +76,7 @@ async def speak(result):
                 break
             Message += result
             draft += result
+            print(Message)
         draft = ""
         await channel.send(Message)
         prevTime = time.time()
