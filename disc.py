@@ -113,7 +113,8 @@ async def on_message(message):
                 blob.MEMORY.learnSentence(learnMemory, "!input")
                 blob.MEMORY.learnSentence("EOS", "!output")
                 learnMemory = ""
-            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
+            for letter in part.split("===")[0]:
+                blob.MEMORY.learnSentence(letter, "!input")
             i = 0
             for letter in part.split("===")[1]:
                 if i != 0:
@@ -201,9 +202,11 @@ async def on_message(message):
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username, force=True)
+            for letter in message.content:
+                blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', letter), username, force=True)
         else:
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username)
+            for letter in message.content:
+                blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', letter), username)
         a = []
         for person in persons:
             if person[1] < 6:
