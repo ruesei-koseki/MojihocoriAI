@@ -31,18 +31,21 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 メンションでは呼べません。
 
 =学習方法=
-以下のコマンドで学習します。
+チャットのメッセージからも学習しますが、コマンドでの学習のほうが便利です。
 ```
 さとみちゃん！ぎゅー！===ちょっと[YOU]！えっち！
 ```
 [YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
+
+=強化学習=
+「×」「❌」とメッセージを送ると、「このメッセージは悪い」と教えることができます。
 
 =配慮コマンドについて=
 botに「静かにして」というと「寡黙モード」になり、メッセージにbotの名前が含まれない限り返信しなくなります。
 botに「話して」というと「通常モード」になり、メッセージに通常通りbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。
 botに「じっとしてて」というと、チャンネルを動かなくなります。
 botに「動いて」というと、チャンネルを動けるようになります。
-"""
+これらのコマンドのタイミングも学習します。"""
 
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = blob.DATA.settings["discToken"]
@@ -157,8 +160,10 @@ async def on_message(message):
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
+                blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), "!")
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
+                blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), "!")
             channel = message.channel
             persons = [[blob.DATA.settings["myname"], 0]]
         if message.author == client.user:
@@ -270,7 +275,7 @@ async def cron():
             if i == -1:
                 add = False
             dt_now = datetime.datetime.now()
-            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
             a = []
             for person in persons:
                 if person[1] < 6:
@@ -282,7 +287,7 @@ async def cron():
             if blob.DATA.settings["myname"] not in pss:
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
-                blob.receive("!command ignore", lastUsername)
+                blob.receive("!command ignore", lastUsername, add=add)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
@@ -292,7 +297,7 @@ async def cron():
                             await speak(result)
                             messages = []
             if mode <= 1:
-                blob.receive("!command ignore", lastUsername)
+                blob.receive("!command ignore", lastUsername, add=add)
             prevTime = time.time()
         if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
             mode = 2

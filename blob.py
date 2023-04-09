@@ -53,7 +53,7 @@ def initialize(directory, interface_):
         DATA.data["words"] = []
 
 
-def speakFreely():
+def speakFreely(add=True):
     #自由に話す
     result = DATA.myVoice
     DATA.lastSentenceHeart = result
@@ -74,11 +74,13 @@ def speakFreely():
                     result += rslt + "\n"
                 i += 1
         """
+        if add:
+            MEMORY.learnSentence(result, "!")
 
     DATA.lastSentence = result
     return result
 
-def speakNext():
+def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
         result = DATA.data["sentence"][DATA.heart+1][0]
@@ -92,12 +94,14 @@ def speakNext():
         if result != None:
             result = result.replace("[YOU]", DATA.lastUser)
             result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+            if add:
+                MEMORY.learnSentence(result, "!")
         DATA.lastSentence = result
         return result
     else:
         return False
 
-def receive(x, u, force=False):
+def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
         #名前置き換え
@@ -114,25 +118,15 @@ def receive(x, u, force=False):
             DATA.lastUser = u
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
+        if add:
+            if x.count("\n") >= 1:
+                for xx in x.split("\n"):
+                    MEMORY.learnSentence(xx, u)
+            else:
+                MEMORY.learnSentence(x, u)
         if x == "×" or x == "☓" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
-        if x.count("\n") >= 1:
-            result = ""
-            i = 0
-            for xx in x.split("\n"):
-                y = CONSIDERATION.looking(xx, u, force=force)
-                if y != None:
-                    if x.count("\n") == i:
-                        result += y
-                    else:
-                        result += y + "\n"
-                i += 1
-            if result == "":
-                result = None
-            else:
-                result = result.replace("\n\n", "\n")
-        else:
-            result = CONSIDERATION.looking(x, u, force=force)
+        result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
             DATA.myVoice = None
             return
