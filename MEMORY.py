@@ -25,9 +25,9 @@ def learnSentence(x, u, save=True):
     else:
         DATA.data["sentence"].append([x, u])
     if save:
-        save()
+        saveData()
 
-def save():
+def saveData():
     if len(DATA.data["sentence"]) >= 100000000:
         while len(DATA.data["sentence"]) >= 100000000:
             del DATA.data["sentence"][0]
