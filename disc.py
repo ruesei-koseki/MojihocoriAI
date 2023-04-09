@@ -11,7 +11,7 @@ else:
 
 persons = [[blob.DATA.settings["myname"], 0]]
 channel = None
-lastMessage = ""
+lastMessage = None
 lastUsername = "誰か"
 messages = []
 prevTime = time.time()
@@ -34,8 +34,6 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 以下のコマンドで学習します。
 ```
 さとみちゃん！ぎゅー！===ちょっと[YOU]！えっち！
-+==そんなことほかの子にしたら嫌われるよ？
-+==私は...いいけどね...//
 ```
 [YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
 
@@ -51,41 +49,83 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-mode = 2
+if len(blob.DATA.data["sentence"]) >= 12:
+    mode = 2
+    yet = 2
+elif len(blob.DATA.data["sentence"]) >= 10:
+    mode = 1
+    yet = 1
+else:
+    mode = 0
+    yet = 0
 
 print("mode: {}".format(mode))
+print("yet: {}".format(yet))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
 
 def setMode(x):
-    global mode, channel
+    global mode, channel, restStep
     mode = x
     print("mode: {}".format(mode))
 
-draft = ""
 async def speak(result):
-    global channel, persons, prevTime, mode, pin, draft
+    global channel, persons, prevTime, mode, yet, pin
     global lastMessage, prevTime, messages
     try:
-        draft = "出力ドラフト: {}".format(result)
-        if len(draft) > 10:
-            draft = draft[-10:]
-        Message = result
-        for i in range(random.randint(0, 100000)):
-            blob.receive(draft, "!system")
-            result = blob.speakFreely()
-            if result == "EOS":
-                break
-            Message += result
-            draft += result
-            if len(draft) > 10:
-                draft = draft[-10:]
-            print("ドラフト: {}".format(Message))
-        draft = ""
-        await channel.send(Message)
+        print("{}: {}".format(blob.DATA.settings["myname"], result))
+        #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
+        pattern = re.compile(r"^[!/]command")
+        print("users: {}".format(persons))
+        results = result.split("\n")
+
+        Message = ""
+        for result in results:
+            if bool(pattern.search(result)):
+                com = result.split(" ")
+                if com[1] == "discMove" and not pin:
+                    if client.get_channel(int(com[2])) != None:
+                        try:
+                            channel = client.get_channel(int(com[2]))
+                        except:
+                            print("チャンネルが存在しません")
+                        persons = [[blob.DATA.settings["myname"], 0]]
+                        try:
+                            print("チャンネルを移動しました: {}".format(channel.name))
+                        except:
+                            print("チャンネルを移動しました: DM")
+                    else:
+                        blob.receive("エラー: あなたは固定されています。", "!system")
+                        print("エラー: あなたは固定されています。")
+                elif com[1] == "ignore":
+                    pass
+                elif com[1] == "setMode":
+                    setMode(int(com[2]))
+                elif com[1] == "saveMyData":
+                    blob.MEMORY.save()
+                elif com[1] == "pin":
+                    pin = True
+                elif com[1] == "unpin":
+                    pin = False
+                elif com[1] == "saveMyData":
+                    blob.MEMORY.save()
+            else:
+                Message += result + "\n"
+        Message = Message[:-1]
+        if Message != "":
+            async with channel.typing():
+                if len(Message) / (mode * 3) <= 1:
+                    await asyncio.sleep(len(Message) / (mode * 3))
+                else:
+                    await asyncio.sleep(1)
+                await channel.send(Message)
+                restStep = 0
         prevTime = time.time()
+        result = blob.speakNext()
+        if result:
+            await speak(result)
     except:
-        import traceback
-        traceback.print_exc()
+        blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
+        print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
 
 # 起動時に動作する処理
 @client.event
@@ -96,62 +136,20 @@ async def on_ready():
     cron.start()
     blob.receive("通知: 貴方は目を覚ましました。", "!system")
     print("通知: 貴方は目を覚ましました。")
-    game = discord.Game(f'ヘルプ: 「{blob.DATA.settings["myname"]}、ヘルプを表示して」')
-    await client.change_presence(status=discord.Status.online, activity=game)
 
 ii = 0
-learnMemory = ""
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, learnMemory, prevTime, lastUsername, ii, mode
+    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
     ff = False
     parts = message.content.split("\n")
     for part in parts:
         if bool(re.search("(.*?)===(.*?)", part)):
-            if learnMemory != "":
-                blob.MEMORY.learnSentence(learnMemory, "!input")
-                blob.MEMORY.learnSentence("EOS", "!output")
-                learnMemory = ""
-            for letter in part.split("===")[0]:
-                blob.MEMORY.learnSentence(letter, "!input")
-            i = 0
-            for letter in part.split("===")[1]:
-                if i != 0:
-                    blob.MEMORY.learnSentence(learnMemory, "!input")
-                    blob.MEMORY.learnSentence(letter, "!output")
-                    learnMemory += letter
-                    if len(learnMemory) > 10:
-                        learnMemory = learnMemory[-10:]
-                else:
-                    blob.MEMORY.learnSentence(letter, "!output")
-                    learnMemory = "出力ドラフト: {}".format(letter)
-                    if len(learnMemory) > 10:
-                        learnMemory = learnMemory[-10:]
-                i += 1
-            blob.MEMORY.learnSentence(learnMemory, "!input")
-            blob.MEMORY.learnSentence("\n", "!output")
-            learnMemory += "\n"
-            if len(learnMemory) > 10:
-                learnMemory = learnMemory[-10:]
-            ff = True
-        elif bool(re.search("\+==(.*?)", part)):
-            for letter in part.replace("+==", ""):
-                blob.MEMORY.learnSentence(learnMemory, "!input")
-                blob.MEMORY.learnSentence(letter, "!output")
-                learnMemory += letter
-                if len(learnMemory) > 10:
-                    learnMemory = learnMemory[-10:]
-            blob.MEMORY.learnSentence(learnMemory, "!input")
-            blob.MEMORY.learnSentence("\n", "!output")
-            learnMemory += "\n"
-            if len(learnMemory) > 10:
-                learnMemory = learnMemory[-10:]
+            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
+            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
             ff = True
     if ff:
-        blob.MEMORY.learnSentence(learnMemory, "!input")
-        blob.MEMORY.learnSentence("EOS", "!output")
-        learnMemory = ""
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
@@ -202,11 +200,9 @@ async def on_message(message):
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) == 2 or isinstance(message.channel, discord.DMChannel):
-            for letter in message.content:
-                blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', letter), username, force=True)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username, force=True)
         else:
-            for letter in message.content:
-                blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', letter), username)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username)
         a = []
         for person in persons:
             if person[1] < 6:
@@ -226,7 +222,7 @@ i = 0
 add = True
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages, add, mode
+    global persons, prevTime, lastMessage, i, messages, add, mode, yet
     try:
         if mode == 1:
             if len(messages) != 0:
@@ -239,7 +235,7 @@ async def cron():
                         else:
                             await speak(result)
                         messages = []
-        elif mode == 2 :
+        elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
                 i = 0
                 pss = []
@@ -298,6 +294,16 @@ async def cron():
             if mode <= 1:
                 blob.receive("!command ignore", lastUsername)
             prevTime = time.time()
+        if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
+            mode = 2
+            yet = 2
+            print("自分からしゃべれるようになりました")
+            await speak("自分からしゃべれるようになりました")
+        if len(blob.DATA.data["sentence"]) >= 10 and yet == 0:
+            mode = 1
+            yet = 1
+            print("しゃべれるようになりました")
+            await speak("しゃべれるようになりました")
         else:
             pass
     except:

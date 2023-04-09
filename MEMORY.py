@@ -20,10 +20,14 @@ def learnSentence(x, u):
             x = x.replace(myname, "[I]")
         x = x.replace(DATA.lastUser, "[YOU]")
     #言葉を脳に記録する
-    DATA.data["sentence"].append([x, u])
+    if u in DATA.settings["mynames"].split("|"):
+        DATA.data["sentence"].append([x, "!"])
+    else:
+        DATA.data["sentence"].append([x, u])
+    save()
 
 def save():
-    if len(DATA.data["sentence"]) >= 1000000000:
+    if len(DATA.data["sentence"]) >= 100000000:
         while len(DATA.data["sentence"]) >= 100000000:
             del DATA.data["sentence"][0]
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:

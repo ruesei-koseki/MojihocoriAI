@@ -78,6 +78,25 @@ def speakFreely():
     DATA.lastSentence = result
     return result
 
+def speakNext():
+    #自由に話す
+    if INTELLIGENCE.isNextOk():
+        result = DATA.data["sentence"][DATA.heart+1][0]
+        DATA.lastSentenceHeart = result
+        DATA.heart += 1
+        if "!" not in DATA.lastUser:
+            DATA.lastUserReplied = DATA.lastUser
+        DATA.lastSentenceHeart = result
+        DATA.userLog.append("!")
+        DATA.userLog.pop(0)
+        if result != None:
+            result = result.replace("[YOU]", DATA.lastUser)
+            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+        DATA.lastSentence = result
+        return result
+    else:
+        return False
+
 def receive(x, u, force=False):
     try:
         if x == None or u == None: return
@@ -97,12 +116,23 @@ def receive(x, u, force=False):
         DATA.userLog.pop(0)
         if x == "×" or x == "☓" or x == "❌":
             DATA.data["sentence"].insert(DATA.heart+1, ["×", "!"])
-        CONSIDERATION.looking(x, u, force=force)
-        if DATA.data["sentence"][DATA.heart+1][1] == "!output":
-            result = DATA.data["sentence"][DATA.heart+1][0]
-            DATA.heart += 1
+        if x.count("\n") >= 1:
+            result = ""
+            i = 0
+            for xx in x.split("\n"):
+                y = CONSIDERATION.looking(xx, u, force=force)
+                if y != None:
+                    if x.count("\n") == i:
+                        result += y
+                    else:
+                        result += y + "\n"
+                i += 1
+            if result == "":
+                result = None
+            else:
+                result = result.replace("\n\n", "\n")
         else:
-            result = None
+            result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
             DATA.myVoice = None
             return
@@ -111,8 +141,8 @@ def receive(x, u, force=False):
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
         DATA.maeheart = DATA.heart
-        #print("座標: {}".format(DATA.heart))
-        #print("ログ: {}".format(DATA.userLog))
+        print("座標: {}".format(DATA.heart))
+        print("ログ: {}".format(DATA.userLog))
     except:
         import traceback
         traceback.print_exc()
