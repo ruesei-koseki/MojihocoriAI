@@ -3,7 +3,7 @@ import INTELLIGENCE
 import json
 import random
 
-def learnSentence(x, u):
+def learnSentence(x, u, save=True):
     #名前置き換え
     if u == "!input":
         for myname in DATA.settings["mynames"].split("|"):
@@ -24,7 +24,8 @@ def learnSentence(x, u):
         DATA.data["sentence"].append([x, "!"])
     else:
         DATA.data["sentence"].append([x, u])
-    save()
+    if save:
+        save()
 
 def save():
     if len(DATA.data["sentence"]) >= 100000000:
