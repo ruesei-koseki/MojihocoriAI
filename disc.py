@@ -104,13 +104,13 @@ async def speak(result):
                 elif com[1] == "setMode":
                     setMode(int(com[2]))
                 elif com[1] == "saveMyData":
-                    blob.MEMORY.save()
+                    blob.MEMORY.saveData()
                 elif com[1] == "pin":
                     pin = True
                 elif com[1] == "unpin":
                     pin = False
                 elif com[1] == "saveMyData":
-                    blob.MEMORY.save()
+                    blob.MEMORY.saveData()
             else:
                 Message += result + "\n"
         Message = Message[:-1]
@@ -121,10 +121,10 @@ async def speak(result):
                 else:
                     await asyncio.sleep(1)
                 await channel.send(Message)
-                restStep = 0
         prevTime = time.time()
-        result = blob.speakNext()
-        if result:
+        if random.randint(0,1) == 0:
+            print("うんこ")
+            result = blob.speakNext()
             await speak(result)
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
@@ -354,7 +354,7 @@ def listen():
                 if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
                     blob.receive("!command saveMyData", "あなた")
                     print("セーブします")
-                    blob.MEMORY.save()
+                    blob.MEMORY.saveData()
                     print("完了")
                 
                 else:

@@ -82,24 +82,19 @@ def speakFreely(add=True):
 
 def speakNext(add=True):
     #自由に話す
-    if INTELLIGENCE.isNextOk():
-        result = DATA.data["sentence"][DATA.heart+1][0]
-        DATA.lastSentenceHeart = result
-        DATA.heart += 1
-        if "!" not in DATA.lastUser:
-            DATA.lastUserReplied = DATA.lastUser
-        DATA.lastSentenceHeart = result
-        DATA.userLog.append("!")
-        DATA.userLog.pop(0)
-        if result != None:
-            result = result.replace("[YOU]", DATA.lastUser)
-            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-            if add:
-                MEMORY.learnSentence(result, "!")
-        DATA.lastSentence = result
-        return result
-    else:
-        return False
+    result = CONSIDERATION.looking(DATA.lastSentence, "!")
+    if "!" not in DATA.lastUser:
+        DATA.lastUserReplied = DATA.lastUser
+    DATA.lastSentenceHeart = result
+    DATA.userLog.append("!")
+    DATA.userLog.pop(0)
+    if result != None:
+        result = result.replace("[YOU]", DATA.lastUser)
+        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+        if add:
+            MEMORY.learnSentence(result, "!")
+    DATA.lastSentence = result
+    return result
 
 def receive(x, u, add=True, force=False):
     try:
