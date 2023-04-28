@@ -51,7 +51,7 @@ botに「動いて」というと、チャンネルを動けるようになり�
 TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
-client = discord.Client(intents=intents)
+client = discord.Client(intents=intents, self_bot=True)
 if len(blob.DATA.data["sentence"]) >= 12:
     mode = 2
     yet = 2
@@ -123,7 +123,6 @@ async def speak(result):
                 await channel.send(Message)
         prevTime = time.time()
         if random.randint(0,1) == 0:
-            print("うんこ")
             result = blob.speakNext()
             await speak(result)
     except:
@@ -160,10 +159,10 @@ async def on_message(message):
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
-                blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), "!")
+                blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic), username)
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
-                blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), "!")
+                blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username), username)
             channel = message.channel
             persons = [[blob.DATA.settings["myname"], 0]]
         if message.author == client.user:
