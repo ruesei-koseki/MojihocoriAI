@@ -239,7 +239,7 @@ async def cron():
                             pass
                         else:
                             await speak(result)
-                        messages = []
+                    messages = []
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
                 i = 0
@@ -253,13 +253,13 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, 7) == 0 and blob.DATA.myVoice != None):
+                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-1) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely()
                     if result == None:
                         pass
                     else:
                         await speak(result)
-                    messages = []
+                messages = []
         elif len(messages) != 0:
             i = 0
         nowTime = time.time()
@@ -288,7 +288,7 @@ async def cron():
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
                 blob.receive("!command ignore", lastUsername, add=add)
-                if blob.DATA.myVoice != None and random.randint(0, len(persons)+7) == 0:
+                if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
                         if result == None:
