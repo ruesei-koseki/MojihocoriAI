@@ -67,7 +67,7 @@ print("yet: {}".format(yet))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
 
 def setMode(x):
-    global mode, channel, restStep
+    global mode, channel
     mode = x
     print("mode: {}".format(mode))
 
@@ -143,7 +143,7 @@ ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, restStep, prevTime, lastUsername, ii, mode
+    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, prevTime, lastUsername, ii, mode
     ff = False
     parts = message.content.split("\n")
     for part in parts:
