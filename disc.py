@@ -172,13 +172,14 @@ async def on_message(message):
             pss.append(ps[0])
         if username not in pss:
             persons.append([username, 0])
-        if message.content == "":
+        if message.content == "" and message.attachments == []:
             return
         if message.content == None:
             return        
         additional = ""
         for attachment in message.attachments:
             additional += "\n" + attachment.url
+            print(attachment.url)
         message.content += additional
         if bool(re.search("silent mode|沈黙モード|黙っ|だま", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(0)
