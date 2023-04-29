@@ -105,14 +105,6 @@ def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
         #名前置き換え
-        if u != "!":
-            x = x.replace(DATA.lastUser, "[I]")
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[YOU]")
-        else:
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[I]")
-            x = x.replace(DATA.lastUser, "[YOU]")
         DATA.lastSentenceInput = x
         if "!system" not in u:
             DATA.lastUser = u
