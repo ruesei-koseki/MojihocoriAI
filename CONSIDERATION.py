@@ -45,7 +45,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = False
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!good":
                                         flag = True
@@ -87,7 +87,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = False
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!good":
                                         flag = True
@@ -154,7 +154,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -196,7 +196,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -262,7 +262,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -304,7 +304,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -370,7 +370,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -412,7 +412,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -478,7 +478,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
@@ -520,7 +520,7 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(4):
+                            for iiiii in range(25):
                                 if i+1+iiiii < len(DATA.data["sentence"]) - 1:
                                     if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
                                         flag = False
