@@ -52,10 +52,10 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents, self_bot=True)
-if len(blob.DATA.data["sentence"]) >= 12:
+if len(blob.DATA.data["sentence"]) >= 100000:
     mode = 2
     yet = 2
-elif len(blob.DATA.data["sentence"]) >= 10:
+elif len(blob.DATA.data["sentence"]) >= 1000:
     mode = 1
     yet = 1
 else:
@@ -227,7 +227,7 @@ i = 0
 add = True
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages, add, mode, yet
+    global persons, prevTime, lastMessage, i, messages, add, mode, yet, channel
     try:
         if mode == 1:
             if len(messages) != 0:
@@ -253,7 +253,7 @@ async def cron():
                     else:
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-1) == 0 and blob.DATA.myVoice != None):
+                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-2) == 0 and blob.DATA.myVoice != None) or isinstance(channel, discord.DMChannel):
                     result = blob.speakFreely()
                     if result == None:
                         pass
@@ -288,7 +288,7 @@ async def cron():
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
                 blob.receive("!command ignore", lastUsername, add=add)
-                if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
+                if blob.DATA.myVoice != None and random.randint(0, len(persons)-1) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
                         if result == None:
