@@ -75,18 +75,20 @@ def setMode(x):
 
 import requests
 def speak_bouyomi(text='ゆっくりしていってね', volume=-1):
-    res = requests.get(
-        'http://localhost:50080/Talk',
-        params={
-            'text': text,
-            'voice': blob.DATA.settings["yukkuri"]["voice"],
-            'volume': volume,
-            'speed': blob.DATA.settings["yukkuri"]["speed"],
-            'tone': blob.DATA.settings["yukkuri"]["tone"]})
-    time.sleep(0.2*len(text))
+    if text != None:
+        res = requests.get(
+            'http://localhost:50080/Talk',
+            params={
+                'text': text,
+                'voice': blob.DATA.settings["yukkuri"]["voice"],
+                'volume': volume,
+                'speed': blob.DATA.settings["yukkuri"]["speed"],
+                'tone': blob.DATA.settings["yukkuri"]["tone"]})
+        time.sleep(0.2*len(text))
     cronThread = threading.Thread(target=listen, daemon=True)
     cronThread.start()
-    return res.status_code
+    if text != None:
+        return res.status_code
 
 async def speak(result):
     global channel, persons, prevTime, mode, yet, pin
@@ -136,18 +138,22 @@ async def speak(result):
                 async with channel.typing():
                     if len(Message) / (mode * 3) <= 1:
                         await asyncio.sleep(len(Message) / (mode * 3))
+                        await channel.send(Message)
                     else:
                         await asyncio.sleep(1)
-                        await channel.send(Message.rstrip('\n'))
+                        await channel.send(Message)
         elif speakMode == 1:
-            speak_bouyomi(Message)
+            if Message != "":
+                speak_bouyomi(Message)
+            else:
+                speak_bouyomi(None)
         prevTime = time.time()
         result = blob.speakNext()
         if result:
             await speak(result)
     except:
-        blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
-        print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
+        import traceback
+        traceback.print_exc()
 
 # 起動時に動作する処理
 @client.event
@@ -244,15 +250,13 @@ async def on_message(message):
         prevTime = time.time()
         messages.append([message.content, message.author.name])
 
-i = 0
 add = True
 @tasks.loop(seconds=1)
 async def cron():
-    global persons, prevTime, lastMessage, i, messages, add, mode, yet, channel
+    global persons, prevTime, lastMessage, messages, add, mode, yet, channel
     try:
         if mode == 1:
             if len(messages) != 0:
-                i = 0
                 if blob.DATA.myVoice != None:
                     if bool(re.search(blob.DATA.settings["mynames"], messages[-1][0])):
                         result = blob.speakFreely()
@@ -263,7 +267,6 @@ async def cron():
                     messages = []
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
-                i = 0
                 pss = []
                 for ps in persons:
                     pss.append(ps[0])
@@ -281,22 +284,11 @@ async def cron():
                     else:
                         await speak(result)
                 messages = []
-        elif len(messages) != 0:
-            i = 0
         nowTime = time.time()
         if nowTime >= prevTime + 20:
             print("沈黙を検知")
-            if i >= 1:
-                i = -1
-            elif i == -1:
-                pass
-            else:
-                i += 1
-            add = True
-            if i == -1:
-                add = False
             dt_now = datetime.datetime.now()
-            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
+            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
             a = []
             for person in persons:
                 if person[1] < 6:
@@ -308,7 +300,7 @@ async def cron():
             if blob.DATA.settings["myname"] not in pss:
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
-                blob.receive("!command ignore", lastUsername, add=add)
+                blob.receive("!command ignore", lastUsername)
                 if blob.DATA.myVoice != None and random.randint(0, len(persons)-1) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely()
@@ -318,7 +310,7 @@ async def cron():
                             await speak(result)
                             messages = []
             if mode <= 1:
-                blob.receive("!command ignore", lastUsername, add=add)
+                blob.receive("!command ignore", lastUsername)
             prevTime = time.time()
         if len(blob.DATA.data["sentence"]) >= 12 and yet == 1:
             mode = 2
@@ -346,52 +338,53 @@ into = "こんにちは"
 
 
 def listen():
-    global messages, persons, prevTime, lastMessage, i, speakMode
-    
-    print("聞き取っています...")
-    
-    with mic as source:
-        r.adjust_for_ambient_noise(source) #雑音対策
-        audio = r.listen(source)
+    global messages, persons, prevTime, lastMessage, speakMode, lastUsername
+    isActive = True
+    while isActive:
+        print("聞き取っています...")
+        
+        with mic as source:
+            r.adjust_for_ambient_noise(source) #雑音対策
+            audio = r.listen(source)
 
-    print ("解析中...")
+        print ("解析中...")
 
-    try:
-        into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
-        print(into)
+        try:
+            into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
+            print(into)
 
-        if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
+            if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
 
-            speakMode = 1
+                speakMode = 1
 
-            pss = []
-            for ps in persons:
-                pss.append(ps[0])
-            if "笑いのユートピア" not in pss:
-                persons.append(["笑いのユートピア", 0])
-
-            if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
-                blob.receive("!command saveMyData", "笑いのユートピア")
-                print("セーブします")
-                blob.MEMORY.saveData()
-                print("完了")
-            
-            else:
-
-                lastMessage = [into, "笑いのユートピア"]
-                prevTime = time.time()
-                blob.receive(into, "笑いのユートピア")
-                lastUsername = "笑いのユートピア"
-                messages.append([into, "笑いのユートピア"])
+                pss = []
+                for ps in persons:
+                    pss.append(ps[0])
+                if "笑いのユートピア" not in pss:
+                    persons.append(["笑いのユートピア", 0])
 
 
+                if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
+                    blob.receive("!command saveMyData", "笑いのユートピア")
+                    print("セーブします")
+                    blob.MEMORY.saveData()
+                    print("完了")
+                
+                else:
+                    lastMessage = [into, "笑いのユートピア"]
+                    prevTime = time.time()
+                    blob.receive(into, "笑いのユートピア")
+                    lastUsername = "笑いのユートピア"
+                    messages.append([into, "笑いのユートピア"])
+                    isActive = False
 
 
-    # 以下は認識できなかったときに止まらないように。
-    except sr.UnknownValueError:
-        pass
-    except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+        # 以下は認識できなかったときに止まらないように。
+        except sr.UnknownValueError:
+            pass
+        except sr.RequestError as e:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
 
 
