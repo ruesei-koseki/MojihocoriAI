@@ -16,6 +16,7 @@ lastUsername = "誰か"
 messages = []
 prevTime = time.time()
 pin = False
+speakMode = 0 #0はDiscord, 1はアシスタント
 
 from discord.ext import tasks
 import discord
@@ -23,6 +24,7 @@ import threading
 import asyncio
 from rapidfuzz.distance import Levenshtein
 import datetime
+import threading
 
 helpMessage = f"""==blobAIヘルプ==
 このbotはユーザーのメッセージに自分の意思で返信するAIです。
@@ -71,12 +73,26 @@ def setMode(x):
     mode = x
     print("mode: {}".format(mode))
 
+import requests
+def speak_bouyomi(text='ゆっくりしていってね', volume=-1):
+    res = requests.get(
+        'http://localhost:50080/Talk',
+        params={
+            'text': text,
+            'voice': blob.DATA.settings["yukkuri"]["voice"],
+            'volume': volume,
+            'speed': blob.DATA.settings["yukkuri"]["speed"],
+            'tone': blob.DATA.settings["yukkuri"]["tone"]})
+    time.sleep(0.2*len(text))
+    cronThread = threading.Thread(target=listen, daemon=True)
+    cronThread.start()
+    return res.status_code
+
 async def speak(result):
     global channel, persons, prevTime, mode, yet, pin
-    global lastMessage, prevTime, messages
+    global lastMessage, prevTime, messages, speakMode
     try:
         print("{}: {}".format(blob.DATA.settings["myname"], result))
-        #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
         pattern = re.compile(r"^[!/]command")
         print("users: {}".format(persons))
         results = result.split("\n")
@@ -114,13 +130,17 @@ async def speak(result):
             else:
                 Message += result + "\n"
         Message = Message[:-1]
-        if Message != "":
-            async with channel.typing():
-                if len(Message) / (mode * 3) <= 1:
-                    await asyncio.sleep(len(Message) / (mode * 3))
-                else:
-                    await asyncio.sleep(1)
-                await channel.send(Message)
+        print("speakMode: {}".format(speakMode))
+        if speakMode == 0:
+            if Message != "":
+                async with channel.typing():
+                    if len(Message) / (mode * 3) <= 1:
+                        await asyncio.sleep(len(Message) / (mode * 3))
+                    else:
+                        await asyncio.sleep(1)
+                        await channel.send(Message.rstrip('\n'))
+        elif speakMode == 1:
+            speak_bouyomi(Message)
         prevTime = time.time()
         result = blob.speakNext()
         if result:
@@ -143,7 +163,7 @@ ii = 0
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, prevTime, lastUsername, ii, mode
+    global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, prevTime, lastUsername, ii, mode, speakMode
     ff = False
     parts = message.content.split("\n")
     for part in parts:
@@ -155,6 +175,7 @@ async def on_message(message):
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
+        speakMode = 0
         username = message.author.name.split("#")[0]
         if message.channel != channel:
             try:
@@ -315,7 +336,7 @@ async def cron():
         import traceback
         traceback.print_exc()
 
-"""
+
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -325,62 +346,57 @@ into = "こんにちは"
 
 
 def listen():
-    global messages, persons, prevTime, lastMessage, i
-    while True:
-        
-        print("聞き取っています...")
-        
-        with mic as source:
-            r.adjust_for_ambient_noise(source) #雑音対策
-            audio = r.listen(source)
+    global messages, persons, prevTime, lastMessage, i, speakMode
+    
+    print("聞き取っています...")
+    
+    with mic as source:
+        r.adjust_for_ambient_noise(source) #雑音対策
+        audio = r.listen(source)
 
-        print ("解析中...")
+    print ("解析中...")
 
-        try:
-            into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
-            print(into)
+    try:
+        into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
+        print(into)
 
-            if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
+        if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
 
+            speakMode = 1
 
-                pss = []
-                for ps in persons:
-                    pss.append(ps[0])
-                if "あなた" not in pss:
-                    persons.append(["あなた", 0])
+            pss = []
+            for ps in persons:
+                pss.append(ps[0])
+            if "笑いのユートピア" not in pss:
+                persons.append(["笑いのユートピア", 0])
 
+            if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
+                blob.receive("!command saveMyData", "笑いのユートピア")
+                print("セーブします")
+                blob.MEMORY.saveData()
+                print("完了")
+            
+            else:
 
-
-                if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
-                    blob.receive("!command saveMyData", "あなた")
-                    print("セーブします")
-                    blob.MEMORY.saveData()
-                    print("完了")
-                
-                else:
-
-
-                    i = 0
-                    lastMessage = [into, "あなた"]
-                    prevTime = time.time()
-                    blob.receive(into, "あなた")
-                    lastUsername = "あなた"
-                    messages.append([into, "あなた"])
+                lastMessage = [into, "笑いのユートピア"]
+                prevTime = time.time()
+                blob.receive(into, "笑いのユートピア")
+                lastUsername = "笑いのユートピア"
+                messages.append([into, "笑いのユートピア"])
 
 
 
 
-        # 以下は認識できなかったときに止まらないように。
-        except sr.UnknownValueError:
-            pass
-        except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    # 以下は認識できなかったときに止まらないように。
+    except sr.UnknownValueError:
+        pass
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
 
 
-import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
-"""
+
 
 client.run(TOKEN)
