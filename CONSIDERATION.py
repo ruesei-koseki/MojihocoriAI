@@ -45,11 +45,9 @@ def looking(x, u, reply=True, force=False):
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = False
                             for iiiii in range(2):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!good":
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!good":
                                         flag = True
-                                        if iiiii == 0:
-                                            return "!good"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -86,11 +84,9 @@ def looking(x, u, reply=True, force=False):
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = False
                             for iiiii in range(2):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!good":
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!good":
                                         flag = True
-                                        if iiiii == 0:
-                                            return "!good"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -151,12 +147,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -192,12 +186,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -258,12 +250,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -300,12 +290,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -366,12 +354,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -408,12 +394,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -474,12 +458,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii
@@ -516,12 +498,10 @@ def looking(x, u, reply=True, force=False):
                             print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                             print("返信: {}, {}".format(DATA.data["sentence"][i+1][0], i+1))
                             flag = True
-                            for iiiii in range(5):
-                                if i+1+iiiii < len(DATA.data["sentence"]) - 1:
-                                    if DATA.data["sentence"][i+1+iiiii][0] == "!bad":
+                            for iiiii in range(3):
+                                if i+2+iiiii < len(DATA.data["sentence"]) - 1:
+                                    if DATA.data["sentence"][i+2+iiiii][0] == "!bad":
                                         flag = False
-                                        if iiiii == 0:
-                                            return "!bad"
                                         break
                             if flag:
                                 DATA.sa = ii

@@ -113,14 +113,14 @@ def receive(x, u, add=True, force=False):
         if add:
             if x.count("\n") >= 1:
                 for xx in x.split("\n"):
-                    MEMORY.learnSentence(xx, u)
+                    MEMORY.learnSentence(xx.strip(), u)
             else:
-                MEMORY.learnSentence(x, u)
+                MEMORY.learnSentence(x.strip(), u)
         if x == "!bad":
             DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
         if x == "!good":
             DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(x, u, force=force)
+        result = CONSIDERATION.looking(x, u, force=force).strip()
         if result == None:
             DATA.myVoice = None
             return

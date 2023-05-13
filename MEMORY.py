@@ -24,6 +24,8 @@ def learnSentence(x, u, save=True):
         DATA.data["sentence"].append([x, "!"])
     else:
         DATA.data["sentence"].append([x, u])
+    if u == "!output":
+        DATA.data["sentence"].append(["!good", "!system"])
     if save:
         saveData()
 
