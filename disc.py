@@ -329,6 +329,7 @@ async def cron():
         traceback.print_exc()
 
 
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -385,7 +386,7 @@ def listen():
             pass
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
+"""
 
 
 cronThread = threading.Thread(target=listen, daemon=True)
