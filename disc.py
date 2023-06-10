@@ -147,7 +147,7 @@ async def on_message(message):
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
-        username = message.author.name.split("#")[0]
+        username = message.author.display_name
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
@@ -210,10 +210,10 @@ async def on_message(message):
             pss.append(ps[0])
         if blob.DATA.settings["myname"] not in pss:
             persons.append([blob.DATA.settings["myname"], 0])
-        lastMessage = [message.content, message.author.name]
+        lastMessage = [message.content, message.author.display_name]
         lastUsername = username
         prevTime = time.time()
-        messages.append([message.content, message.author.name])
+        messages.append([message.content, message.author.display_name])
 
 i = 0
 add = True
