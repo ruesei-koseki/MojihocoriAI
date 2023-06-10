@@ -115,7 +115,7 @@ async def speak(result):
                 await channel.send(Message)
         prevTime = time.time()
         result = blob.speakNext()
-        if result:
+        if result or ("+g" in blob.DATA.lastSentenceInput and random.randint(0,3) != 0):
             await speak(result)
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
