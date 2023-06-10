@@ -173,10 +173,10 @@ async def on_message(message):
             additional += "\n" + attachment.url
             print(attachment.url)
         message.content += additional
-        if bool(re.search("silent mode|沈黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("沈黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
-        elif bool(re.search("only for mention mode|寡黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("寡黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(1)
             blob.receive("!command setMode {}".format(1), username)
             return
@@ -184,15 +184,15 @@ async def on_message(message):
             setMode(2)
             blob.receive("!command setMode {}".format(2), username)
             return
-        elif bool(re.search("pin|ピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = True
             blob.receive("!command pin", username)
             return
-        elif bool(re.search("unpin|アンピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("アンピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = False
             blob.receive("!command unpin", username)
             return
-        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
@@ -273,6 +273,7 @@ async def cron():
                 if person[1] < 6:
                     a.append([person[0], person[1]+1])
             persons = a
+            print(persons)
             pss = []
             for ps in persons:
                 pss.append(ps[0])

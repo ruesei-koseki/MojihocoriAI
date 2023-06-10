@@ -36,5 +36,5 @@ with open(sys.argv[2], "r", encoding="utf-8") as f:
         except:
             pass
 for d in data:
-    blob.MEMORY.learnSentence(d[1], d[0])
-blob.MEMORY.save()
+    blob.MEMORY.learnSentence(d[1].replace("-br", "\n").strip(), d[0], save=False)
+blob.MEMORY.saveData()

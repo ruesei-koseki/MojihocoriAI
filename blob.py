@@ -25,6 +25,7 @@ DATA.myVoice = None #心の中の声
 DATA.times = 0
 DATA.sa = 0
 DATA.userLog = [None] * 10
+DATA.good = False
 
 def initialize(directory, interface_):
     #初期化
@@ -83,6 +84,10 @@ def speakFreely(add=True):
 def speakNext(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
+        if random.randint(0,1) == 0 and "+g" in DATA.lastSentenceInput:
+            print("創造的になりました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+            result = CONSIDERATION.looking(DATA.lastSentence, "!", force=True)
         result = DATA.data["sentence"][DATA.heart+1][0]
         DATA.lastSentenceHeart = result
         DATA.heart += 1
@@ -104,6 +109,9 @@ def speakNext(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
+        if random.randint(0,1) == 0 and "+g" in x:
+            print("創造的になりました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
         #名前置き換え
         DATA.lastSentenceInput = x
         if "!system" not in u:
@@ -113,14 +121,14 @@ def receive(x, u, add=True, force=False):
         if add:
             if x.count("\n") >= 1:
                 for xx in x.split("\n"):
-                    MEMORY.learnSentence(xx.strip(), u)
+                    MEMORY.learnSentence(xx, u)
             else:
-                MEMORY.learnSentence(x.strip(), u)
+                MEMORY.learnSentence(x, u)
         if x == "!bad":
             DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
         if x == "!good":
             DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(x, u, force=force).strip()
+        result = CONSIDERATION.looking(x, u, force=force)
         if result == None:
             DATA.myVoice = None
             return
