@@ -115,7 +115,7 @@ async def speak(result):
                 await channel.send(Message)
         prevTime = time.time()
         result = blob.speakNext()
-        if result or ("+g" in blob.DATA.lastSentenceInput and random.randint(0,3) != 0):
+        if result:
             await speak(result)
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
@@ -147,7 +147,7 @@ async def on_message(message):
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         prevTime = time.time()
-        username = message.author.display_name
+        username = message.author.name.split("#")[0]
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
@@ -173,10 +173,10 @@ async def on_message(message):
             additional += "\n" + attachment.url
             print(attachment.url)
         message.content += additional
-        if bool(re.search("沈黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("silent mode|沈黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
-        elif bool(re.search("寡黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("only for mention mode|寡黙モード", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(1)
             blob.receive("!command setMode {}".format(1), username)
             return
@@ -184,15 +184,15 @@ async def on_message(message):
             setMode(2)
             blob.receive("!command setMode {}".format(2), username)
             return
-        elif bool(re.search("ピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("pin|ピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = True
             blob.receive("!command pin", username)
             return
-        elif bool(re.search("アンピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("unpin|アンピン", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = False
             blob.receive("!command unpin", username)
             return
-        elif bool(re.search("ヘルプを表示|ヘルプ表示", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
@@ -210,10 +210,10 @@ async def on_message(message):
             pss.append(ps[0])
         if blob.DATA.settings["myname"] not in pss:
             persons.append([blob.DATA.settings["myname"], 0])
-        lastMessage = [message.content, message.author.display_name]
+        lastMessage = [message.content, message.author.name]
         lastUsername = username
         prevTime = time.time()
-        messages.append([message.content, message.author.display_name])
+        messages.append([message.content, message.author.name])
 
 i = 0
 add = True
@@ -273,7 +273,6 @@ async def cron():
                 if person[1] < 6:
                     a.append([person[0], person[1]+1])
             persons = a
-            print(persons)
             pss = []
             for ps in persons:
                 pss.append(ps[0])
