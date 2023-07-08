@@ -7,7 +7,7 @@ countOfMe = 0
 isActiveLearn = True
 def learnSentence(x, u, save=True):
     global countOfMe, isActiveLearn
-    if u != "!":
+    if "!" not in u:
         isActiveLearn == True
         countOfMe = 0
     if isActiveLearn:
@@ -37,7 +37,7 @@ def learnSentence(x, u, save=True):
         if countOfMe >= 3:
             isActiveLearn = False
 
-        if u == "!":
+        if "!" in u:
             countOfMe += 1
 
         if save:
