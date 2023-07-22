@@ -234,6 +234,7 @@ async def on_message(message):
         lastUsername = username
         prevTime = time.time()
         i = 0
+        add = True
         messages.append([message.content, message.author.name])
 
 @tasks.loop(seconds=1)
@@ -277,10 +278,10 @@ async def cron():
                 messages = []
         nowTime = time.time()
         if nowTime >= prevTime + 20:
-            if i > -1:
+            if i > -2:
                 i = -1
             add = True
-            if i <= -1:
+            if i <= -2:
                 add = False
             print("沈黙を検知")
             dt_now = datetime.datetime.now()
