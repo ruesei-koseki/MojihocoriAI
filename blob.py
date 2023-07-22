@@ -80,10 +80,53 @@ def speakFreely(add=True):
     DATA.lastSentence = result
     return result
 
-def speakNext(add=True):
+
+def speakNextFreely(add=True):
     #自由に話す
     if INTELLIGENCE.isNextOk():
-        result = DATA.data["sentence"][DATA.heart+1][0]
+        if random.randint(0,2) == 0:
+            print("組み合わせました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+        result = CONSIDERATION.lookingForNext(DATA.lastSentence, "!")
+        DATA.lastSentenceHeart = result
+        DATA.heart += 1
+        if "!" not in DATA.lastUser:
+            DATA.lastUserReplied = DATA.lastUser
+        DATA.lastSentenceHeart = result
+        DATA.userLog.append("!")
+        DATA.userLog.pop(0)
+        if result != None:
+            result = result.replace("[YOU]", DATA.lastUser)
+            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+            if add:
+                MEMORY.learnSentence(result, "!")
+        DATA.lastSentence = result
+        return result
+    else:
+        print("組み合わせました")
+        DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+        result = CONSIDERATION.lookingForNext(DATA.lastSentence, "!")
+        DATA.lastSentenceHeart = result
+        DATA.heart += 1
+        if "!" not in DATA.lastUser:
+            DATA.lastUserReplied = DATA.lastUser
+        DATA.lastSentenceHeart = result
+        DATA.userLog.append("!")
+        DATA.userLog.pop(0)
+        if result != None:
+            result = result.replace("[YOU]", DATA.lastUser)
+            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+            if add:
+                MEMORY.learnSentence(result, "!")
+        DATA.lastSentence = result
+        return result
+
+def speakNext(add=True):
+    if INTELLIGENCE.isNextOk():
+        if random.randint(0,2) == 0:
+            print("組み合わせました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+        result = CONSIDERATION.lookingForNext(DATA.lastSentence, "!")
         DATA.lastSentenceHeart = result
         DATA.heart += 1
         if "!" not in DATA.lastUser:
@@ -111,16 +154,18 @@ def receive(x, u, add=True, force=False):
         DATA.userLog.append(u)
         DATA.userLog.pop(0)
         if add:
-            if x.count("\n") >= 1:
-                for xx in x.split("\n"):
-                    MEMORY.learnSentence(xx.strip(), u)
-            else:
-                MEMORY.learnSentence(x.strip(), u)
+            for xx in x.split("\n"):
+                MEMORY.learnSentence(xx, u)
         if x == "!bad":
             DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
         if x == "!good":
             DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(x, u, force=force).strip()
+        if random.randint(0,2) == 0:
+            print("組み合わせました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+        result = None
+        for xx in re.findall("[^。+\.+！+？+\!+\?+\n+]+[。+\.+！+？+\!+\?+\n+]?", x):
+            result = CONSIDERATION.looking(xx, u, force=force)
         if result == None:
             DATA.myVoice = None
             return

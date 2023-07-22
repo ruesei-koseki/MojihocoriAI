@@ -4,6 +4,7 @@ import json
 import random
 
 def learnSentence(x, u, save=True):
+    global beforeMessage, countor, isSilent
     #名前置き換え
     if u == "!input":
         for myname in DATA.settings["mynames"].split("|"):
@@ -19,6 +20,7 @@ def learnSentence(x, u, save=True):
         for myname in DATA.settings["mynames"].split("|"):
             x = x.replace(myname, "[I]")
         x = x.replace(DATA.lastUser, "[YOU]")
+    x = x.replace("+gen ", "")
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
         DATA.data["sentence"].append([x, "!"])
