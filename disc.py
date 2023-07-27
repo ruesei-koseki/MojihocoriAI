@@ -121,18 +121,6 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
         prevTime = time.time()
-        if "+gen" in blob.DATA.lastSentenceInput:
-            if random.random() < 0.87 and kaisu < 3:
-                result = blob.speakNextFreely()
-            else:
-                result = None
-        else:
-            result = blob.speakNext()
-        if result:
-            await speak(result)
-            kaisu += 1
-        else:
-            kaisu = 0
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system")
         print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
@@ -157,12 +145,11 @@ add = True
 async def on_message(message):
     global pin, channel, persons, prevTime, lastMessage, messages, helpMessage, prevTime, lastUsername, ii, mode, i, add
     ff = False
-    parts = message.content.split("\n")
-    for part in parts:
-        if bool(re.search("(.*?)===(.*?)", part)):
-            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
-            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-            ff = True
+    content = message.content
+    if bool(re.search("(.*?)===(.*?)", content)):
+        blob.MEMORY.learnSentence(content.split("===")[0], "!input")
+        blob.MEMORY.learnSentence(content.split("===")[1], "!output")
+        ff = True
     if ff:
         return
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
@@ -279,11 +266,11 @@ async def cron():
         nowTime = time.time()
         if nowTime >= prevTime + 20:
             if i > -2:
-                i = -1
+                i -= 1
             add = True
             if i <= -2:
                 add = False
-            print("沈黙を検知")
+            print("沈黙を検知: {}".format(i))
             dt_now = datetime.datetime.now()
             blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
             a = []
@@ -298,7 +285,7 @@ async def cron():
                 persons.append([blob.DATA.settings["myname"], 0])
             if mode == 2:
                 blob.receive("!command ignore", lastUsername, add=add)
-                if blob.DATA.myVoice != None and random.randint(0, len(persons)-1) == 0:
+                if blob.DATA.myVoice != None and random.randint(0, 5) == 0:
                     if blob.DATA.myVoice != None:
                         result = blob.speakFreely(add=add)
                         if result == None:
