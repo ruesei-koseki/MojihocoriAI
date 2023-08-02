@@ -204,9 +204,9 @@ async def on_message(message):
             return
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(persons) <= 2 or isinstance(message.channel, discord.DMChannel):
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username, force=True)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content), username, force=True)
         else:
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content), username)
         a = []
         for person in persons:
             if person[1] < 6:
