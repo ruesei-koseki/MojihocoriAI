@@ -14,4 +14,4 @@ with open(sys.argv[2], "r", encoding="utf-8") as f:
 for i in range(len(into)):
     blob.MEMORY.learnSentence(into[i], "!input")
     blob.MEMORY.learnSentence(out[i], "!")
-blob.MEMORY.save()
+blob.MEMORY.saveData()

@@ -80,13 +80,33 @@ def speakFreely(add=True):
     DATA.lastSentence = result
     return result
 
-
+def nextNode(add=True, force=False):
+    #自由に話す
+    if len(DATA.data["sentence"]) >= 2000:
+        if INTELLIGENCE.isNextOk() or force:
+            DATA.maeheart = DATA.heart
+            if random.randint(0,2) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
+                print("組み合わせました")
+                DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+                result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
+            else:
+                result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
+            DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+            DATA.lastSentenceHeart = result
+            result = result.replace("[YOU]", DATA.lastUser)
+            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+            DATA.myVoice = result
+            return True
+        else:
+            return None
+    else:
+        return None
 
 
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        #名前置き換え
+        DATA.maeheart = DATA.heart
         DATA.lastSentenceInput = x
         if "!system" not in u:
             DATA.lastUser = u
@@ -105,11 +125,11 @@ def receive(x, u, add=True, force=False):
         if result == None:
             DATA.myVoice = None
             return
+        DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.lastSentenceHeart = result
         DATA.myVoice = result
-        DATA.maeheart = DATA.heart
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))
     except:

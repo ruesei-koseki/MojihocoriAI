@@ -23,7 +23,8 @@ def learnSentence(x, u, save=True):
     x = x.replace("+gen ", "")
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
-        DATA.data["sentence"].append([x, "!"])
+        DATA.data["sentence"].append([x, "!output"])
+        DATA.data["sentence"].append(["!good", "!system"])
     else:
         DATA.data["sentence"].append([x, u])
     if u == "!output":
