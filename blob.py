@@ -107,21 +107,22 @@ def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
         DATA.maeheart = DATA.heart
-        DATA.lastSentenceInput = x
-        if "!system" not in u:
-            DATA.lastUser = u
-        DATA.userLog.append(u)
-        DATA.userLog.pop(0)
-        if add:
-            MEMORY.learnSentence(x, u)
-        if x == "!bad":
-            DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
-        if x == "!good":
-            DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        if random.randint(0,2) == 0:
-            print("組み合わせました")
-            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
-        result = CONSIDERATION.looking(x, u, force=force)
+        for xx in x.split("\n"):
+            DATA.lastSentenceInput = xx
+            if "!system" not in u:
+                DATA.lastUser = u
+            DATA.userLog.append(u)
+            DATA.userLog.pop(0)
+            if add:
+                MEMORY.learnSentence(xx, u)
+            if xx == "!bad":
+                DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
+            if xx == "!good":
+                DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
+            if random.randint(0,2) == 0:
+                print("組み合わせました")
+                DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+            result = CONSIDERATION.looking(xx, u, force=force)
         if result == None:
             DATA.myVoice = None
             return

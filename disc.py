@@ -216,9 +216,9 @@ async def on_message(message):
         
         print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content), username, force=True)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username, force=True)
         else:
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content), username)
+            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username)
         a = []
         for person in people:
             if person[1] < 6:
@@ -240,9 +240,9 @@ async def cron():
     global people, lastMessage, messages, mode, channel, i, add
     try:
         dt_now = datetime.datetime.now()
-        pattern = re.compile(r":00$")
+        pattern = re.compile(r"(0|3)0:00$")
         if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
-            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
+            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
         if mode == 1:
             if len(messages) != 0:
                 if blob.DATA.myVoice != None:
@@ -306,6 +306,7 @@ async def cron():
         traceback.print_exc()
 
 
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -369,6 +370,7 @@ def listen():
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
+"""
 
 
 client.run(TOKEN)
