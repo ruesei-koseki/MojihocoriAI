@@ -48,12 +48,9 @@ class IRC(object):
         self.server.send(b"QUIT :bye!") #QUITメッセージ送信
 
     def wait_message(self, func):
-        prevTime = time.time()
         while True:
-            if time.time() - prevTime >= 20:
-                prevTime = time.time()
-                topic_message = "TOPIC " + self.channel + "\n" #JOINメッセージ
-                self.server.send(topic_message.encode('utf-8')) #送信
+            topic_message = "TOPIC " + self.channel + "\n" #JOINメッセージ
+            self.server.send(topic_message.encode('utf-8')) #送信
 
 
             msg_buf = self.server.recv(BUF_SIZE) #受信
@@ -85,10 +82,12 @@ class IRC(object):
 
                 func(prefix.split("!")[0], text.split("\n")[0], params[0], "PRIVMSG")
             elif command == "INVITE":
+                text = last_param
                 if params[0] == self.nickname:
-                    func(prefix.split("!")[0], params[1], "invite", "INVITE")
+                    func(prefix.split("!")[0], text.split("\n")[0], "invite", "INVITE")
             elif command == "TOPIC":
-                func(prefix.split("!")[0], params[1], params[0], "TOPIC")
+                text = last_param
+                func(prefix.split("!")[0], text.split("\n")[0], params[0], "TOPIC")
 
 
 
@@ -105,16 +104,13 @@ import sys
 blob.initialize(sys.argv[1], "irc")
 
 
-persons = [[blob.DATA.settings["myname"], 0]]
+people = [[blob.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
 lastUsername = None
 messages = []
-prevTime = time.time()
 
-
-
-mode = 2
+mode = blob.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -127,11 +123,9 @@ import threading
 irc = IRC()
 irc.connect(blob.DATA.settings["irc"]["host"], blob.DATA.settings["irc"]["port"])
 irc.login(None, blob.DATA.settings["myname"], blob.DATA.settings["myname"], blob.DATA.settings["myname"])
-time.sleep(7)
+time.sleep(10)
 irc.join(blob.DATA.settings["irc"]["defaultChannel"])
 nowChannel = blob.DATA.settings["irc"]["defaultChannel"]
-
-
 
 
 def setMode(x):
@@ -140,18 +134,11 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 
-
-
-
-
-
-
-
-import Levenshtein
+add = True
 def speak(result):
-    global nowChannel, persons, restStep, restStep
+    global nowChannel, people, add
     if result:
-        print("users: {}".format(persons))
+        print("users: {}".format(people))
         pattern = re.compile(r"^!command")
         if bool(pattern.search(result)):
             try:
@@ -177,12 +164,6 @@ def speak(result):
         else:
             time.sleep(3)
             irc.privmsg(nowChannel, result)
-                
-        result = blob.speakNext()
-        if result:
-            speak(result)
-            #pass
-
 
 
 
@@ -191,26 +172,35 @@ def speak(result):
 
 
 i = 0
-add = True
 def cron():
-    global persons, prevTime, lastMessage, i, messages, restStep, mode, restTime, add
-    while True:
-        try:
-            if mode == 1:
-                if len(messages) != 0:
-                    i = 0
+    global people, lastMessage, messages, mode, channel, i, add
+    try:
+        while True:
+            dt_now = datetime.datetime.now()
+            pattern = re.compile(r"(0|3)0:00$")
+            if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
+                blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
+            if mode == 0:
+                if len(messages) == 0:
                     if blob.DATA.myVoice != None:
-                        if bool(re.search(blob.DATA.settings["mynames"], messages[-1][0])):
-                            result = blob.speakFreely()
+                        if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])):
+                            result = blob.speakFreely(add=add)
                             if result == None:
                                 pass
                             else:
                                 speak(result)
-            elif mode == 2:
+                        messages = []
+                else:
+                    if i > -2:
+                        i -= 1
+                    add = True
+                    if i <= -2:
+                        add = False
+                    blob.nextNode(add=add, force=True)
+            elif mode == 1 or mode == 2:
                 if len(messages) != 0 and lastMessage != None:
-                    i = 0
                     pss = []
-                    for ps in persons:
+                    for ps in people:
                         pss.append(ps[0])
                     aaa = ""
                     for person in pss:
@@ -219,56 +209,41 @@ def cron():
                         else:
                             aaa = aaa + person[0] + "|"
                     aaa = aaa[0:-1]
-                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, len(persons)-1) == 0 and blob.DATA.myVoice != None):
-                        result = blob.speakFreely()
+                    
+                    denominator = 0
+                    if len(people) - 2 < 0:
+                        denominator = 0
+                    else:
+                        denominator = len(people) - 2
+                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
+                        result = blob.speakFreely(add=add)
                         if result == None:
                             pass
                         else:
                             speak(result)
-            elif len(messages) != 0:
-                i = 0
-                
-
-            nowTime = time.time()
-            if nowTime >= prevTime + 5:
-                print("沈黙を検知")
-                if i >= 1:
-                    i = -1
-                elif i == -1:
-                    pass
+                    messages = []
                 else:
-                    i += 1
-                add = True
-                if i == -1:
-                    add = False
-                dt_now = datetime.datetime.now()
-                blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
-                a = []
-                for person in persons:
-                    if person[1] < 6:
-                        a.append([person[0], person[1]+1])
-                persons = a
-                pss = []
-                for ps in persons:
-                    pss.append(ps[0])
-                if blob.DATA.settings["myname"] not in pss:
-                    persons.append([blob.DATA.settings["myname"], 0])
-
-                if mode == 2:
-                    blob.receive("!command ignore", lastUsername, add=add)
-                    if blob.DATA.myVoice != None and random.randint(0, len(persons)) == 0:
-                            result = blob.speakFreely()
-                            if result == None:
-                                messages = []
-                            else:
-                                speak(result)
-                                messages = []
-                if mode == 1:
-                    blob.receive("!command ignore", lastUsername, add=add)
-                prevTime = time.time()
-        except:
-            import traceback
-            traceback.print_exc()
+                    if i > -2:
+                        i -= 1
+                    add = True
+                    if i <= -2:
+                        add = False
+                    denominator = 0
+                    if len(people) - 2 < 0:
+                        denominator = 0
+                    else:
+                        denominator = len(people) - 2
+                    if random.randint(0, denominator+6) == 0 and blob.DATA.myVoice != None:
+                        blob.nextNode(add=add, force=True)
+                        result = blob.speakFreely(add=add)
+                        if result == None:
+                            pass
+                        else:
+                            speak(result)
+            time.sleep(1)
+    except:
+        import traceback
+        traceback.print_exc()
         time.sleep(1)
 
 
@@ -293,17 +268,17 @@ cronThread1.start()
 
 ##########################################
 
-"""
+
 import speech_recognition as sr
 
 r = sr.Recognizer()
 mic = sr.Microphone()
 
 into = "こんにちは"
-
+from rapidfuzz.distance import Levenshtein
 
 def listen():
-    global messages, persons, prevTime, lastMessage, i
+    global messages, people, lastMessage, i
     while True:
         
         print("聞き取っています...")
@@ -318,14 +293,14 @@ def listen():
             into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
             print(into)
 
-            if Levenshtein.ratio(into, blob.DATA.lastSentence) < 0.85:
+            if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
 
 
                 pss = []
-                for ps in persons:
+                for ps in people:
                     pss.append(ps[0])
                 if "あなた" not in pss:
-                    persons.append(["あなた", 0])
+                    people.append(["あなた", 0])
 
 
 
@@ -340,7 +315,6 @@ def listen():
 
                     i = 0
                     lastMessage = [into, "あなた"]
-                    prevTime = time.time()
                     blob.receive(into, "あなた")
                     lastUsername = "あなた"
                     messages.append([into, "あなた"])
@@ -357,7 +331,7 @@ def listen():
 
 cronThread2 = threading.Thread(target=listen, daemon=True)
 cronThread2.start()
-"""
+
 
 
 
@@ -380,9 +354,9 @@ cronThread2.start()
 
 @irc.wait_message
 def onMessage(user, message, channel, a):
-    global nowChannel, messages, persons, prevTime, lastMessage
+    global nowChannel, messages, people, lastMessage, lastUsername, add, i
     if a == "INVITE":
-        persons = [[blob.DATA.settings["myname"], 0]]
+        people = [[blob.DATA.settings["myname"], 0]]
         blob.receive("!command ircMove {}".format(message), user)
         irc.part(nowChannel)
         time.sleep(1)
@@ -400,25 +374,31 @@ def onMessage(user, message, channel, a):
             message = message.split("(discord): ", 1)[1]
 
         a = []
-        for person in persons:
-            print(persons)
+        for person in people:
+            print(people)
             if person[1] < 6:
                 a.append([person[0], person[1]+0.5])
-        persons = a
+        people = a
         pss = []
-        for ps in persons:
+        for ps in people:
             pss.append(ps[0])
         if blob.DATA.settings["myname"] not in pss:
-            persons.append([blob.DATA.settings["myname"], 0])
+            people.append([blob.DATA.settings["myname"], 0])
         if user not in pss:
-            persons.append([user, 0])
+            people.append([user, 0])
 
 
 
 
 
         ff = False
-        xx = re.split('\n', message)
+        parts = message.split("\n")
+        for part in parts:
+            if bool(re.search("(.*?)===(.*?)", part)):
+                blob.MEMORY.learnSentence(part.split("===")[0], "!input")
+                blob.MEMORY.learnSentence(part.split("===")[1], "!output")
+                ff = True
+        xx = message.split(" | ")
         for x in xx:
             if bool(re.search("(.+): (.+)", x)):
                 blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
@@ -427,15 +407,20 @@ def onMessage(user, message, channel, a):
             return
 
 
-        if bool(re.search("沈黙モード|黙|だま", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
+        if bool(re.search("沈黙モード|(黙|だま)(れ|ってろ)", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
+            blob.receive("!command modeChange 0", user)
             setMode(0)
             return
         if bool(re.search("寡黙モード|静かに|しずかに", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
+            blob.receive("!command modeChange 1", user)
             setMode(1)
             return
         if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
+            blob.receive("!command modeChange 2", user)
             setMode(2)
             return
+        if bool(re.search("終了して|休んで(いい|良い)よ", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
+            exit()
         if bool(re.search("セーブして", message)) and bool(re.search(blob.DATA.settings["mynames"], message)):
             blob.receive("!command saveMyData", user)
             print("セーブします")
@@ -447,9 +432,11 @@ def onMessage(user, message, channel, a):
 
 
         lastMessage = [message, user]
-        prevTime = time.time()
         print("受信: {}, from {}".format(message, user))
-        blob.receive(message, user)
+        lastUsername = user
+        i = 0
+        add = True
+        blob.receive(message, user, add=add)
         messages.append([message, user])
 
 
