@@ -3,7 +3,7 @@ import INTELLIGENCE
 import json
 import random
 
-def learnSentence(x, u, save=True):
+def learnSentence(x, u, save=False):
     #名前置き換え
     if u == "!input":
         for myname in DATA.settings["mynames"].split("|"):
