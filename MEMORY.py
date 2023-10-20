@@ -28,12 +28,15 @@ def learnSentence(x, u, save=True):
     if u == "!output":
         DATA.data["sentence"].append(["!good", "!system"])
 
+    if len(DATA.data["sentence"]) >= 1000000:
+        while len(DATA.data["sentence"]) >= 1000000:
+            del DATA.data["sentence"][0]
+            if DATA.heart >= 5 or DATA.maeheart >= 5:
+                DATA.heart -= 1
+                DATA.maeheart -= 1
     if save:
         saveData()
 
 def saveData():
-    if len(DATA.data["sentence"]) >= 100000000:
-        while len(DATA.data["sentence"]) >= 100000000:
-            del DATA.data["sentence"][0]
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
