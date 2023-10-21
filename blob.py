@@ -1,8 +1,6 @@
-import random
-import re
+import pickle
 import json
 import random
-import time
 import CONSIDERATION
 import DATA
 import MEMORY
@@ -32,25 +30,47 @@ def initialize(directory, interface_):
     DATA.interface = interface_
 
     try:
-        with open(DATA.direc+"/data.json", "r", encoding="utf8") as f:
-            DATA.data = json.load(f)
-        with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
-            DATA.settings = json.load(f)
-    except:
-        with open(DATA.direc+"/data_backup.json", "r", encoding="utf8") as f:
-            DATA.data = json.load(f)
-        with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
-            DATA.settings = json.load(f)
-        with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
-            json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
-    DATA.heart = len(DATA.data["sentence"]) - 1
+        try:
+            with open(DATA.direc+"/data", "rb") as f:
+                DATA.data = pickle.load(f)
+            with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
+                DATA.settings = json.load(f)
+        except:
+            with open(DATA.direc+"/data_backup", "rb") as f:
+                DATA.data = pickle.load(f)
+            with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
+                DATA.settings = json.load(f)
+            with open(DATA.direc+"/data", "wb") as f:
+                pickle.dump(DATA.data, f)
+        DATA.heart = len(DATA.data["sentence"]) - 1
 
-    with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
-        json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
-    try:
-        DATA.data["words"]
+        with open(DATA.direc+"/data_backup", "wb") as f:
+            pickle.dump(DATA.data, f)
+        try:
+            DATA.data["words"]
+        except:
+            DATA.data["words"] = []
     except:
-        DATA.data["words"] = []
+        try:
+            with open(DATA.direc+"/data.json", "r", encoding="utf8") as f:
+                DATA.data = json.load(f)
+            with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
+                DATA.settings = json.load(f)
+        except:
+            with open(DATA.direc+"/data_backup.json", "r", encoding="utf8") as f:
+                DATA.data = json.load(f)
+            with open(DATA.direc+"/settings.json", "r", encoding="utf8") as f:
+                DATA.settings = json.load(f)
+            with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
+                json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+        DATA.heart = len(DATA.data["sentence"]) - 1
+
+        with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
+            json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+        try:
+            DATA.data["words"]
+        except:
+            DATA.data["words"] = []
 
 
 def speakFreely(add=True):
