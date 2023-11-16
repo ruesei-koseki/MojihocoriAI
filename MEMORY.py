@@ -1,6 +1,6 @@
 import DATA
 import INTELLIGENCE
-import json
+import pickle
 import random
 
 def learnSentence(x, u, save=False):
@@ -22,14 +22,32 @@ def learnSentence(x, u, save=False):
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
         DATA.data["sentence"].append([x, "!output"])
-        DATA.data["sentence"].append(["!good", "!system"])
     else:
         DATA.data["sentence"].append([x, u])
-    if u == "!output":
-        DATA.data["sentence"].append(["!good", "!system"])
 
-    if len(DATA.data["sentence"]) >= 1000000:
-        while len(DATA.data["sentence"]) >= 1000000:
+    if x != "!good":
+        flag = False
+        for iiiii in range(6):
+            if DATA.heart+1+iiiii < len(DATA.data["sentence"]) - 1:
+                if DATA.data["sentence"][DATA.heart+1+iiiii][0] == "!good":
+                    flag = True
+                    break
+        if flag:
+            DATA.data["sentence"].append(["!good", "!system"])
+
+    if x != "!bad":
+        flag = False
+        for iiiii in range(6):
+            if DATA.heart+1+iiiii < len(DATA.data["sentence"]) - 1:
+                if DATA.data["sentence"][DATA.heart+1+iiiii][0] == "!bad":
+                    flag = True
+                    break
+        if flag:
+            DATA.data["sentence"].append(["!bad", "!system"])
+
+
+    if len(DATA.data["sentence"]) >= 1600000:
+        while len(DATA.data["sentence"]) >= 1600000:
             del DATA.data["sentence"][0]
             if DATA.heart >= 5 or DATA.maeheart >= 5:
                 DATA.heart -= 1
@@ -38,5 +56,5 @@ def learnSentence(x, u, save=False):
         saveData()
 
 def saveData():
-    with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
-        json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+    with open(DATA.direc+"/data", "wb") as f:
+        pickle.dump(DATA.data, f)

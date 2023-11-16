@@ -52,10 +52,8 @@ TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-if len(blob.DATA.data["sentence"]) >= 1000:
-    mode = blob.DATA.settings["defaultMode"]
-else:
-    mode = 1
+
+mode = blob.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -125,6 +123,11 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
                 
+                result = blob.nextNode(add=add)
+                if result:
+                    result = blob.speakFreely(add=add)
+                    await speak(result)
+                
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
         messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
@@ -148,6 +151,27 @@ add = True
 @client.event
 async def on_message(message):
     global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add
+
+    ff = False
+    parts = message.content.split("\n")
+    for part in parts:
+        if bool(re.search("(.*?)===(.*?)", part)):
+            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
+            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
+            ff = True
+    if ff:
+        blob.MEMORY.learnSentence("!good", "!system")
+        return
+    
+    ff = False
+    xx = message.content.split("\n")
+    for x in xx:
+        if bool(re.search("(.+): (.+)", x)):
+            blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
+            ff = True
+    if ff:
+        blob.MEMORY.learnSentence("!good", "!system")
+        return
 
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         username = message.author.name.split("#")[0]
@@ -177,21 +201,6 @@ async def on_message(message):
             print(attachment.url)
         message.content += additional
 
-        ff = False
-        parts = message.content.split("\n")
-        for part in parts:
-            if bool(re.search("(.*?)===(.*?)", part)):
-                blob.MEMORY.learnSentence(part.split("===")[0], "!input")
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-                ff = True
-        xx = message.content.split("\n")
-        for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
-                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
-                ff = True
-        if ff:
-            return
-
         if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
@@ -210,7 +219,7 @@ async def on_message(message):
         if bool(re.search("セーブして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             blob.receive("!command saveMyData", username)
             print("セーブします")
-            blob.MEMORY.save()
+            blob.MEMORY.saveData()
             print("完了")
             return
         
@@ -219,16 +228,6 @@ async def on_message(message):
             blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username, force=True)
         else:
             blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username)
-        a = []
-        for person in people:
-            if person[1] < 6:
-                a.append([person[0], person[1]+0.5])
-        people = a
-        pss = []
-        for ps in people:
-            pss.append(ps[0])
-        if blob.DATA.settings["myname"] not in pss:
-            people.append([blob.DATA.settings["myname"], 0])
         lastMessage = [message.content, message.author.name]
         lastUsername = username
         i = 0
@@ -243,6 +242,18 @@ async def cron():
         pattern = re.compile(r"(0|3)0:00$")
         if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
             blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+
+        a = []
+        for person in people:
+            if person[1] < 6:
+                a.append([person[0], person[1]+0.5])
+        people = a
+        pss = []
+        for ps in people:
+            pss.append(ps[0])
+        if blob.DATA.settings["myname"] not in pss:
+            people.append([blob.DATA.settings["myname"], 0])
+
         if mode == 1:
             if len(messages) != 0:
                 if blob.DATA.myVoice != None:
@@ -254,12 +265,19 @@ async def cron():
                             await speak(result)
                     messages = []
             else:
-                if i > -2:
-                    i -= 1
-                add = True
-                if i <= -2:
-                    add = False
-                blob.nextNode(add=add, force=True)
+                if len(blob.DATA.data["sentence"]) >= 5000:
+                    if i > -2:
+                        i -= 1
+                    add = True
+                    if i <= -2:
+                        add = False
+                    denominator = 0
+                    if len(people) - 2 < 0:
+                        denominator = 0
+                    else:
+                        denominator = len(people) - 2
+                    if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+                        blob.nextNode(add=add, force=True)
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
                 pss = []
@@ -286,21 +304,22 @@ async def cron():
                         await speak(result)
                 messages = []
             else:
-                if i > -2:
-                    i -= 1
-                add = True
-                if i <= -2:
-                    add = False
-                denominator = 0
-                if len(people) - 2 < 0:
+                if len(blob.DATA.data["sentence"]) >= 5000:
+                    if i > -2:
+                        i -= 1
+                    add = True
+                    if i <= -2:
+                        add = False
                     denominator = 0
-                else:
-                    denominator = len(people) - 2
-                if random.randint(0, denominator+3) == 0 and blob.DATA.myVoice != None:
-                    a = blob.nextNode(add=add, force=True)
-                    if a:
-                        result = blob.speakFreely(add=add)
-                        await speak(result)
+                    if len(people) - 2 < 0:
+                        denominator = 0
+                    else:
+                        denominator = len(people) - 2
+                    if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+                        a = blob.nextNode(add=add, force=True)
+                        if a:
+                            result = blob.speakFreely(add=add)
+                            await speak(result)
     except:
         import traceback
         traceback.print_exc()

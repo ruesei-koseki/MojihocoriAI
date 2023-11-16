@@ -102,23 +102,20 @@ def speakFreely(add=True):
 
 def nextNode(add=True, force=False):
     #自由に話す
-    if len(DATA.data["sentence"]) >= 2000:
-        if INTELLIGENCE.isNextOk() or force:
-            DATA.maeheart = DATA.heart
-            if random.randint(0,2) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
-                print("組み合わせました")
-                DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
-                result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
-            else:
-                result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
-            DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-            DATA.lastSentenceHeart = result
-            result = result.replace("[YOU]", DATA.lastUser)
-            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-            DATA.myVoice = result
-            return True
+    if INTELLIGENCE.isNextOk() or force:
+        DATA.maeheart = DATA.heart
+        if random.randint(0,2) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
+            print("組み合わせました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
+            result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
         else:
-            return None
+            result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
+        DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        DATA.lastSentenceHeart = result
+        result = result.replace("[YOU]", DATA.lastUser)
+        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+        DATA.myVoice = result
+        return True
     else:
         return None
 
