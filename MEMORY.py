@@ -1,6 +1,6 @@
 import DATA
 import INTELLIGENCE
-import pickle
+import json
 import random
 
 def learnSentence(x, u, save=False):
@@ -56,5 +56,5 @@ def learnSentence(x, u, save=False):
         saveData()
 
 def saveData():
-    with open(DATA.direc+"/data", "wb") as f:
-        pickle.dump(DATA.data, f)
+    with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
+        json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))

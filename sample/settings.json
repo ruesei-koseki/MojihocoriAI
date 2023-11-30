@@ -9,7 +9,7 @@
     ],
     "myname": "sanae",
     "mynames": "sanae|Sanae|早苗",
-    "defaultMode": 1,
+    "defaultMode": 2,
     "irc":{
         "host": "localhost",
         "port": 6667,
