@@ -26,7 +26,7 @@ botに「アンピン」というと、チャンネルを動けるようにな�
 
 ## インストール
 1. ```git clone https://github.com/ruesei-koseki/blobAI/```
-2. ```pip install py-cord```
+2. ```pip install discord.py```
 3. ```cp sample blobAI```
 4. mybot/settings.jsonを設定
 5. ```python disc.py blobAI```
