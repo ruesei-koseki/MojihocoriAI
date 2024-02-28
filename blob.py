@@ -49,6 +49,7 @@ def initialize(directory, interface_):
     except:
         DATA.data["words"] = []
 
+    DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
 
 def speakFreely(add=True):
     #自由に話す
@@ -69,14 +70,13 @@ def nextNode(add=True, force=False):
     #自由に話す
     if INTELLIGENCE.isNextOk() or force:
         DATA.maeheart = DATA.heart
-        if random.randint(0,2) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
+        if random.randint(0,4) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
             print("組み合わせました")
             DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
             result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
         else:
             result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-        DATA.lastSentenceHeart = result
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.myVoice = result
@@ -95,16 +95,16 @@ def receive(x, u, add=True, force=False):
                 DATA.lastUser = u
             DATA.userLog.append(u)
             DATA.userLog.pop(0)
-            if add:
-                MEMORY.learnSentence(xx, u)
             if xx == "!bad":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
             if xx == "!good":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-            if random.randint(0,2) == 0:
+            if random.randint(0,4) == 0:
                 print("組み合わせました")
                 DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
             result = CONSIDERATION.looking(xx, u, force=force)
+            if add:
+                MEMORY.learnSentence(xx, u)
         if result == None:
             DATA.myVoice = None
             return

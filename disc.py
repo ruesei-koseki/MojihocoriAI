@@ -16,12 +16,14 @@ lastUsername = "誰か"
 messages = []
 pin = False
 
+import datetime
+dt = datetime.datetime.now()
+
 from discord.ext import tasks
 import discord
 import threading
 import asyncio
 from rapidfuzz.distance import Levenshtein
-import datetime
 
 helpMessage = f"""==blobAIヘルプ==
 このbotはユーザーのメッセージに自分の意思で返信するAIです。
@@ -37,7 +39,8 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 [YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
 
 =強化学習=
-「×」「❌」とメッセージを送ると、「このメッセージは悪い」と教えることができます。
+「!bad」とメッセージを送ると、「このメッセージは悪い」と教えることができます。
+「!good」とメッセージを送ると、「このメッセージは良い」と教えることができます。
 
 =配慮コマンドについて=
 botに「通常モード」というと「通常モード」になり、メッセージにbotの名前が含まれてなくても人数に応じて頻度を変えて返信します。また、沈黙が続いたときにメッセージを送信します。
@@ -65,7 +68,7 @@ def setMode(x):
 
 kaisu = 0
 async def speak(result):
-    global channel, people, mode, pin, lastMessage, messages, kaisu
+    global channel, people, mode, pin, lastMessage, messages, kaisu, dt
     try:
         print("{}: {}".format(blob.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
@@ -127,6 +130,7 @@ async def speak(result):
                 if result:
                     result = blob.speakFreely(add=add)
                     await speak(result)
+                    dt = datetime.datetime.now()
                 
     except:
         blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
@@ -150,7 +154,7 @@ add = True
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add
+    global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
 
     ff = False
     parts = message.content.split("\n")
@@ -233,10 +237,11 @@ async def on_message(message):
         i = 0
         add = True
         messages.append([message.content, message.author.name])
+        dt = datetime.datetime.now()
 
 @tasks.loop(seconds=1)
 async def cron():
-    global people, lastMessage, messages, mode, channel, i, add
+    global people, lastMessage, messages, mode, channel, i, add, dt
     try:
         dt_now = datetime.datetime.now()
         pattern = re.compile(r"(0|3)0:00$")
@@ -265,19 +270,18 @@ async def cron():
                             await speak(result)
                     messages = []
             else:
-                if len(blob.DATA.data["sentence"]) >= 5000:
-                    if i > -2:
-                        i -= 1
-                    add = True
-                    if i <= -2:
-                        add = False
+                if i > -2:
+                    i -= 1
+                add = True
+                if i <= -2:
+                    add = False
+                denominator = 0
+                if len(people) - 2 < 0:
                     denominator = 0
-                    if len(people) - 2 < 0:
-                        denominator = 0
-                    else:
-                        denominator = len(people) - 2
-                    if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
-                        blob.nextNode(add=add, force=True)
+                else:
+                    denominator = len(people) - 2
+                if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+                    blob.nextNode(add=add, force=True)
         elif mode == 2:
             if len(messages) != 0 and lastMessage != None:
                 pss = []
@@ -304,28 +308,37 @@ async def cron():
                         await speak(result)
                 messages = []
             else:
-                if len(blob.DATA.data["sentence"]) >= 5000:
-                    if i > -2:
-                        i -= 1
-                    add = True
-                    if i <= -2:
-                        add = False
+                if i > -2:
+                    i -= 1
+                add = True
+                if i <= -2:
+                    add = False
+                denominator = 0
+                if len(people) - 2 < 0:
                     denominator = 0
-                    if len(people) - 2 < 0:
-                        denominator = 0
-                    else:
-                        denominator = len(people) - 2
-                    if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
-                        a = blob.nextNode(add=add, force=True)
-                        if a:
-                            result = blob.speakFreely(add=add)
-                            await speak(result)
+                else:
+                    denominator = len(people) - 2
+                if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+                    a = blob.nextNode(add=add, force=True)
+                    if a:
+                        result = blob.speakFreely(add=add)
+                        await speak(result)
+        if dt_now - dt >= datetime.timedelta(seconds=20):
+            if i > -2:
+                i -= 1
+            add = True
+            if i <= -2:
+                add = False
+            dt = datetime.datetime.now()
+            blob.receive("!command ignore", lastMessage[1], add=add)
+            print("沈黙を検知")
+        
     except:
         import traceback
         traceback.print_exc()
 
 
-"""
+
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -370,10 +383,28 @@ def listen():
                 else:
 
 
-                    lastMessage = [into, "あなた"]
-                    blob.receive(into, "あなた")
-                    lastUsername = "あなた"
-                    messages.append([into, "あなた"])
+                    a = 0
+                    b = ""
+                    c = []
+                    for intoo in into.split():
+                        if a >= 4:
+                            c.append(b)
+                            b = ""
+                            a = 0
+                        else:
+                            if a != 0:
+                                b += " "
+                        b += intoo
+                        a += 1
+                    if b != "":
+                        c.append(b)
+                        b = ""
+                        a = 0
+                    for cc in c:
+                        lastMessage = [cc, "あなた"]
+                        blob.receive(cc, "あなた")
+                        lastUsername = "あなた"
+                        messages.append([cc, "あなた"])
 
 
 
@@ -389,7 +420,7 @@ def listen():
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
-"""
+
 
 
 client.run(TOKEN)
