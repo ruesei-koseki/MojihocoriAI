@@ -3,7 +3,9 @@ import INTELLIGENCE
 import json
 import CONSIDERATION
 
-def learnSentence(x, u, save=True):
+def learnSentence(x, u, save=True, mama=False):
+    #if len(DATA.data["sentence"]) >= 1000 or mama:
+        
     #名前置き換え
     if u == "!input":
         for myname in DATA.settings["mynames"].split("|"):
@@ -19,6 +21,9 @@ def learnSentence(x, u, save=True):
         for myname in DATA.settings["mynames"].split("|"):
             x = x.replace(myname, "[I]")
         x = x.replace(DATA.lastUser, "[YOU]")
+    #mamaがTrueのときに自分の名前以外を無効にする
+    if u not in DATA.settings["mynames"].split("|") and mama and u not in ["!input", "!output", "!system"]:
+        u = "!input-"+u
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
         DATA.data["sentence"].append([x, "!output"])
@@ -27,26 +32,24 @@ def learnSentence(x, u, save=True):
 
     flag1 = False
     flag2 = False
-    if x != "!bad" and x != "!good":
-        if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
-            if DATA.data["sentence"][DATA.heart+1][0] == "!good":
-                flag1 = True
-        if flag1:
-            print("このメッセージは良い")
-            DATA.data["sentence"].append(["!good", "!system"])
-            result = CONSIDERATION.looking("!good", "!system")
+    if u[0] != "!" and not mama:
+        if x != "!bad" and x != "!good":
+            if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
+                if DATA.data["sentence"][DATA.heart+1][0] == "!good":
+                    flag1 = True
+            if flag1:
+                print("このメッセージは良い")
+                DATA.data["sentence"].append(["!good", "!system"])
+                result = CONSIDERATION.looking("!good", "!system")
 
-    if x != "!bad" and x != "!good" and not flag1:
-        if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
-            if DATA.data["sentence"][DATA.heart+1][0] == "!bad":
-                flag2 = True
-        if flag2:
-            print("このメッセージは悪い")
-            DATA.data["sentence"].append(["!bad", "!system"])
-            result = CONSIDERATION.looking("!bad", "!system")
-
-    if x== "!bad" or x == "!good":
-        result = CONSIDERATION.looking(x, u)
+        if x != "!bad" and x != "!good" and not flag1:
+            if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
+                if DATA.data["sentence"][DATA.heart+1][0] == "!bad":
+                    flag2 = True
+            if flag2:
+                print("このメッセージは悪い")
+                DATA.data["sentence"].append(["!bad", "!system"])
+                result = CONSIDERATION.looking("!bad", "!system")
         
 
     if len(DATA.data["sentence"]) >= 1600000:

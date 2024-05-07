@@ -156,26 +156,31 @@ add = True
 async def on_message(message):
     global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
 
-    ff = False
-    parts = message.content.split("\n")
-    for part in parts:
-        if bool(re.search("(.*?)===(.*?)", part)):
-            blob.MEMORY.learnSentence(part.split("===")[0], "!input")
-            blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-            ff = True
-    if ff:
-        blob.MEMORY.learnSentence("!good", "!system")
-        return
-    
-    ff = False
-    xx = message.content.split("\n")
-    for x in xx:
-        if bool(re.search("(.+): (.+)", x)):
-            blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
-            ff = True
-    if ff:
-        blob.MEMORY.learnSentence("!good", "!system")
-        return
+    if message.author.name == "zansetsuber":
+        ff = False
+        parts = message.content.split("\n")
+        for part in parts:
+            if bool(re.search("(.*?)===(.*?)", part)):
+                if part.split("===")[0] == "":
+                    blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                else:
+                    blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                ff = True
+        if ff:
+            blob.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
+        
+        ff = False
+        xx = message.content.split("\n")
+        for x in xx:
+            if bool(re.search("(.+): (.+)", x)):
+                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+                ff = True
+        if ff:
+            blob.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
 
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         username = message.author.name.split("#")[0]
@@ -219,6 +224,9 @@ async def on_message(message):
             return
         if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             pin = False
+            return
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+            await channel.send(helpMessage)
             return
         if bool(re.search("セーブして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
             blob.receive("!command saveMyData", username)
@@ -275,15 +283,11 @@ async def cron():
                 add = True
                 if i <= -2:
                     add = False
-                denominator = 0
-                if len(people) - 2 < 0:
-                    denominator = 0
-                else:
-                    denominator = len(people) - 2
-                if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+
+                if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
                     blob.nextNode(add=add, force=True)
         elif mode == 2:
-            if len(messages) != 0 and lastMessage != None:
+            if len(messages) != 0:
                 pss = []
                 for ps in people:
                     pss.append(ps[0])
@@ -295,11 +299,7 @@ async def cron():
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
                 
-                denominator = 0
-                if len(people) - 2 < 0:
-                    denominator = 0
-                else:
-                    denominator = len(people) - 2
+                denominator = len(people)
                 if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely(add=add)
                     if result == None:
@@ -313,12 +313,8 @@ async def cron():
                 add = True
                 if i <= -2:
                     add = False
-                denominator = 0
-                if len(people) - 2 < 0:
-                    denominator = 0
-                else:
-                    denominator = len(people) - 2
-                if random.randint(0, denominator+25) == 0 and blob.DATA.myVoice != None:
+
+                if random.randint(0, 180) == 0 and blob.DATA.myVoice != None:
                     a = blob.nextNode(add=add, force=True)
                     if a:
                         result = blob.speakFreely(add=add)
@@ -330,7 +326,7 @@ async def cron():
             if i <= -2:
                 add = False
             dt = datetime.datetime.now()
-            blob.receive("!command ignore", lastMessage[1], add=add)
+            blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
         
     except:
@@ -338,7 +334,7 @@ async def cron():
         traceback.print_exc()
 
 
-
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -348,7 +344,7 @@ into = "こんにちは"
 
 
 def listen():
-    global messages, people, lastMessage
+    global messages, people, lastMessage, i
     while True:
         
         print("聞き取っています...")
@@ -411,15 +407,22 @@ def listen():
 
         # 以下は認識できなかったときに止まらないように。
         except sr.UnknownValueError:
-            pass
+            if i > -2:
+                i -= 1
+            add = True
+            if i <= -2:
+                add = False
+            dt = datetime.datetime.now()
+            blob.receive("!command ignore", lastUser, add=add)
+            print("沈黙を検知")
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
 
 
 import threading
 cronThread = threading.Thread(target=listen, daemon=True)
 cronThread.start()
+"""
 
 
 
