@@ -107,16 +107,14 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(4):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
                 rate = 0.8
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.7
             if kaisu == 3:
-                rate = 0.4
-            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -197,16 +195,14 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(4):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
                 rate = 0.8
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.7
             if kaisu == 3:
-                rate = 0.4
-            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -399,16 +395,14 @@ def lookingForNext(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(4):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
                 rate = 0.8
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.7
             if kaisu == 3:
-                rate = 0.4
-            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -489,16 +483,14 @@ def lookingForNext(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(4):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
                 rate = 0.8
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.7
             if kaisu == 3:
-                rate = 0.4
-            if kaisu == 4:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
