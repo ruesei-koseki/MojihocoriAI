@@ -314,7 +314,7 @@ async def cron():
                 if i <= -2:
                     add = False
 
-                if random.randint(0, 180) == 0 and blob.DATA.myVoice != None:
+                if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
                     a = blob.nextNode(add=add, force=True)
                     if a:
                         result = blob.speakFreely(add=add)
