@@ -156,34 +156,33 @@ add = True
 async def on_message(message):
     global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
 
-    if message.author.name == "zansetsuber":
-        ff = False
-        parts = message.content.split("\n")
-        for part in parts:
-            if bool(re.search("(.*?)===(.*?)", part)):
-                if part.split("===")[0] == "":
-                    blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-                else:
-                    blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-                ff = True
-        if ff:
-            blob.MEMORY.learnSentence("!good", "!system", mama=True)
-            return
-        
-        ff = False
-        xx = message.content.split("\n")
-        for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
-                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
-                ff = True
-        if ff:
-            blob.MEMORY.learnSentence("!good", "!system", mama=True)
-            return
+    ff = False
+    parts = message.content.split("\n")
+    for part in parts:
+        if bool(re.search("(.*?)===(.*?)", part)):
+            if part.split("===")[0] == "":
+                blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+            else:
+                blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+            ff = True
+    if ff:
+        blob.MEMORY.learnSentence("!good", "!system", mama=True)
+        return
+    
+    ff = False
+    xx = message.content.split("\n")
+    for x in xx:
+        if bool(re.search("(.+): (.+)", x)):
+            blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+            ff = True
+    if ff:
+        blob.MEMORY.learnSentence("!good", "!system", mama=True)
+        return
 
     if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
-        username = message.author.name.split("#")[0]
+        username = message.author.display_name.split("#")[0]
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
@@ -240,11 +239,11 @@ async def on_message(message):
             blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username, force=True)
         else:
             blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username)
-        lastMessage = [message.content, message.author.name]
+        lastMessage = [message.content, message.author.display_name]
         lastUsername = username
         i = 0
         add = True
-        messages.append([message.content, message.author.name])
+        messages.append([message.content, message.author.display_name])
         dt = datetime.datetime.now()
 
 @tasks.loop(seconds=1)
@@ -252,9 +251,11 @@ async def cron():
     global people, lastMessage, messages, mode, channel, i, add, dt
     try:
         dt_now = datetime.datetime.now()
+        """
         pattern = re.compile(r"(0|3)0:00$")
         if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
             blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+        """
 
         a = []
         for person in people:
@@ -278,14 +279,9 @@ async def cron():
                             await speak(result)
                     messages = []
             else:
-                if i > -2:
-                    i -= 1
-                add = True
-                if i <= -2:
-                    add = False
 
                 if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
-                    blob.nextNode(add=add, force=True)
+                    blob.nextNode(add=add)
         elif mode == 2:
             if len(messages) != 0:
                 pss = []
@@ -299,7 +295,10 @@ async def cron():
                         aaa = aaa + person[0] + "|"
                 aaa = aaa[0:-1]
                 
-                denominator = len(people)
+                if len(people) <= 1:
+                    denominator = 0
+                else:
+                    denominator = len(people) - 2
                 if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely(add=add)
                     if result == None:
@@ -308,24 +307,14 @@ async def cron():
                         await speak(result)
                 messages = []
             else:
-                if i > -2:
-                    i -= 1
-                add = True
-                if i <= -2:
-                    add = False
-
-                if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
-                    a = blob.nextNode(add=add, force=True)
+                if random.randint(0, 5) == 0 and blob.DATA.myVoice != None:
+                    a = blob.nextNode(add=add)
                     if a:
                         result = blob.speakFreely(add=add)
                         await speak(result)
         if dt_now - dt >= datetime.timedelta(seconds=20):
-            if i > -2:
-                i -= 1
-            add = True
-            if i <= -2:
-                add = False
             dt = datetime.datetime.now()
+            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
             blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
         
@@ -407,11 +396,6 @@ def listen():
 
         # 以下は認識できなかったときに止まらないように。
         except sr.UnknownValueError:
-            if i > -2:
-                i -= 1
-            add = True
-            if i <= -2:
-                add = False
             dt = datetime.datetime.now()
             blob.receive("!command ignore", lastUser, add=add)
             print("沈黙を検知")

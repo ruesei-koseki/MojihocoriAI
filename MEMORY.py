@@ -32,7 +32,7 @@ def learnSentence(x, u, save=True, mama=False):
 
     flag1 = False
     flag2 = False
-    if u[0] != "!" and not mama:
+    if "!" in u[0] and not mama:
         if x != "!bad" and x != "!good":
             if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
                 if DATA.data["sentence"][DATA.heart+1][0] == "!good":

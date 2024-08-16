@@ -44,10 +44,6 @@ def initialize(directory, interface_):
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
-    try:
-        DATA.data["words"]
-    except:
-        DATA.data["words"] = []
 
     DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
 
@@ -66,24 +62,17 @@ def speakFreely(add=True):
     DATA.lastSentence = result
     return result
 
-def nextNode(add=True, force=False):
+def nextNode(add=True):
     #自由に話す
-    if INTELLIGENCE.isNextOk() or force:
+    if INTELLIGENCE.isNextOk():
         DATA.maeheart = DATA.heart
-        if random.randint(0,3) == 0 or DATA.heart >= len(DATA.data["sentence"]) - 1:
-            print("組み合わせました")
-            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
-            result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
-        else:
-            result = CONSIDERATION.lookingForNext(DATA.lastSentenceHeart, DATA.heartLastSpeaker)
-        if result != None:
-            DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-            result = result.replace("[YOU]", DATA.lastUser)
-            result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-            DATA.myVoice = result
-            return True
-        else:
-            return None
+        DATA.heart += 1
+        result = DATA.data["sentence"][DATA.heart][0]
+        DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        result = result.replace("[YOU]", DATA.lastUser)
+        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+        DATA.myVoice = result
+        return True
     else:
         return None
 
@@ -103,9 +92,6 @@ def receive(x, u, add=True, force=False):
                     DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
                 if xx == "!good":
                     DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-            if random.randint(0,3) == 0:
-                print("組み合わせました")
-                DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1)
             result = CONSIDERATION.looking(xx, u, force=force)
             if add:
                 MEMORY.learnSentence(xx, u)
