@@ -268,7 +268,7 @@ cronThread1.start()
 
 ##########################################
 
-
+"""
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -331,7 +331,7 @@ def listen():
 
 cronThread2 = threading.Thread(target=listen, daemon=True)
 cronThread2.start()
-
+"""
 
 
 
