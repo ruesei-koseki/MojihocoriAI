@@ -109,7 +109,7 @@ channel = None
 lastMessage = None
 lastUsername = None
 messages = []
-
+dt = datetime.datetime.now()
 mode = blob.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
@@ -134,9 +134,10 @@ def setMode(x):
     print("mode: {}".format(mode))
 
 
+import subprocess
 add = True
 def speak(result):
-    global nowChannel, people, add
+    global nowChannel, people, add, dt
     if result:
         print("users: {}".format(people))
         pattern = re.compile(r"^!command")
@@ -159,6 +160,14 @@ def speak(result):
                     setMode(int(com[2]))
                 elif com[1] == "saveMyData":
                     blob.MEMORY.save()
+                elif com[1] == "shell":
+                    proc = subprocess.Popen(com[2], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                    res = proc.communicate()[0].decode("utf-8")
+                    err = proc.communicate()[1].decode("utf-8")
+                    if res:
+                        blob.receive(res, "!shell", add=add)
+                    if err:
+                        blob.receive("エラーが発生しました！\n {}".format(err), "!shell", add=add)
             except:
                 pass
         else:
@@ -170,18 +179,30 @@ def speak(result):
 
 
 
-
-i = 0
 def cron():
-    global people, lastMessage, messages, mode, channel, i, add
+    global people, lastMessage, messages, mode, channel, i, add, dt
     try:
         while True:
             dt_now = datetime.datetime.now()
+            """
             pattern = re.compile(r"(0|3)0:00$")
             if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
-                blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
-            if mode == 0:
-                if len(messages) == 0:
+                blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+            """
+
+            a = []
+            for person in people:
+                if person[1] < 6:
+                    a.append([person[0], person[1]+0.5])
+            people = a
+            pss = []
+            for ps in people:
+                pss.append(ps[0])
+            if blob.DATA.settings["myname"] not in pss:
+                people.append([blob.DATA.settings["myname"], 0])
+
+            if mode == 1:
+                if len(messages) != 0:
                     if blob.DATA.myVoice != None:
                         if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])):
                             result = blob.speakFreely(add=add)
@@ -191,14 +212,11 @@ def cron():
                                 speak(result)
                         messages = []
                 else:
-                    if i > -2:
-                        i -= 1
-                    add = True
-                    if i <= -2:
-                        add = False
-                    blob.nextNode(add=add, force=True)
-            elif mode == 1 or mode == 2:
-                if len(messages) != 0 and lastMessage != None:
+
+                    if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
+                        blob.nextNode(add=add)
+            elif mode == 2:
+                if len(messages) != 0:
                     pss = []
                     for ps in people:
                         pss.append(ps[0])
@@ -209,9 +227,8 @@ def cron():
                         else:
                             aaa = aaa + person[0] + "|"
                     aaa = aaa[0:-1]
-                    
-                    denominator = 0
-                    if len(people) - 2 < 0:
+
+                    if len(people) <= 1:
                         denominator = 0
                     else:
                         denominator = len(people) - 2
@@ -223,23 +240,16 @@ def cron():
                             speak(result)
                     messages = []
                 else:
-                    if i > -2:
-                        i -= 1
-                    add = True
-                    if i <= -2:
-                        add = False
-                    denominator = 0
-                    if len(people) - 2 < 0:
-                        denominator = 0
-                    else:
-                        denominator = len(people) - 2
-                    if random.randint(0, denominator+6) == 0 and blob.DATA.myVoice != None:
-                        blob.nextNode(add=add, force=True)
-                        result = blob.speakFreely(add=add)
-                        if result == None:
-                            pass
-                        else:
+                    if random.randint(0, 5) == 0 and blob.DATA.myVoice != None:
+                        a = blob.nextNode(add=add)
+                        if a:
+                            result = blob.speakFreely(add=add)
                             speak(result)
+            if dt_now - dt >= datetime.timedelta(seconds=20):
+                dt = datetime.datetime.now()
+                blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
+                blob.receive("!command ignore", lastUsername, add=add)
+                print("沈黙を検知")
             time.sleep(1)
     except:
         import traceback
@@ -355,6 +365,7 @@ cronThread2.start()
 @irc.wait_message
 def onMessage(user, message, channel, a):
     global nowChannel, messages, people, lastMessage, lastUsername, add, i
+    message = message.replace("\n", "")
     if a == "INVITE":
         people = [[blob.DATA.settings["myname"], 0]]
         blob.receive("!command ircMove {}".format(message), user)
@@ -388,22 +399,29 @@ def onMessage(user, message, channel, a):
             people.append([user, 0])
 
 
-
-
-
         ff = False
         parts = message.split("\n")
         for part in parts:
             if bool(re.search("(.*?)===(.*?)", part)):
-                blob.MEMORY.learnSentence(part.split("===")[0], "!input")
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output")
-                ff = True
-        xx = message.split(" | ")
-        for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
-                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0])
+                if part.split("===")[0] == "":
+                    blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                else:
+                    blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                    blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
                 ff = True
         if ff:
+            blob.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
+
+        ff = False
+        xx = message.split("\n")
+        for x in xx:
+            if bool(re.search("(.+): (.+)", x)):
+                blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+                ff = True
+        if ff:
+            blob.MEMORY.learnSentence("!good", "!system", mama=True)
             return
 
 
