@@ -2,28 +2,15 @@ import DATA
 import INTELLIGENCE
 import json
 import CONSIDERATION
+import random
 
 def learnSentence(x, u, save=True, mama=False):
     #if len(DATA.data["sentence"]) >= 1000 or mama:
-        
-    #名前置き換え
-    if u == "!input":
-        for myname in DATA.settings["mynames"].split("|"):
-            x = x.replace(myname, "[YOU]")
-    elif u == "!output":
-        for myname in DATA.settings["mynames"].split("|"):
-            x = x.replace(myname, "[I]")
-    elif u != "!":
-        x = x.replace(DATA.lastUser, "[I]")
-        for myname in DATA.settings["mynames"].split("|"):
-            x = x.replace(myname, "[YOU]")
-    else:
-        for myname in DATA.settings["mynames"].split("|"):
-            x = x.replace(myname, "[I]")
-        x = x.replace(DATA.lastUser, "[YOU]")
+    
     #mamaがTrueのときに自分の名前以外を無効にする
     if u not in DATA.settings["mynames"].split("|") and mama and u not in ["!input", "!output", "!system"]:
         u = "!input-"+u
+
     #言葉を脳に記録する
     if u in DATA.settings["mynames"].split("|"):
         DATA.data["sentence"].append([x, "!output"])
@@ -50,7 +37,11 @@ def learnSentence(x, u, save=True, mama=False):
                 print("このメッセージは悪い")
                 DATA.data["sentence"].append(["!bad", "!system"])
                 result = CONSIDERATION.looking("!bad", "!system")
-        
+
+    words = x.split()  # スペースで区切られた単語を検出
+    for word in words:
+        if word not in DATA.data["words"] and word != x:  # 既に記憶されていない単語のみ追加
+            DATA.data["words"].append(word)
 
     if len(DATA.data["sentence"]) >= 1600000:
         while len(DATA.data["sentence"]) >= 1600000:

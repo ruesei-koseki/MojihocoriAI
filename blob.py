@@ -13,6 +13,7 @@ DATA.heart = None #今の気持ち(ログの座標で表される)
 DATA.lastSentence = "" #最後のbotの言葉
 DATA.lastSentenceHeart = "" #最後のbotのベース発言
 DATA.lastSentenceInput = "" #最後に聞いた言葉
+DATA.lastSentenceInputHeart = "" #最後に聞いた言葉
 DATA.heartLastSpeaker = None #過去に似た話をしてたユーザー
 DATA.maeheart = 0 #一つ前の気持ち
 DATA.interface = 0 #クライアントの種類
@@ -21,6 +22,7 @@ DATA.lastUserReplied = "あんた" #最後に返信したユーザー
 DATA.myVoice = None #心の中の声
 DATA.times = 0
 DATA.sa = 0
+DATA.skip = 0
 DATA.userLog = [None] * 10
 
 def initialize(directory, interface_):
@@ -41,6 +43,11 @@ def initialize(directory, interface_):
         with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
             json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
     DATA.heart = len(DATA.data["sentence"]) - 1
+
+    try:
+        DATA.data["words"]
+    except:
+        DATA.data["words"] = []
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
@@ -69,6 +76,7 @@ def nextNode(add=True):
         DATA.heart += 1
         result = DATA.data["sentence"][DATA.heart][0]
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        result = INTELLIGENCE.replaceWords(result, DATA.lastSentenceInput, DATA.lastSentenceInputHeart)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.myVoice = result
@@ -80,6 +88,23 @@ def nextNode(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
+
+        #名前置き換え
+        if u == "!input":
+            for myname in DATA.settings["mynames"].split("|"):
+                x = x.replace(myname, "[YOU]")
+        elif u == "!output":
+            for myname in DATA.settings["mynames"].split("|"):
+                x = x.replace(myname, "[I]")
+        elif u != "!":
+            x = x.replace(DATA.lastUser, "[I]")
+            for myname in DATA.settings["mynames"].split("|"):
+                x = x.replace(myname, "[YOU]")
+        else:
+            for myname in DATA.settings["mynames"].split("|"):
+                x = x.replace(myname, "[I]")
+            x = x.replace(DATA.lastUser, "[YOU]")
+        
         DATA.maeheart = DATA.heart
         for xx in x.split("\n"):
             DATA.lastSentenceInput = xx
@@ -99,9 +124,10 @@ def receive(x, u, add=True, force=False):
             DATA.myVoice = None
             return
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        DATA.lastSentenceHeart = result
+        result = INTELLIGENCE.replaceWords(result, x, DATA.lastSentenceInputHeart)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
-        DATA.lastSentenceHeart = result
         DATA.myVoice = result
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))

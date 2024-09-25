@@ -6,8 +6,7 @@ import sys
 if sys.argv[1]:
     blob.initialize(sys.argv[1], "discord")
 else:
-    print("人格フォルダを指定してください。")
-    exit()
+    blob.initialize("main", "discord")
 
 people = [[blob.DATA.settings["myname"], 0]]
 channel = None
@@ -36,7 +35,6 @@ botの名前を呼ぶとそのチャンネルに来てくれます。
 ```
 ぬんへっへ！===下品だよ！
 ```
-[YOU]という文字列は実際に発言する際ユーザー名に置き換えられます。
 
 =強化学習=
 「!bad」とメッセージを送ると、「このメッセージは悪い」と教えることができます。
@@ -299,7 +297,7 @@ async def cron():
                     denominator = 0
                 else:
                     denominator = len(people) - 2
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
+                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator*2) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely(add=add)
                     if result == None:
                         pass
@@ -397,7 +395,7 @@ def listen():
         # 以下は認識できなかったときに止まらないように。
         except sr.UnknownValueError:
             dt = datetime.datetime.now()
-            blob.receive("!command ignore", lastUser, add=add)
+            blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))

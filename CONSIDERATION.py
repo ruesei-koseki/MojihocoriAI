@@ -4,9 +4,6 @@ from rapidfuzz.distance import Levenshtein
 def looking(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
-        x = x.replace(DATA.lastUser, "[I]")
-        for myname in DATA.settings["mynames"].split("|"):
-            x = x.replace(myname, "[YOU]")
         print("思考中: {}".format(x))
 
         for kaisu in range(4):
@@ -27,7 +24,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -50,7 +47,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
@@ -72,7 +71,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -95,7 +94,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
@@ -109,18 +110,16 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(6):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
-                rate = 0.8
+                rate = 0.9
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.8
             if kaisu == 3:
-                rate = 0.4
+                rate = 0.7
             if kaisu == 4:
-                rate = 0.2
-            if kaisu == 5:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -131,7 +130,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(x*15, u), "{}: {}".format(DATA.data["sentence"][i][0]*15, DATA.data["sentence"][i][1])) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -149,7 +148,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
@@ -171,7 +172,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(x*15, u), "{}: {}".format(DATA.data["sentence"][i][0]*15, DATA.data["sentence"][i][1])) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -189,7 +190,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
@@ -203,18 +206,16 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(6):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
-                rate = 0.8
+                rate = 0.9
             if kaisu == 2:
-                rate = 0.6
+                rate = 0.8
             if kaisu == 3:
-                rate = 0.4
+                rate = 0.7
             if kaisu == 4:
-                rate = 0.2
-            if kaisu == 5:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -225,7 +226,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(x*15, u), "{}: {}".format(DATA.data["sentence"][i][0]*15, DATA.data["sentence"][i][1])) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -243,7 +244,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
@@ -265,7 +268,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(x*15, u), "{}: {}".format(DATA.data["sentence"][i][0]*15, DATA.data["sentence"][i][1])) >= rate:
-                    for iiii in range(3):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -283,7 +286,9 @@ def looking(x, u, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("返信: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
+                                    DATA.lastSentenceInputHeart = DATA.data["sentence"][i][0]
                                     DATA.sa = ii
+                                    DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
                                     DATA.rate = rate
