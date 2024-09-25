@@ -110,16 +110,18 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
-                rate = 0.9
-            if kaisu == 2:
                 rate = 0.8
+            if kaisu == 2:
+                rate = 0.6
             if kaisu == 3:
-                rate = 0.7
+                rate = 0.4
             if kaisu == 4:
+                rate = 0.2
+            if kaisu == 5:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
@@ -153,6 +155,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.heartLastSpeakerInput = DATA.data["sentence"][i][1]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -206,16 +209,18 @@ def looking(x, u, reply=True, force=False):
                 i += 1
                 ii += 1
 
-        for kaisu in range(5):
+        for kaisu in range(6):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
-                rate = 0.9
-            if kaisu == 2:
                 rate = 0.8
+            if kaisu == 2:
+                rate = 0.6
             if kaisu == 3:
-                rate = 0.7
+                rate = 0.4
             if kaisu == 4:
+                rate = 0.2
+            if kaisu == 5:
                 rate = 0.0
             #今の気持ちから考える
             f = DATA.heart
