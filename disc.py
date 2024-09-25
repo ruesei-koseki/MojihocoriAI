@@ -296,8 +296,8 @@ async def cron():
                 if len(people) <= 1:
                     denominator = 0
                 else:
-                    denominator = len(people) - 2
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator*2) == 0 and blob.DATA.myVoice != None):
+                    denominator = len(people)# - 2
+                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely(add=add)
                     if result == None:
                         pass
