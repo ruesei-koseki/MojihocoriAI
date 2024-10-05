@@ -54,7 +54,10 @@ TOKEN = blob.DATA.settings["discToken"]
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-mode = blob.DATA.settings["defaultMode"]
+if len(blob.DATA.data["sentence"]) < 10000:
+    mode = 1
+else:
+    mode = blob.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -269,7 +272,7 @@ async def cron():
         if mode == 1:
             if len(messages) != 0:
                 if blob.DATA.myVoice != None:
-                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])):
+                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel):
                         result = blob.speakFreely(add=add)
                         if result == None:
                             pass
@@ -296,8 +299,8 @@ async def cron():
                 if len(people) <= 1:
                     denominator = 0
                 else:
-                    denominator = len(people)# - 2
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
+                    denominator = len(people) - 2
+                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
                     result = blob.speakFreely(add=add)
                     if result == None:
                         pass
@@ -312,7 +315,7 @@ async def cron():
                         await speak(result)
         if dt_now - dt >= datetime.timedelta(seconds=20):
             dt = datetime.datetime.now()
-            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+            blob.receive(dt_now.strftime('%Y年 %m月 %d日 : %H時 %M分 %S秒'), "!systemClock", add=add)
             blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
         

@@ -24,6 +24,8 @@ DATA.times = 0
 DATA.sa = 0
 DATA.skip = 0
 DATA.userLog = [None] * 10
+DATA.tangoOkikae1 = ""
+DATA.tangoOkikae2 = ""
 
 def initialize(directory, interface_):
     #初期化
@@ -76,7 +78,7 @@ def nextNode(add=True):
         DATA.heart += 1
         result = DATA.data["sentence"][DATA.heart][0]
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-        result = INTELLIGENCE.replaceWords(result, DATA.lastSentenceInput, DATA.lastSentenceInputHeart)
+        result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.myVoice = result
@@ -88,7 +90,7 @@ def nextNode(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-
+        
         #名前置き換え
         if u == "!input":
             for myname in DATA.settings["mynames"].split("|"):
@@ -118,6 +120,15 @@ def receive(x, u, add=True, force=False):
                 if xx == "!good":
                     DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
             result = CONSIDERATION.looking(xx, u, force=force)
+        
+            if len(DATA.tangoOkikae1) >= 1024:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
+            DATA.tangoOkikae1 += " " + x
+
+            if len(DATA.tangoOkikae2) >= 1024:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
+            DATA.tangoOkikae2 += " " + DATA.lastSentenceInputHeart
+            
             if add:
                 MEMORY.learnSentence(xx, u)
         if result == None:
@@ -125,7 +136,8 @@ def receive(x, u, add=True, force=False):
             return
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
         DATA.lastSentenceHeart = result
-        result = INTELLIGENCE.replaceWords(result, x, DATA.lastSentenceInputHeart)
+        
+        result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         result = result.replace("[YOU]", DATA.lastUser)
         result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
         DATA.myVoice = result
