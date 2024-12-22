@@ -38,10 +38,7 @@ def learnSentence(x, u, save=True, mama=False):
                 DATA.data["sentence"].append(["!bad", "!system"])
                 result = CONSIDERATION.looking("!bad", "!system")
 
-    words = x.split()  # スペースで区切られた単語を検出
-    for word in words:
-        if word not in DATA.data["words"] and word != x:  # 既に記憶されていない単語のみ追加
-            DATA.data["words"].append(word)
+    findWords(x)
 
     if len(DATA.data["sentence"]) >= 1600000:
         while len(DATA.data["sentence"]) >= 1600000:
@@ -51,6 +48,12 @@ def learnSentence(x, u, save=True, mama=False):
                 DATA.maeheart -= 1
     if save:
         saveData()
+
+def findWords(x):
+    words = x.split()  # スペースで区切られた単語を検出
+    for word in words:
+        if word not in DATA.data["words"] and word != x:  # 既に記憶されていない単語のみ追加
+            DATA.data["words"].append(word)
 
 def saveData():
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:

@@ -22,6 +22,7 @@ from discord.ext import tasks
 import discord
 import threading
 import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 from rapidfuzz.distance import Levenshtein
 
 helpMessage = f"""==blobAIヘルプ==
@@ -48,16 +49,15 @@ botに「ピン」というと、チャンネルを動かなくなります。
 botに「アンピン」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも学習します。"""
 
+helpMessage = f"""調整中..."""
+
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-if len(blob.DATA.data["sentence"]) < 10000:
-    mode = 1
-else:
-    mode = blob.DATA.settings["defaultMode"]
+mode = blob.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
 print("sentences: {}".format(len(blob.DATA.data["sentence"])))
@@ -160,13 +160,13 @@ async def on_message(message):
     ff = False
     parts = message.content.split("\n")
     for part in parts:
-        if bool(re.search("(.*?)===(.*?)", part)):
-            if part.split("===")[0] == "":
+        if bool(re.search("(.*?):==>(.*?)", part)):
+            if part.split(":==>")[0] == "":
                 blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                blob.MEMORY.learnSentence(part.split(":==>")[1], "!output", mama=True)
             else:
-                blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                blob.MEMORY.learnSentence(part.split(":==>")[0], "!input", mama=True)
+                blob.MEMORY.learnSentence(part.split(":==>")[1], "!output", mama=True)
             ff = True
     if ff:
         blob.MEMORY.learnSentence("!good", "!system", mama=True)
@@ -175,7 +175,7 @@ async def on_message(message):
     ff = False
     xx = message.content.split("\n")
     for x in xx:
-        if bool(re.search("(.+): (.+)", x)):
+        if bool(re.search("(.+):=> (.+)", x)):
             blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
             ff = True
     if ff:
@@ -235,11 +235,11 @@ async def on_message(message):
             print("完了")
             return
         
-        print("受信: {}, from {}".format(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', message.content), username))
+        print("受信: {}, from {}".format(message.content, username))
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username, force=True)
+            blob.receive(message.content, username, force=True)
         else:
-            blob.receive(re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '', message.content).replace("<>", ""), username)
+            blob.receive(message.content, username, force=True)
         lastMessage = [message.content, message.author.display_name]
         lastUsername = username
         i = 0
@@ -314,10 +314,19 @@ async def cron():
                         result = blob.speakFreely(add=add)
                         await speak(result)
         if dt_now - dt >= datetime.timedelta(seconds=20):
+            if i > -2:
+                i -= 1
+            add = True
+            if i <= -2:
+                add = False
+
             dt = datetime.datetime.now()
             blob.receive(dt_now.strftime('%Y年 %m月 %d日 : %H時 %M分 %S秒'), "!systemClock", add=add)
             blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
+            if mode == 2 and random.randint(0, 5) == 0:
+                    result = blob.speakFreely(add=add)
+                    await speak(result)
         
     except:
         import traceback

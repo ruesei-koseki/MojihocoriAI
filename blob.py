@@ -14,7 +14,8 @@ DATA.lastSentence = "" #最後のbotの言葉
 DATA.lastSentenceHeart = "" #最後のbotのベース発言
 DATA.lastSentenceInput = "" #最後に聞いた言葉
 DATA.lastSentenceInputHeart = "" #最後に聞いた言葉
-DATA.heartLastSpeaker = None #過去に似た話をしてたユーザー
+DATA.heartLastSpeaker = "" #過去に似た話をしてたユーザー
+DATA.heartLastSpeakerInput = ""
 DATA.maeheart = 0 #一つ前の気持ち
 DATA.interface = 0 #クライアントの種類
 DATA.lastUser = "あんた" #最後に話したユーザー
@@ -24,8 +25,8 @@ DATA.times = 0
 DATA.sa = 0
 DATA.skip = 0
 DATA.userLog = [None] * 10
-DATA.tangoOkikae1 = ""
-DATA.tangoOkikae2 = ""
+DATA.tangoOkikae1 = []
+DATA.tangoOkikae2 = []
 
 def initialize(directory, interface_):
     #初期化
@@ -50,6 +51,10 @@ def initialize(directory, interface_):
         DATA.data["words"]
     except:
         DATA.data["words"] = []
+    
+    for message in DATA.data["sentence"]:
+        MEMORY.findWords(message[0])
+        MEMORY.findWords(message[1])
 
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
@@ -78,10 +83,10 @@ def nextNode(add=True):
         DATA.heart += 1
         result = DATA.data["sentence"][DATA.heart][0]
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-        result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
-        result = result.replace("[YOU]", DATA.lastUser)
-        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+        result = INTELLIGENCE.replaceWords(DATA.lastUser+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         DATA.myVoice = result
+        if add:
+            MEMORY.learnSentence(result, "!")
         return True
     else:
         return None
@@ -90,56 +95,45 @@ def nextNode(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        
-        #名前置き換え
-        if u == "!input":
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[YOU]")
-        elif u == "!output":
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[I]")
-        elif u != "!":
-            x = x.replace(DATA.lastUser, "[I]")
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[YOU]")
-        else:
-            for myname in DATA.settings["mynames"].split("|"):
-                x = x.replace(myname, "[I]")
-            x = x.replace(DATA.lastUser, "[YOU]")
+        MEMORY.findWords(u)
         
         DATA.maeheart = DATA.heart
-        for xx in x.split("\n"):
-            DATA.lastSentenceInput = xx
-            if "!system" not in u:
-                DATA.lastUser = u
-            DATA.userLog.append(u)
-            DATA.userLog.pop(0)
-            if add:
-                if xx == "!bad":
-                    DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
-                if xx == "!good":
-                    DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-            result = CONSIDERATION.looking(xx, u, force=force)
+        DATA.lastSentenceInput = x
+        if "!system" not in u:
+            DATA.lastUser = u
+        DATA.userLog.append(u)
+        DATA.userLog.pop(0)
+        if add:
+            if x == "!bad":
+                DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
+            if x == "!good":
+                DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
+        result = CONSIDERATION.looking(x, u, force=force)
         
-            if len(DATA.tangoOkikae1) >= 1024:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
-            DATA.tangoOkikae1 += " " + x
-
-            if len(DATA.tangoOkikae2) >= 1024:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
-            DATA.tangoOkikae2 += " " + DATA.lastSentenceInputHeart
-            
-            if add:
-                MEMORY.learnSentence(xx, u)
+        if add:
+            MEMORY.learnSentence(x, u)
+        else:
+            MEMORY.findWords(x)
+        
         if result == None:
             DATA.myVoice = None
             return
+    
+        if len(DATA.tangoOkikae1) >= 1024:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
+        DATA.tangoOkikae1.append(u+": "+x)
+
+        if len(DATA.tangoOkikae2) >= 1024:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
+        if DATA.heartLastSpeakerInput == "!":
+            DATA.tangoOkikae2.append(DATA.settings["mynames"]+": "+DATA.lastSentenceInputHeart)
+        else:
+            DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput+": "+DATA.lastSentenceInputHeart)
+        
+        result = INTELLIGENCE.replaceWords(x+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
         DATA.lastSentenceHeart = result
-        
-        result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
-        result = result.replace("[YOU]", DATA.lastUser)
-        result = result.replace("[I]", DATA.settings["mynames"].split("|")[0])
+
         DATA.myVoice = result
         print("座標: {}".format(DATA.heart))
         print("ログ: {}".format(DATA.userLog))

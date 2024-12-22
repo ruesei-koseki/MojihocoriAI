@@ -12,13 +12,17 @@ def isNextOk():
         return DATA.lastSentenceInput != DATA.data["sentence"][DATA.heart+1][0] and DATA.lastSentence != DATA.data["sentence"][DATA.heart+1][0] and DATA.data["sentence"][DATA.heart+1][1] == DATA.data["sentence"][DATA.heart][1] and DATA.data["sentence"][DATA.heart+1][1] != "!" and "!system" not in DATA.data["sentence"][DATA.heart+1][1]
 
 def replaceWords(x, inputs, inputsHeart):
-    print(inputs, " <=> ", inputsHeart)
-    result = x
-    for word in random.sample(DATA.data["words"], len(DATA.data["words"])):
-        if word in inputs and word not in inputsHeart and word not in x:
-            for word2 in random.sample(DATA.data["words"], len(DATA.data["words"])):
-                if word2 in x and word2 in inputsHeart and word2 not in inputs:
-                    result = result.replace(word2, word)
-                    break
-    print(x, " <=> ", result)
+    xx = x
+    result = x.split(": ", 1)[1]
+    for i in reversed(range(len(inputs))):
+        x = xx
+        for word in reversed(sorted(DATA.data["words"], key=len)):
+            if word in inputs[i] and word not in inputsHeart[i] and word not in x:
+                for word2 in reversed(sorted(DATA.data["words"], key=len)):
+                    if word2 in x and word2 in inputsHeart[i] and word2 not in inputs[i]:
+                        result = result.replace(word2, word)
+                        break
+                    inputsHeart[i] = inputsHeart[i].replace(word2, "")
+                    x = x.replace(word2, "")
+            inputs[i] = inputs[i].replace(word, "")
     return result
