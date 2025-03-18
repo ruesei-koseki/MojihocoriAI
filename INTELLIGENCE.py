@@ -39,7 +39,8 @@ def replaceWords(x, inputs, inputsHeart):
         if a == []:
             break
         a = sorted(a, key=operator.itemgetter(1))
-        word1.append(a[0])
+        if a[0][0] not in [" ", "", "　"]:
+            word1.append(a[0])
         ipts = ipts[ipts.find(a[0][0])+len(a[0][0]):]
     while True:
         a = []
@@ -49,7 +50,8 @@ def replaceWords(x, inputs, inputsHeart):
         if a == []:
             break
         a = sorted(a, key=operator.itemgetter(1))
-        word2.append(a[0])
+        if a[0][0] not in [" ", "", "　"]:
+            word2.append(a[0])
         iptsh = iptsh[iptsh.find(a[0][0])+len(a[0][0]):]
     word1 = list(reversed(word1))
     word2 = list(reversed(word2))
@@ -71,7 +73,7 @@ def replaceWords(x, inputs, inputsHeart):
         while True:
             if j > m:
                 break
-            if word1[i] != word2[j] and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0] and word1[i-2][0] == word2[j-2][0] and word1[i+2][0] == word2[j+2][0]:
+            if word1[i] != word2[j] and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0]:
                 result = result.replace(word2[j][0], "_/_".join(word1[i][0]))
             j += 1
         i += 1
