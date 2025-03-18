@@ -6,7 +6,7 @@ def looking(x, u, reply=True, force=False):
     try:
         print("思考中: {}".format(x))
 
-        for kaisu in range(4):
+        for kaisu in range(5):
             if kaisu == 0:
                 rate = 1
             if kaisu == 1:
@@ -15,6 +15,8 @@ def looking(x, u, reply=True, force=False):
                 rate = 0.8
             if kaisu == 3:
                 rate = 0.7
+            if kaisu == 4:
+                rate = 0.6
             #今の気持ちから考える
             f = DATA.heart
             t = len(DATA.data["sentence"]) - 1
@@ -53,6 +55,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -101,6 +104,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -158,7 +162,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
-                                    DATA.heartLastSpeakerInput = DATA.data["sentence"][i][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -202,6 +206,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -259,6 +264,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:
@@ -302,6 +308,7 @@ def looking(x, u, reply=True, force=False):
                                     DATA.skip = iiii
                                     DATA.heart = i+iiii+1
                                     DATA.heartLastSpeaker = DATA.data["sentence"][i+iiii+1][1]
+                                    DATA.lastSentenceHeart = DATA.data["sentence"][i+iiii+1][0]
                                     DATA.rate = rate
                                     return DATA.data["sentence"][i+iiii+1][0]
                             else:

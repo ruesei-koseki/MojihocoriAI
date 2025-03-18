@@ -49,8 +49,6 @@ botに「ピン」というと、チャンネルを動かなくなります。
 botに「アンピン」というと、チャンネルを動けるようになります。
 これらのコマンドのタイミングも学習します。"""
 
-helpMessage = f"""調整中..."""
-
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = blob.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
@@ -145,9 +143,9 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
-    blob.receive("通知: 貴方は目を覚ましました。", "!system", add=add)
-    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
-    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
+    blob.receive("通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system", add=add)
+    lastMessage = ["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system"]
+    messages.append(["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system"])
 
 ii = 0
 i = 0
@@ -160,13 +158,13 @@ async def on_message(message):
     ff = False
     parts = message.content.split("\n")
     for part in parts:
-        if bool(re.search("(.*?):==>(.*?)", part)):
-            if part.split(":==>")[0] == "":
+        if bool(re.search("(.*?)===(.*?)", part)):
+            if part.split("===")[0] == "":
                 blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split(":==>")[1], "!output", mama=True)
+                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
             else:
-                blob.MEMORY.learnSentence(part.split(":==>")[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split(":==>")[1], "!output", mama=True)
+                blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
             ff = True
     if ff:
         blob.MEMORY.learnSentence("!good", "!system", mama=True)
@@ -175,7 +173,7 @@ async def on_message(message):
     ff = False
     xx = message.content.split("\n")
     for x in xx:
-        if bool(re.search("(.+):=> (.+)", x)):
+        if bool(re.search("(.+): (.+)", x)):
             blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
             ff = True
     if ff:
@@ -240,11 +238,11 @@ async def on_message(message):
             blob.receive(message.content, username, force=True)
         else:
             blob.receive(message.content, username, force=True)
-        lastMessage = [message.content, message.author.display_name]
+        lastMessage = [message.content, username]
         lastUsername = username
         i = 0
         add = True
-        messages.append([message.content, message.author.display_name])
+        messages.append([message.content, username])
         dt = datetime.datetime.now()
 
 @tasks.loop(seconds=1)
@@ -280,7 +278,6 @@ async def cron():
                             await speak(result)
                     messages = []
             else:
-
                 if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
                     blob.nextNode(add=add)
         elif mode == 2:
@@ -325,8 +322,8 @@ async def cron():
             blob.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
             if mode == 2 and random.randint(0, 5) == 0:
-                    result = blob.speakFreely(add=add)
-                    await speak(result)
+                result = blob.speakFreely(add=add)
+                await speak(result)
         
     except:
         import traceback

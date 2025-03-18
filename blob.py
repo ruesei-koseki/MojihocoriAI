@@ -5,6 +5,7 @@ import DATA
 import MEMORY
 import INTELLIGENCE
 import FUNCTION
+from rapidfuzz.distance import Levenshtein
 
 DATA.data = None #別途読み込むデータ
 DATA.settings = None #設定
@@ -17,6 +18,7 @@ DATA.lastSentenceInputHeart = "" #最後に聞いた言葉
 DATA.heartLastSpeaker = "" #過去に似た話をしてたユーザー
 DATA.heartLastSpeakerInput = ""
 DATA.maeheart = 0 #一つ前の気持ち
+DATA.zenkaiHeart = 0
 DATA.interface = 0 #クライアントの種類
 DATA.lastUser = "あんた" #最後に話したユーザー
 DATA.lastUserReplied = "あんた" #最後に返信したユーザー
@@ -25,8 +27,10 @@ DATA.times = 0
 DATA.sa = 0
 DATA.skip = 0
 DATA.userLog = [None] * 10
-DATA.tangoOkikae1 = []
-DATA.tangoOkikae2 = []
+DATA.tangoOkikae1 = ""
+DATA.tangoOkikae2 = ""
+DATA.rate = 1.0
+
 
 def initialize(directory, interface_):
     #初期化
@@ -47,6 +51,9 @@ def initialize(directory, interface_):
             json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
     DATA.heart = len(DATA.data["sentence"]) - 1
 
+    with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
+        json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
+
     try:
         DATA.data["words"]
     except:
@@ -55,9 +62,6 @@ def initialize(directory, interface_):
     for message in DATA.data["sentence"]:
         MEMORY.findWords(message[0])
         MEMORY.findWords(message[1])
-
-    with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
-        json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
     DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
 
@@ -72,6 +76,17 @@ def speakFreely(add=True):
     if result != None:
         if add:
             MEMORY.learnSentence(result, "!")
+    
+        if len(DATA.tangoOkikae1) >= 1024:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
+        DATA.tangoOkikae1 += "\n" + DATA.settings["myname"]+": "+result
+        
+        if len(DATA.tangoOkikae2) >= 1024:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
+        if DATA.heartLastSpeaker == "!":
+            DATA.tangoOkikae2 += "\n" + DATA.settings["myname"]+": "+DATA.lastSentenceHeart
+        else:
+            DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeaker+": "+DATA.lastSentenceHeart
 
     DATA.lastSentence = result
     return result
@@ -91,11 +106,11 @@ def nextNode(add=True):
     else:
         return None
 
-
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        MEMORY.findWords(u)
+        if u not in DATA.data["words"]:
+            DATA.data["words"].append(u)
         
         DATA.maeheart = DATA.heart
         DATA.lastSentenceInput = x
@@ -118,21 +133,20 @@ def receive(x, u, add=True, force=False):
         if result == None:
             DATA.myVoice = None
             return
-    
         if len(DATA.tangoOkikae1) >= 1024:
             DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
-        DATA.tangoOkikae1.append(u+": "+x)
+        DATA.tangoOkikae1 += "\n" + u+": "+x
 
         if len(DATA.tangoOkikae2) >= 1024:
             DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
         if DATA.heartLastSpeakerInput == "!":
-            DATA.tangoOkikae2.append(DATA.settings["mynames"]+": "+DATA.lastSentenceInputHeart)
+            DATA.tangoOkikae2 += "\n" + DATA.settings["myname"]+": "+DATA.lastSentenceInputHeart
         else:
-            DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput+": "+DATA.lastSentenceInputHeart)
+            DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeakerInput+": "+DATA.lastSentenceInputHeart
         
-        result = INTELLIGENCE.replaceWords(x+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
-        DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
-        DATA.lastSentenceHeart = result
+        print("DATA.tangoOkikae1: {}".format(DATA.tangoOkikae1))
+        print("DATA.tangoOkikae2: {}".format(DATA.tangoOkikae2))
+        result = INTELLIGENCE.replaceWords(DATA.heartLastSpeaker+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
 
         DATA.myVoice = result
         print("座標: {}".format(DATA.heart))

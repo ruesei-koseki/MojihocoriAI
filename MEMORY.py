@@ -3,6 +3,8 @@ import INTELLIGENCE
 import json
 import CONSIDERATION
 import random
+from janome.tokenizer import Tokenizer
+t = Tokenizer()
 
 def learnSentence(x, u, save=True, mama=False):
     #if len(DATA.data["sentence"]) >= 1000 or mama:
@@ -54,6 +56,10 @@ def findWords(x):
     for word in words:
         if word not in DATA.data["words"] and word != x:  # 既に記憶されていない単語のみ追加
             DATA.data["words"].append(word)
+    for w in list(t.tokenize(x, wakati=True)):
+        if w not in DATA.data["words"] and w != x:  # 既に記憶されていない単語のみ追加
+            DATA.data["words"].append(w)
+
 
 def saveData():
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
