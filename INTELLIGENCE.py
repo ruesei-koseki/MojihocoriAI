@@ -95,14 +95,11 @@ def replaceWords(x, inputs, inputsHeart):
         while True:
             if j > m:
                 break
-            if word2[j][0] not in used and word1[i][0] not in used and word2[j-1][0] not in used and word2[j+1][0] not in used and word2[j][0] != word1[i][0] and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0]:
+            if word2[j][0] not in used and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0]:
                 for k in range(len(word3)):
                     if word3[k] == word2[j][0]:
                         word3[k] = word1[i][0]
                 used.append(word1[i][0])
-                used.append(word2[j][0])
-                used.append(word1[i-1][0])
-                used.append(word1[i+1][0])
             j += 1
         i += 1
     return "".join(word3)
