@@ -57,7 +57,7 @@ def findWords(x):
         if word not in DATA.data["words"] and word != x:  # 既に記憶されていない単語のみ追加
             DATA.data["words"].append(word)
     for w in list(t.tokenize(x, wakati=True)):
-        if w not in DATA.data["words"] and w != x:  # 既に記憶されていない単語のみ追加
+        if w not in DATA.data["words"]:  # 既に記憶されていない単語のみ追加
             DATA.data["words"].append(w)
 
 

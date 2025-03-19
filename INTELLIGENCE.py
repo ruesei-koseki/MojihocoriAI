@@ -13,24 +13,34 @@ def isNextOk():
         return DATA.lastSentenceInput != DATA.data["sentence"][DATA.heart+1][0] and DATA.lastSentence != DATA.data["sentence"][DATA.heart+1][0] and DATA.data["sentence"][DATA.heart+1][1] == DATA.data["sentence"][DATA.heart][1] and DATA.data["sentence"][DATA.heart+1][1] != "!" and "!system" not in DATA.data["sentence"][DATA.heart+1][1]
 
 def replaceWords(x, inputs, inputsHeart):
-    result = x.split(": ", 1)[1]
+    x = x.split(": ", 1)[1]
     used = []
     word1_ = []
     word2_ = []
+    word3_ = []
     ipts = inputs
     iptsh = inputsHeart
-    for word in reversed(sorted(DATA.data["words"], key=len)):
+    xx = x
+    for word in sorted(DATA.data["words"], key=len, reverse=True):
         if word in ipts:
             word1_.append(word)
             ipts = ipts.replace(word, "")
-    for word in reversed(sorted(DATA.data["words"], key=len)):
+    for word in sorted(DATA.data["words"], key=len, reverse=True):
         if word in iptsh:
             word2_.append(word)
             iptsh = iptsh.replace(word, "")
+    for word in sorted(DATA.data["words"], key=len, reverse=True):
+        if word in xx:
+            word3_.append(word)
+            xx = xx.replace(word, " ")
+    for w in xx.split():
+        word3_.append(w)
     ipts = inputs
     iptsh = inputsHeart
+    xx = x
     word1 = []
     word2 = []
+    word3 = []
     while True:
         a = []
         for w1 in word1_:
@@ -38,7 +48,7 @@ def replaceWords(x, inputs, inputsHeart):
                 a.append([w1, ipts.find(w1)])
         if a == []:
             break
-        a = sorted(a, key=operator.itemgetter(1))
+        a = sorted(a, key=lambda x: (x[1], -len(x)))
         if a[0][0] not in [" ", "", "　"]:
             word1.append(a[0])
         ipts = ipts[ipts.find(a[0][0])+len(a[0][0]):]
@@ -49,10 +59,20 @@ def replaceWords(x, inputs, inputsHeart):
                 a.append([w2, iptsh.find(w2)])
         if a == []:
             break
-        a = sorted(a, key=operator.itemgetter(1))
+        a = sorted(a, key=lambda x: (x[1], -len(x)))
         if a[0][0] not in [" ", "", "　"]:
             word2.append(a[0])
         iptsh = iptsh[iptsh.find(a[0][0])+len(a[0][0]):]
+    while True:
+        a = []
+        for w3 in word3_:
+            if w3 in xx:
+                a.append([w3, xx.find(w3)])
+        if a == []:
+            break
+        a = sorted(a, key=lambda x: (x[1], -len(x)))
+        word3.append(a[0][0])
+        xx = xx[xx.find(a[0][0])+len(a[0][0]):]
     word1 = list(reversed(word1))
     word2 = list(reversed(word2))
     word1.insert(0, ["_BOS_", 0])
@@ -63,19 +83,24 @@ def replaceWords(x, inputs, inputsHeart):
     word2.insert(0, ["_BOS_", 0])
     word2.append(["_EOS_", 0])
     word2.append(["_EOS_", 0])
+    used = []
     i = 2
+    l = len(word1) - 3
+    print(word3)
     while True:
         j = 2
-        l = len(word1) - 3
         m = len(word2) - 3
         if i > l:
             break
         while True:
             if j > m:
                 break
-            if word1[i] != word2[j] and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0]:
-                result = result.replace(word2[j][0], "_/_".join(word1[i][0]))
+            if word2[j][0] not in used and word1[i][0] not in used and word1[i-1][0] == word2[j-1][0] and word1[i+1][0] == word2[j+1][0]:
+                for k in range(len(word3)):
+                    if word3[k] == word2[j][0]:
+                        word3[k] = word1[i][0]
+                used.append(word1[i][0])
+                used.append(word2[j][0])
             j += 1
         i += 1
-    result = result.replace("_/_", "")
-    return result
+    return "".join(word3)

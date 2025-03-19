@@ -58,6 +58,17 @@ def initialize(directory, interface_):
         DATA.data["words"]
     except:
         DATA.data["words"] = []
+    try:
+        DATA.data["tangoOkikae1"]
+    except:
+        DATA.data["tangoOkikae1"] = ""
+    try:
+        DATA.data["tangoOkikae2"]
+    except:
+        DATA.data["tangoOkikae2"] = ""
+
+    DATA.tangoOkikae1 = DATA.data["tangoOkikae1"]
+    DATA.tangoOkikae2 = DATA.data["tangoOkikae2"]
     
     for message in DATA.data["sentence"]:
         MEMORY.findWords(message[0])
@@ -68,15 +79,11 @@ def initialize(directory, interface_):
 def speakFreely(add=True):
     #自由に話す
     result = DATA.myVoice
-    DATA.lastSentenceHeart = result
     if "!" not in DATA.lastUser:
         DATA.lastUserReplied = DATA.lastUser
     DATA.userLog.append("!")
     DATA.userLog.pop(0)
     if result != None:
-        if add:
-            MEMORY.learnSentence(result, "!")
-    
         if len(DATA.tangoOkikae1) >= 1024:
             DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
         DATA.tangoOkikae1 += "\n" + DATA.settings["myname"]+": "+result
@@ -87,6 +94,9 @@ def speakFreely(add=True):
             DATA.tangoOkikae2 += "\n" + DATA.settings["myname"]+": "+DATA.lastSentenceHeart
         else:
             DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeaker+": "+DATA.lastSentenceHeart
+
+        if add:
+            MEMORY.learnSentence(result, "!")
 
     DATA.lastSentence = result
     return result
@@ -144,8 +154,6 @@ def receive(x, u, add=True, force=False):
         else:
             DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeakerInput+": "+DATA.lastSentenceInputHeart
         
-        print("DATA.tangoOkikae1: {}".format(DATA.tangoOkikae1))
-        print("DATA.tangoOkikae2: {}".format(DATA.tangoOkikae2))
         result = INTELLIGENCE.replaceWords(DATA.heartLastSpeaker+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
 
         DATA.myVoice = result
