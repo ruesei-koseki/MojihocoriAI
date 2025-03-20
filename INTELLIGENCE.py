@@ -14,7 +14,6 @@ def isNextOk():
 
 def replaceWords(x, inputs, inputsHeart):
     x = x.split(": ", 1)[1]
-    used = []
     word1_ = []
     word2_ = []
     word3_ = []
@@ -86,7 +85,6 @@ def replaceWords(x, inputs, inputsHeart):
     used = []
     i = 2
     l = len(word1) - 3
-    print(word3)
     while True:
         j = 2
         m = len(word2) - 3

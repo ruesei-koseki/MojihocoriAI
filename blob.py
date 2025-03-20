@@ -58,17 +58,6 @@ def initialize(directory, interface_):
         DATA.data["words"]
     except:
         DATA.data["words"] = []
-    try:
-        DATA.data["tangoOkikae1"]
-    except:
-        DATA.data["tangoOkikae1"] = ""
-    try:
-        DATA.data["tangoOkikae2"]
-    except:
-        DATA.data["tangoOkikae2"] = ""
-
-    DATA.tangoOkikae1 = DATA.data["tangoOkikae1"]
-    DATA.tangoOkikae2 = DATA.data["tangoOkikae2"]
     
     for message in DATA.data["sentence"]:
         MEMORY.findWords(message[0])
@@ -84,16 +73,24 @@ def speakFreely(add=True):
     DATA.userLog.append("!")
     DATA.userLog.pop(0)
     if result != None:
-        if len(DATA.tangoOkikae1) >= 1024:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
-        DATA.tangoOkikae1 += "\n" + DATA.settings["myname"]+": "+result
-        
-        if len(DATA.tangoOkikae2) >= 1024:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
-        if DATA.heartLastSpeaker == "!":
-            DATA.tangoOkikae2 += "\n" + DATA.settings["myname"]+": "+DATA.lastSentenceHeart
-        else:
-            DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeaker+": "+DATA.lastSentenceHeart
+
+        a = []
+        k = 16
+        if k > len(DATA.data["sentence"])-1:
+            k = len(DATA.data["sentence"])-1
+        for i in range(k, -1, -1):
+            a.append(DATA.data["sentence"][len(DATA.data["sentence"])-1-i][1]+": "+DATA.data["sentence"][len(DATA.data["sentence"])-1-i][0])
+        DATA.tangoOkikae1 = "\n".join(a)
+        DATA.tangoOkikae1 = DATA.tangoOkikae1.replace("!:", "{}:".format(DATA.settings["myname"]))
+
+        a = []
+        k = 16
+        if k > DATA.heart-1:
+            k = DATA.heart-1
+        for i in range(k, -1, -1):
+            a.append(DATA.data["sentence"][DATA.heart-1-i][1]+": "+DATA.data["sentence"][DATA.heart-1-i][0])
+        DATA.tangoOkikae2 = "\n".join(a)
+        DATA.tangoOkikae2 = DATA.tangoOkikae2.replace("!:", "{}:".format(DATA.settings["myname"]))
 
         if add:
             MEMORY.learnSentence(result, "!")
@@ -108,10 +105,9 @@ def nextNode(add=True):
         DATA.heart += 1
         result = DATA.data["sentence"][DATA.heart][0]
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        DATA.lastSentenceHeart = DATA.data["sentence"][DATA.heart][0]
         result = INTELLIGENCE.replaceWords(DATA.lastUser+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         DATA.myVoice = result
-        if add:
-            MEMORY.learnSentence(result, "!")
         return True
     else:
         return None
@@ -143,16 +139,27 @@ def receive(x, u, add=True, force=False):
         if result == None:
             DATA.myVoice = None
             return
-        if len(DATA.tangoOkikae1) >= 1024:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-1024:]
-        DATA.tangoOkikae1 += "\n" + u+": "+x
 
-        if len(DATA.tangoOkikae2) >= 1024:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-1024:]
-        if DATA.heartLastSpeakerInput == "!":
-            DATA.tangoOkikae2 += "\n" + DATA.settings["myname"]+": "+DATA.lastSentenceInputHeart
-        else:
-            DATA.tangoOkikae2 += "\n" + DATA.heartLastSpeakerInput+": "+DATA.lastSentenceInputHeart
+        a = []
+        k = 16
+        if k > len(DATA.data["sentence"])-1:
+            k = len(DATA.data["sentence"])-1
+        for i in range(k, -1, -1):
+            a.append(DATA.data["sentence"][len(DATA.data["sentence"])-1-i][1]+": "+DATA.data["sentence"][len(DATA.data["sentence"])-1-i][0])
+        DATA.tangoOkikae1 = "\n".join(a)
+        DATA.tangoOkikae1 = DATA.tangoOkikae1.replace("!:", "{}:".format(DATA.settings["myname"]))
+
+        a = []
+        k = 16
+        if k > DATA.heart-1:
+            k = DATA.heart-1
+        for i in range(k, -1, -1):
+            a.append(DATA.data["sentence"][DATA.heart-1-i][1]+": "+DATA.data["sentence"][DATA.heart-1-i][0])
+        DATA.tangoOkikae2 = "\n".join(a)
+        DATA.tangoOkikae2 = DATA.tangoOkikae2.replace("!:", "{}:".format(DATA.settings["myname"]))
+
+        print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
+        print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
         
         result = INTELLIGENCE.replaceWords(DATA.heartLastSpeaker+": "+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
 
