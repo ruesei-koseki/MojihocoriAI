@@ -1,14 +1,14 @@
-import blob
+import mojihocori
 import time
 import random
 import re
 import sys
 if sys.argv[1]:
-    blob.initialize(sys.argv[1], "discord")
+    mojihocori.initialize(sys.argv[1], "discord")
 else:
-    blob.initialize("main", "discord")
+    mojihocori.initialize("main", "discord")
 
-people = [[blob.DATA.settings["myname"], 0]]
+people = [[mojihocori.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
 lastUsername = "誰か"
@@ -25,7 +25,7 @@ import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 from rapidfuzz.distance import Levenshtein
 
-helpMessage = f"""==blobAIヘルプ==
+helpMessage = f"""==mojihocoriAIヘルプ==
 このbotはユーザーのメッセージに自分の意思で返信するAIです。
 話している人数に応じて返信頻度を下げます。
 botの名前を呼ぶとそのチャンネルに来てくれます。
@@ -50,15 +50,15 @@ botに「アンピン」というと、チャンネルを動けるようにな�
 これらのコマンドのタイミングも学習します。"""
 
 # 自分のBotのアクセストークンに置き換えてください
-TOKEN = blob.DATA.settings["discToken"]
+TOKEN = mojihocori.DATA.settings["discToken"]
 # 接続に必要なオブジェクトを生成
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
-mode = blob.DATA.settings["defaultMode"]
+mode = mojihocori.DATA.settings["defaultMode"]
 
 print("mode: {}".format(mode))
-print("sentences: {}".format(len(blob.DATA.data["sentence"])))
+print("sentences: {}".format(len(mojihocori.DATA.data["sentence"])))
 
 def setMode(x):
     global mode, channel
@@ -69,7 +69,7 @@ kaisu = 0
 async def speak(result):
     global channel, people, mode, pin, lastMessage, messages, kaisu, dt
     try:
-        print("{}: {}".format(blob.DATA.settings["myname"], result))
+        print("{}: {}".format(mojihocori.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
         pattern = re.compile(r"^[!/]command")
         print("users: {}".format(people))
@@ -86,34 +86,34 @@ async def speak(result):
                                 channel = client.get_channel(int(com[2]))
                             except:
                                 print("チャンネルが存在しません")
-                                blob.receive("チャンネルが存在しません", "!system", add=add)
+                                mojihocori.receive("チャンネルが存在しません", "!system", add=add)
                                 messages.append(["チャンネルが存在しません", "!system"])
                                 try:
                                     print("チャンネルを移動しました: {}".format(channel.name))
-                                    blob.receive("チャンネルを移動しました: {}".format(channel.name), "!system", add=add)
-                                    people = [[blob.DATA.settings["myname"], 0]]
+                                    mojihocori.receive("チャンネルを移動しました: {}".format(channel.name), "!system", add=add)
+                                    people = [[mojihocori.DATA.settings["myname"], 0]]
                                     messages.append(["チャンネルを移動しました: {}".format(channel.name), "!system"])
                                 except:
                                     print("チャンネルを移動しました: DM")
-                                    blob.receive("チャンネルを移動しました: DM", "!system", add=add)
-                                    people = [[blob.DATA.settings["myname"], 0]]
+                                    mojihocori.receive("チャンネルを移動しました: DM", "!system", add=add)
+                                    people = [[mojihocori.DATA.settings["myname"], 0]]
                                     messages.append(["チャンネルを移動しました: DM", "!system"])
                     else:
                         print("エラー: あなたは固定されています。")
-                        blob.receive("エラー: あなたは固定されています。", "!system", add=add)
+                        mojihocori.receive("エラー: あなたは固定されています。", "!system", add=add)
                         messages.append(["エラー: あなたは固定されています。", "!system"])
                 elif com[1] == "ignore":
                     pass
                 elif com[1] == "setMode":
                     setMode(int(com[2]))
                 elif com[1] == "saveMyData":
-                    blob.MEMORY.saveData()
+                    mojihocori.MEMORY.saveData()
                 elif com[1] == "pin":
                     pin = True
                 elif com[1] == "unpin":
                     pin = False
                 elif com[1] == "saveMyData":
-                    blob.MEMORY.saveData()
+                    mojihocori.MEMORY.saveData()
             else:
                 Message += result + "\n"
         Message = Message[:-1]
@@ -125,14 +125,14 @@ async def speak(result):
                     await asyncio.sleep(1)
                 await channel.send(Message)
                 
-                result = blob.nextNode(add=add)
+                result = mojihocori.nextNode(add=add)
                 if result:
-                    result = blob.speakFreely(add=add)
+                    result = mojihocori.speakFreely(add=add)
                     await speak(result)
                     dt = datetime.datetime.now()
                 
     except:
-        blob.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
+        mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
         messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
         print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
 
@@ -143,9 +143,9 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
-    blob.receive("通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system", add=add)
-    lastMessage = ["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system"]
-    messages.append(["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(blob.DATA.settings["mynames"]), "!system"])
+    mojihocori.receive("通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system", add=add)
+    lastMessage = ["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system"]
+    messages.append(["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system"])
 
 ii = 0
 i = 0
@@ -160,37 +160,37 @@ async def on_message(message):
     for part in parts:
         if bool(re.search("(.*?)===(.*?)", part)):
             if part.split("===")[0] == "":
-                blob.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
             else:
-                blob.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                blob.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
             ff = True
     if ff:
-        blob.MEMORY.learnSentence("!good", "!system", mama=True)
+        mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
         return
     
     ff = False
     xx = message.content.split("\n")
     for x in xx:
         if bool(re.search("(.+): (.+)", x)):
-            blob.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+            mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
             ff = True
     if ff:
-        blob.MEMORY.learnSentence("!good", "!system", mama=True)
+        mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
         return
 
-    if message.channel == channel or bool(re.search(blob.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
+    if message.channel == channel or bool(re.search(mojihocori.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         username = message.author.display_name.split("#")[0]
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
-                blob.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic).replace("\n", " "), username)
+                mojihocori.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic).replace("\n", " "), username)
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
-                blob.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username).replace("\n", " "), username)
+                mojihocori.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username).replace("\n", " "), username)
             channel = message.channel
-            people = [[blob.DATA.settings["myname"], 0]]
+            people = [[mojihocori.DATA.settings["myname"], 0]]
         if message.author == client.user:
             return
         pss = []
@@ -208,36 +208,36 @@ async def on_message(message):
             print(attachment.url)
         message.content += additional
 
-        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             setMode(0)
             return
-        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             setMode(1)
             return
-        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             setMode(2)
             return
-        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             pin = True
             return
-        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             pin = False
             return
-        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
             await channel.send(helpMessage)
             return
-        if bool(re.search("セーブして", message.content)) and bool(re.search(blob.DATA.settings["mynames"], message.content)):
-            blob.receive("!command saveMyData", username)
+        if bool(re.search("セーブして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+            mojihocori.receive("!command saveMyData", username)
             print("セーブします")
-            blob.MEMORY.saveData()
+            mojihocori.MEMORY.saveData()
             print("完了")
             return
         
         print("受信: {}, from {}".format(message.content, username))
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
-            blob.receive(message.content, username, force=True)
+            mojihocori.receive(message.content, username, force=True)
         else:
-            blob.receive(message.content, username, force=True)
+            mojihocori.receive(message.content, username, force=True)
         lastMessage = [message.content, username]
         lastUsername = username
         i = 0
@@ -253,7 +253,7 @@ async def cron():
         """
         pattern = re.compile(r"(0|3)0:00$")
         if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
-            blob.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
+            mojihocori.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
         """
 
         a = []
@@ -264,22 +264,22 @@ async def cron():
         pss = []
         for ps in people:
             pss.append(ps[0])
-        if blob.DATA.settings["myname"] not in pss:
-            people.append([blob.DATA.settings["myname"], 0])
+        if mojihocori.DATA.settings["myname"] not in pss:
+            people.append([mojihocori.DATA.settings["myname"], 0])
 
         if mode == 1:
             if len(messages) != 0:
-                if blob.DATA.myVoice != None:
-                    if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel):
-                        result = blob.speakFreely(add=add)
+                if mojihocori.DATA.myVoice != None:
+                    if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel):
+                        result = mojihocori.speakFreely(add=add)
                         if result == None:
                             pass
                         else:
                             await speak(result)
                     messages = []
             else:
-                if random.randint(0, 100) == 0 and blob.DATA.myVoice != None:
-                    blob.nextNode(add=add)
+                if random.randint(0, 100) == 0 and mojihocori.DATA.myVoice != None:
+                    mojihocori.nextNode(add=add)
         elif mode == 2:
             if len(messages) != 0:
                 pss = []
@@ -287,7 +287,7 @@ async def cron():
                     pss.append(ps[0])
                 aaa = ""
                 for person in pss:
-                    if person[0] == blob.DATA.settings["myname"]:
+                    if person[0] == mojihocori.DATA.settings["myname"]:
                         pass
                     else:
                         aaa = aaa + person[0] + "|"
@@ -297,18 +297,18 @@ async def cron():
                     denominator = 0
                 else:
                     denominator = len(people) - 2
-                if bool(re.search(blob.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and blob.DATA.myVoice != None):
-                    result = blob.speakFreely(add=add)
+                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
+                    result = mojihocori.speakFreely(add=add)
                     if result == None:
                         pass
                     else:
                         await speak(result)
                 messages = []
             else:
-                if random.randint(0, 19) == 0 and blob.DATA.myVoice != None:
-                    a = blob.nextNode(add=add)
+                if random.randint(0, 19) == 0 and mojihocori.DATA.myVoice != None:
+                    a = mojihocori.nextNode(add=add)
                     if a:
-                        result = blob.speakFreely(add=add)
+                        result = mojihocori.speakFreely(add=add)
                         await speak(result)
         if dt_now - dt >= datetime.timedelta(seconds=20):
             if i > -2:
@@ -318,11 +318,11 @@ async def cron():
                 add = False
 
             dt = datetime.datetime.now()
-            blob.receive(dt_now.strftime('%Y年 %m月 %d日 : %H時 %M分 %S秒'), "!systemClock", add=add)
-            blob.receive("!command ignore", lastUsername, add=add)
+            mojihocori.receive(dt_now.strftime('%Y年 %m月 %d日 : %H時 %M分 %S秒'), "!systemClock", add=add)
+            mojihocori.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
             if mode == 2 and random.randint(0, 5) == 0:
-                result = blob.speakFreely(add=add)
+                result = mojihocori.speakFreely(add=add)
                 await speak(result)
         
     except:
@@ -352,10 +352,10 @@ def listen():
         print ("解析中...")
 
         try:
-            into = r.recognize_google(audio, language=blob.DATA.settings["languageHear"])
+            into = r.recognize_google(audio, language=mojihocori.DATA.settings["languageHear"])
             print(into)
 
-            if Levenshtein.normalized_similarity(into, blob.DATA.lastSentence) < 0.85:
+            if Levenshtein.normalized_similarity(into, mojihocori.DATA.lastSentence) < 0.85:
 
 
                 pss = []
@@ -366,10 +366,10 @@ def listen():
 
 
 
-                if bool(re.search("セーブして", into)) and bool(re.search(blob.DATA.settings["mynames"], into)):
-                    blob.receive("!command saveMyData", "あなた")
+                if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
+                    mojihocori.receive("!command saveMyData", "あなた")
                     print("セーブします")
-                    blob.MEMORY.saveData()
+                    mojihocori.MEMORY.saveData()
                     print("完了")
                 
                 else:
@@ -394,7 +394,7 @@ def listen():
                         a = 0
                     for cc in c:
                         lastMessage = [cc, "あなた"]
-                        blob.receive(cc, "あなた")
+                        mojihocori.receive(cc, "あなた")
                         lastUsername = "あなた"
                         messages.append([cc, "あなた"])
 
@@ -404,7 +404,7 @@ def listen():
         # 以下は認識できなかったときに止まらないように。
         except sr.UnknownValueError:
             dt = datetime.datetime.now()
-            blob.receive("!command ignore", lastUsername, add=add)
+            mojihocori.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
