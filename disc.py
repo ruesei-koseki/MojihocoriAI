@@ -155,31 +155,6 @@ add = True
 async def on_message(message):
     global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
 
-    ff = False
-    parts = message.content.split("\n")
-    for part in parts:
-        if bool(re.search("(.*?)===(.*?)", part)):
-            if part.split("===")[0] == "":
-                mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-            else:
-                mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-            ff = True
-    if ff:
-        mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
-        return
-    
-    ff = False
-    xx = message.content.split("\n")
-    for x in xx:
-        if bool(re.search("(.+): (.+)", x)):
-            mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
-            ff = True
-    if ff:
-        mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
-        return
-
     if message.channel == channel or bool(re.search(mojihocori.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         username = message.author.display_name.split("#")[0]
         if message.channel != channel:
@@ -193,6 +168,32 @@ async def on_message(message):
             people = [[mojihocori.DATA.settings["myname"], 0]]
         if message.author == client.user:
             return
+
+        ff = False
+        parts = message.content.split("\n")
+        for part in parts:
+            if bool(re.search("(.*?)===(.*?)", part)):
+                if part.split("===")[0] == "":
+                    mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                else:
+                    mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                ff = True
+        if ff:
+            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
+        
+        ff = False
+        xx = message.content.split("\n")
+        for x in xx:
+            if bool(re.search("(.+): (.+)", x)):
+                mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+                ff = True
+        if ff:
+            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
+
         pss = []
         for ps in people:
             pss.append(ps[0])
@@ -278,7 +279,7 @@ async def cron():
                             await speak(result)
                     messages = []
             else:
-                if random.randint(0, 100) == 0 and mojihocori.DATA.myVoice != None:
+                if random.randint(0, 60*15) == 0 and mojihocori.DATA.myVoice != None:
                     mojihocori.nextNode(add=add)
         elif mode == 2:
             if len(messages) != 0:
