@@ -18,37 +18,58 @@ def replaceWords(x, inputs, inputsHeart):
     # 本体を取り出す
     x_body = x.split("\t", 1)[1] if "\t" in x else x
 
-    # 差分を取得
-    diffs = list(differ.compare(inputsHeart, inputs))
-
-    replacements = []
-    old = ""
-    new = ""
-
-    for diff in diffs:
-        tag = diff[:2]
-        content = diff[2:]
-
-        if tag == "- ":
-            old += content
-        elif tag == "+ ":
-            new += content
-        elif tag == "  ":
-            if old and new:
-                replacements.append((old, new))
-            old = ""
-            new = ""
-
-    # 最後に残ったやつ
-    if old and new:
-        replacements.append((old, new))
-
-    # 置換処理
     already_used = []
-    for old, new in replacements:
-        if old in x_body and old not in already_used:
-            print(f"{old} => {new}")
-            x_body = x_body.replace(old, new)
-            already_used.append(new)
+    for i in reversed(range(len(inputs))):
+        # 差分を取得
+        diffs = list(differ.compare(inputsHeart[i], inputs[i]))
+
+        replacements = []
+        old = ""
+        new = ""
+
+        i = 0
+        j = ""
+        for diff in diffs:
+            tag = diff[:2]
+            content = diff[2:]
+
+            if tag == "- ":
+                if j != "- ":
+                    if i >= 2:
+                        if old and new:
+                            replacements.append((old, new))
+                        old = ""
+                        new = ""
+                        i = 0
+                        j = ""
+                    i += 1
+                    j = "- "
+                old += content
+            elif tag == "+ ":
+                if j != "+ ":
+                    if i >= 2:
+                        if old and new:
+                            replacements.append((old, new))
+                        old = ""
+                        new = ""
+                        i = 0
+                        j = ""
+                    i += 1
+                    j = "+ "
+                new += content
+            elif tag == "  ":
+                if old and new:
+                    replacements.append((old, new))
+                old = ""
+                new = ""
+                i = 0
+                j = ""
+
+        # 置換処理
+        for old, new in replacements:
+            if old in x_body and old not in already_used:
+                print(f"{old} => {new}")
+                x_body = x_body.replace(old, new)
+                already_used.append(new)
 
     return x_body
