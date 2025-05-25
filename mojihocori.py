@@ -86,12 +86,13 @@ def speakFreely(add=True):
         if add:
             MEMORY.learnSentence(result, "!")
 
-    DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-    DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-    if len(DATA.tangoOkikae1) >= 32:
-        DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-    if len(DATA.tangoOkikae2) >= 32:
-        DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+    if add:
+        DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+        DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+        if len(DATA.tangoOkikae1) >= 32:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+        if len(DATA.tangoOkikae2) >= 32:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
 
     MEMORY.evalute()
 
@@ -141,14 +142,15 @@ def receive(x, u, add=True, force=False):
             DATA.myVoice = None
             return
 
-        DATA.tangoOkikae1.append((u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-        DATA.tangoOkikae2.append((DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-        if len(DATA.tangoOkikae1) >= 32:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-        if len(DATA.tangoOkikae2) >= 32:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
-        DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
-        DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+        if add:
+            DATA.tangoOkikae1.append((u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            DATA.tangoOkikae2.append((DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            if len(DATA.tangoOkikae1) >= 32:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+            if len(DATA.tangoOkikae2) >= 32:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
         print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
         print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
