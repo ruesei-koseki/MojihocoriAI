@@ -54,6 +54,7 @@ def initialize(directory, interface_):
     with open(DATA.direc+"/data_backup.json", "w", encoding="utf8") as f:
         json.dump(DATA.data, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
+    """
     try:
         DATA.data["words"]
     except:
@@ -65,6 +66,7 @@ def initialize(directory, interface_):
         
     if DATA.settings["myname"] not in DATA.data["words"]:
         DATA.data["words"].append(DATA.settings["myname"])
+    """
     
     try:
         DATA.tangoOkikae1 = DATA.data["tangoOkikae1"]
@@ -86,13 +88,13 @@ def speakFreely(add=True):
         if add:
             MEMORY.learnSentence(result, "!")
 
-    if add:
-        DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-        DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-        if len(DATA.tangoOkikae1) >= 32:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-        if len(DATA.tangoOkikae2) >= 32:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+        if add:
+            DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            if len(DATA.tangoOkikae1) >= 32:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+            if len(DATA.tangoOkikae2) >= 32:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
 
     MEMORY.evalute()
 
@@ -117,8 +119,8 @@ def nextNode(add=True):
 def receive(x, u, add=True, force=False):
     try:
         if x == None or u == None: return
-        if u not in DATA.data["words"]:
-            DATA.data["words"].append(u)
+        #if u not in DATA.data["words"]:
+        #    DATA.data["words"].append(u)
         
         DATA.maeheart = DATA.heart
         DATA.lastSentenceInput = x
@@ -135,8 +137,8 @@ def receive(x, u, add=True, force=False):
         
         if add:
             MEMORY.learnSentence(x, u)
-        else:
-            MEMORY.findWords(x)
+        #else:
+        #    MEMORY.findWords(x)
         
         if result == None:
             DATA.myVoice = None

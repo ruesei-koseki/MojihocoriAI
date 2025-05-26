@@ -3,8 +3,8 @@ import INTELLIGENCE
 import json
 import CONSIDERATION
 import random
-from janome.tokenizer import Tokenizer
-t = Tokenizer()
+#from janome.tokenizer import Tokenizer
+#t = Tokenizer()
 
 def learnSentence(x, u, save=True, mama=False):
     #if len(DATA.data["sentence"]) >= 1000 or mama:
@@ -18,7 +18,7 @@ def learnSentence(x, u, save=True, mama=False):
         DATA.data["sentence"].append([x, "!output"])
     else:
         DATA.data["sentence"].append([x, u])
-    findWords(x)
+    #findWords(x)
 
     if len(DATA.data["sentence"]) >= 1600000:
         while len(DATA.data["sentence"]) >= 1600000:
@@ -29,6 +29,8 @@ def learnSentence(x, u, save=True, mama=False):
     if save:
         saveData()
 
+
+"""
 def findWords(x):
     words = x.split()  # スペースで区切られた単語を検出
     for word in words:
@@ -37,6 +39,7 @@ def findWords(x):
     for w in list(t.tokenize(x, wakati=True)):
         if w not in DATA.data["words"]:  # 既に記憶されていない単語のみ追加
             DATA.data["words"].append(w)
+"""
 
 
 def saveData():
