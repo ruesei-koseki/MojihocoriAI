@@ -54,8 +54,6 @@ def replaceWords(x, inputs, inputsHeart):
                     l = ""
                 new += content
             elif tag == "  ":
-                if content == "\t":
-                    m = False
                 k += 1
                 l += content
                 if m:
@@ -67,6 +65,8 @@ def replaceWords(x, inputs, inputsHeart):
                         i = 0
                         k = 0
                         l = ""
+                    if content == "\t":
+                        m = False
                 j = "  "
 
         # 置換処理
