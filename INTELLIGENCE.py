@@ -29,12 +29,16 @@ def replaceWords(x, inputs, inputsHeart):
 
         i = 0
         j = ""
+        k = 0
+        l = ""
         for diff in diffs:
             tag = diff[:2]
             content = diff[2:]
 
             if tag == "- ":
                 if j != "- ":
+                    old += l
+                    new += l
                     if i >= 2:
                         if old and new:
                             replacements.append((old, new))
@@ -44,9 +48,13 @@ def replaceWords(x, inputs, inputsHeart):
                         j = ""
                     i += 1
                     j = "- "
+                    k = 0
+                    l = ""
                 old += content
             elif tag == "+ ":
                 if j != "+ ":
+                    old += l
+                    new += l
                     if i >= 2:
                         if old and new:
                             replacements.append((old, new))
@@ -56,14 +64,21 @@ def replaceWords(x, inputs, inputsHeart):
                         j = ""
                     i += 1
                     j = "+ "
+                    k = 0
+                    l = ""
                 new += content
             elif tag == "  ":
-                if old and new:
-                    replacements.append((old, new))
-                old = ""
-                new = ""
-                i = 0
-                j = ""
+                k += 1
+                l += content
+                if k >= 3 or content == "\t":
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                    i = 0
+                    j = ""
+                    k = 0
+                    l = ""
 
         # 置換処理
         for old, new in replacements:
