@@ -56,6 +56,7 @@ def evalute():
         if flag1:
             print("このメッセージは良い")
             DATA.data["sentence"].append(["!good", "!system"])
+            CONSIDERATION.looking("!good", "!system")
 
     if DATA.data["sentence"][len(DATA.data["sentence"])-1][0] != "!bad" and DATA.data["sentence"][len(DATA.data["sentence"])-1][0] != "!good" and not flag1:
         if DATA.heart+1 < len(DATA.data["sentence"]) - 1:
@@ -64,3 +65,4 @@ def evalute():
         if flag2:
             print("このメッセージは悪い")
             DATA.data["sentence"].append(["!bad", "!system"])
+            CONSIDERATION.looking("!bad", "!system")
