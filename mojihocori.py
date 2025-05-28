@@ -91,10 +91,18 @@ def speakFreely(add=True):
         if add:
             DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
             DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            if len(DATA.tangoOkikae1) >= 32:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-            if len(DATA.tangoOkikae2) >= 32:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+            res1 = [result, DATA.settings["myname"]]
+            for i in range(3):
+                res1 = CONSIDERATION.rensou(res1[0], res1[1])
+                res2 = INTELLIGENCE.replaceWords(res1[1]+"\t"+res1[0], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
+                DATA.tangoOkikae1.append((res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+                DATA.tangoOkikae2.append((res2).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            if len(DATA.tangoOkikae1) >= 128:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
+            if len(DATA.tangoOkikae2) >= 128:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
     MEMORY.evalute()
 
@@ -147,10 +155,16 @@ def receive(x, u, add=True, force=False):
         if add:
             DATA.tangoOkikae1.append((u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"])))
             DATA.tangoOkikae2.append((DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            if len(DATA.tangoOkikae1) >= 32:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-            if len(DATA.tangoOkikae2) >= 32:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+            res1 = [u, x]
+            for i in range(3):
+                res1 = CONSIDERATION.rensou(res1[0], res1[1])
+                res2 = INTELLIGENCE.replaceWords(res1[0]+"\t"+res1[1], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
+                DATA.tangoOkikae1.append((res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+                DATA.tangoOkikae2.append((res2).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            if len(DATA.tangoOkikae1) >= 128:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
+            if len(DATA.tangoOkikae2) >= 128:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 

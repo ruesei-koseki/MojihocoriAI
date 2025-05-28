@@ -14,9 +14,9 @@ def isNextOk():
     else:
         return DATA.lastSentenceInput != DATA.data["sentence"][DATA.heart+1][0] and DATA.lastSentence != DATA.data["sentence"][DATA.heart+1][0] and DATA.data["sentence"][DATA.heart+1][1] == DATA.data["sentence"][DATA.heart][1] and DATA.data["sentence"][DATA.heart+1][1] != "!" and "!system" not in DATA.data["sentence"][DATA.heart+1][1]
 
-def replaceWords(x, inputs, inputsHeart):
+def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     # 本体を取り出す
-    x_body = x.split("\t", 1)[1] if "\t" in x else x
+    x_body = x.split("\t", 1)[1] if "\t" in x and not ignoreTab else x
 
     already_used = []
     for i in reversed(range(len(inputs))):
@@ -54,9 +54,9 @@ def replaceWords(x, inputs, inputsHeart):
                     l = ""
                 new += content
             elif tag == "  ":
-                k += 1
-                l += content
                 if m:
+                    k += 1
+                    l += content
                     if k >= 3 or content == "\t" or i >= len(inputs) - 1:
                         if old and new:
                             replacements.append((old, new))
