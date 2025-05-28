@@ -19,7 +19,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     x_body = x.split("\t", 1)[1] if "\t" in x and not ignoreTab else x
 
     already_used = []
-    for i in reversed(range(len(inputs))):
+    for i in range(len(inputs)):
         # 差分を取得
         diffs = list(differ.compare(inputsHeart[i], inputs[i]))
 
@@ -35,6 +35,16 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
             tag = diff[:2]
             content = diff[2:]
 
+            if content == "\t":
+                m = False
+                if old and new:
+                    replacements.append((old, new))
+                old = ""
+                new = ""
+                j = ""
+                k = 0
+                l = ""
+                continue
             if tag == "- ":
                 m = True
                 if j != "- ":
@@ -57,23 +67,20 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                 if m:
                     k += 1
                     l += content
-                    if k >= 3 or content == "\t" or i >= len(inputs) - 1:
+                    if k >= 3 or i >= len(inputs) - 1:
                         if old and new:
                             replacements.append((old, new))
                         old = ""
                         new = ""
-                        i = 0
                         k = 0
                         l = ""
-                    if content == "\t":
-                        m = False
                 j = "  "
 
         # 置換処理
         for old, new in replacements:
-            if old in x_body and [new, old] not in already_used:
+            if old in x_body and old not in already_used:
                 print(f"{old} => {new}")
                 x_body = x_body.replace(old, new)
-                already_used.append([old, new])
+                already_used.append(new)
 
     return x_body
