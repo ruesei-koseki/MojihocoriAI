@@ -77,10 +77,16 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                 j = "  "
 
         # 置換処理
+        x_body_copy = x_body
+        inputsHeart_copy = inputsHeart[i]
         for old, new in replacements:
             if old in x_body and old not in already_used:
-                print(f"{old} => {new}")
-                x_body = x_body.replace(old, new)
-                already_used.append(new)
+                if inputsHeart[i].replace(old, new) == inputs[i]:
+                    print(f"{old} => {new}")
+                    inputsHeart_copy = inputsHeart_copy.replace(old, new)
+                    x_body_copy = x_body_copy.replace(old, new)
+                    already_used.append(new)
+        if inputsHeart_copy == inputs[i]:
+            x_body = x_body_copy
 
     return x_body
