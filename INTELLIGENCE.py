@@ -80,7 +80,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         for old, new in replacements:
             if old in x_body and old not in already_used:
                 print(f"{old} => {new}")
-                x_body = x_body.replace(old, new, 1)
+                x_body = x_body.replace(old, new)
                 already_used.append(new)
 
     return x_body
