@@ -1,6 +1,7 @@
 import DATA
 import random
 import operator
+import re
 import difflib
 differ = difflib.Differ()
 
@@ -25,55 +26,68 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     old = ""
     new = ""
 
+    i = 0
     j = ""
     k = 0
+    l = ""
+    m = False
     for diff in diffs:
+        i += 1
         tag = diff[:2]
         content = diff[2:]
 
-        if tag == "- ":
-            if j != "- ":
-                k += 1
-                if k >= 3:
-                    if old and new:
-                        replacements.append((old, new))
-                    old = ""
-                    new = ""
-                    k = 0
-                j = "- "
-            old += content
-        elif tag == "+ ":
-            if j != "+ ":
-                k += 1
-                if k >= 3:
-                    if old and new:
-                        replacements.append((old, new))
-                    old = ""
-                    new = ""
-                    k = 0
-                j = "+ "
-            new += content
-        elif tag == "  ":
+        if content == "\t":
+            m = False
             if old and new:
                 replacements.append((old, new))
             old = ""
             new = ""
+            j = ""
             k = 0
+            l = ""
+            continue
+        if tag == "- ":
+            m = True
+            if j != "- ":
+                old += l
+                new += l
+                j = "- "
+                k = 0
+                l = ""
+            old += content
+        elif tag == "+ ":
+            m = True
+            if j != "+ ":
+                old += l
+                new += l
+                j = "+ "
+                k = 0
+                l = ""
+            new += content
+        elif tag == "  ":
+            if m:
+                k += 1
+                l += content
+                if k >= 3 or i >= len(inputs) - 1:
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                    k = 0
+                    l = ""
             j = "  "
-    
-    if old and new:
-        replacements.append((old, new))
 
     # 置換処理
     inputsHeart_copy = inputsHeart
     for old, new in replacements:
         if old in x_body:
-            print(f"{old} => {new}")
-            wordNumber = "[word_"+str(random.randint(0, 1000000))+"]"
-            inputsHeart_copy = inputsHeart_copy.replace(old, wordNumber)
-            x_body = x_body.replace(old, wordNumber)
-            numberToWord.append([wordNumber, new])
-    for ntw in reversed(numberToWord):
+            if not bool(re.search("\[word\_(.*?){}(.*?)\]".format(old), x_body)) and not bool(re.search("\[word\_(.*?){}(.*?)\]".format(old), inputsHeart_copy)):
+                print(f"{old} => {new}")
+                wordNumber = "[word_"+str(random.randint(0, 1000000))+"]"
+                inputsHeart_copy = inputsHeart_copy.replace(old, wordNumber)
+                x_body = x_body.replace(old, wordNumber)
+                numberToWord.append([wordNumber, new])
+    for ntw in numberToWord:
         inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
         x_body = x_body.replace(ntw[0], ntw[1])
 
