@@ -25,7 +25,6 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     old = ""
     new = ""
 
-    i = 1
     j = ""
     k = 0
     for diff in diffs:
@@ -40,6 +39,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                         replacements.append((old, new))
                     old = ""
                     new = ""
+                    k = 0
                 j = "- "
             old += content
         elif tag == "+ ":
@@ -50,6 +50,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                         replacements.append((old, new))
                     old = ""
                     new = ""
+                    k = 0
                 j = "+ "
             new += content
         elif tag == "  ":
@@ -57,8 +58,8 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                 replacements.append((old, new))
             old = ""
             new = ""
+            k = 0
             j = "  "
-        i += 1
 
     # 置換処理
     x_body_copy = x_body
