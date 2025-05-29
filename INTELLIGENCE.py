@@ -25,24 +25,44 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     old = ""
     new = ""
 
+    j = ""
+    k = 0
     for diff in diffs:
         tag = diff[:2]
         content = diff[2:]
 
         if tag == "- ":
+            if j != "- ":
+                k += 1
+                if k >= 3:
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                    k = 0
+                j = "- "
             old += content
         elif tag == "+ ":
+            if j != "+ ":
+                k += 1
+                if k >= 3:
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                    k = 0
+                j = "+ "
             new += content
         elif tag == "  ":
             if old and new:
                 replacements.append((old, new))
             old = ""
             new = ""
-
-    # 最後に残ったやつ
+            k = 0
+            j = "  "
+    
     if old and new:
         replacements.append((old, new))
-
 
     # 置換処理
     x_body_copy = x_body
@@ -58,6 +78,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
     for ntw in reversed(numberToWord):
         x_body_copy = x_body_copy.replace(ntw[0], ntw[1])
-    x_body = x_body_copy
+    if inputs == inputsHeart_copy:
+        x_body = x_body_copy
 
     return x_body
