@@ -71,9 +71,9 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
             inputsHeart_copy = inputsHeart_copy.replace(old, wordNumber)
             x_body_copy = x_body_copy.replace(old, wordNumber)
             numberToWord.append([wordNumber, new])
-    for ntw in numberToWord:
+    for ntw in reversed(numberToWord):
         inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
-    for ntw in numberToWord:
+    for ntw in reversed(numberToWord):
         x_body_copy = x_body_copy.replace(ntw[0], ntw[1])
     x_body = x_body_copy
 
