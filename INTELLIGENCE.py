@@ -25,41 +25,24 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     old = ""
     new = ""
 
-    j = ""
-    k = 0
     for diff in diffs:
         tag = diff[:2]
         content = diff[2:]
 
         if tag == "- ":
-            if j != "- ":
-                k += 1
-                if k >= 3:
-                    if old and new:
-                        replacements.append((old, new))
-                    old = ""
-                    new = ""
-                    k = 0
-                j = "- "
             old += content
         elif tag == "+ ":
-            if j != "+ ":
-                k += 1
-                if k >= 3:
-                    if old and new:
-                        replacements.append((old, new))
-                    old = ""
-                    new = ""
-                    k = 0
-                j = "+ "
             new += content
         elif tag == "  ":
             if old and new:
                 replacements.append((old, new))
             old = ""
             new = ""
-            k = 0
-            j = "  "
+
+    # 最後に残ったやつ
+    if old and new:
+        replacements.append((old, new))
+
 
     # 置換処理
     x_body_copy = x_body
