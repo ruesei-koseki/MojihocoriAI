@@ -78,7 +78,6 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
     for ntw in reversed(numberToWord):
         x_body_copy = x_body_copy.replace(ntw[0], ntw[1])
-    if inputs == inputsHeart_copy:
-        x_body = x_body_copy
+    x_body = x_body_copy
 
     return x_body
