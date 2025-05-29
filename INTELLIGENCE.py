@@ -17,76 +17,63 @@ def isNextOk():
 def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     # 本体を取り出す
     x_body = x.split("\t", 1)[1] if "\t" in x and not ignoreTab else x
+    numberToWord = []
+    # 差分を取得
+    diffs = list(differ.compare(inputsHeart, inputs))
 
-    already_used = []
-    for i in range(len(inputs)):
-        # 差分を取得
-        diffs = list(differ.compare(inputsHeart[i], inputs[i]))
+    replacements = []
+    old = ""
+    new = ""
 
-        replacements = []
-        old = ""
-        new = ""
+    i = 1
+    j = ""
+    k = 0
+    for diff in diffs:
+        tag = diff[:2]
+        content = diff[2:]
 
-        j = ""
-        k = 0
-        l = ""
-        m = False
-        for diff in diffs:
-            tag = diff[:2]
-            content = diff[2:]
+        if tag == "- ":
+            if j != "- ":
+                k += 1
+                if k >= 3:
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                j = "- "
+            old += content
+        elif tag == "+ ":
+            if j != "+ ":
+                k += 1
+                if k >= 3:
+                    if old and new:
+                        replacements.append((old, new))
+                    old = ""
+                    new = ""
+                j = "+ "
+            new += content
+        elif tag == "  ":
+            if old and new:
+                replacements.append((old, new))
+            old = ""
+            new = ""
+            j = "  "
+        i += 1
 
-            if content == "\t":
-                m = False
-                if old and new:
-                    replacements.append((old, new))
-                old = ""
-                new = ""
-                j = ""
-                k = 0
-                l = ""
-                continue
-            if tag == "- ":
-                m = True
-                if j != "- ":
-                    old += l
-                    new += l
-                    j = "- "
-                    k = 0
-                    l = ""
-                old += content
-            elif tag == "+ ":
-                m = True
-                if j != "+ ":
-                    old += l
-                    new += l
-                    j = "+ "
-                    k = 0
-                    l = ""
-                new += content
-            elif tag == "  ":
-                if m:
-                    k += 1
-                    l += content
-                    if k >= 3 or i >= len(inputs) - 1:
-                        if old and new:
-                            replacements.append((old, new))
-                        old = ""
-                        new = ""
-                        k = 0
-                        l = ""
-                j = "  "
-
-        # 置換処理
-        x_body_copy = x_body
-        inputsHeart_copy = inputsHeart[i]
-        for old, new in replacements:
-            if old in x_body and old not in already_used:
-                if inputsHeart[i].replace(old, new) == inputs[i]:
-                    print(f"{old} => {new}")
-                    inputsHeart_copy = inputsHeart_copy.replace(old, new)
-                    x_body_copy = x_body_copy.replace(old, new)
-                    already_used.append(new)
-        if inputsHeart_copy == inputs[i]:
-            x_body = x_body_copy
+    # 置換処理
+    x_body_copy = x_body
+    inputsHeart_copy = inputsHeart
+    for old, new in replacements:
+        if old in x_body:
+            print(f"{old} => {new}")
+            wordNumber = "[word_"+str(random.randint(0, 1000000))+"]"
+            inputsHeart_copy = inputsHeart_copy.replace(old, wordNumber)
+            x_body_copy = x_body_copy.replace(old, wordNumber)
+            numberToWord.append([wordNumber, new])
+    for ntw in numberToWord:
+        inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
+    for ntw in numberToWord:
+        x_body_copy = x_body_copy.replace(ntw[0], ntw[1])
+    x_body = x_body_copy
 
     return x_body

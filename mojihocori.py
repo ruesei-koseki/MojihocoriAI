@@ -27,8 +27,8 @@ DATA.times = 0
 DATA.sa = 0
 DATA.skip = 0
 DATA.userLog = [None] * 10
-DATA.tangoOkikae1 = []
-DATA.tangoOkikae2 = []
+DATA.tangoOkikae1 = ""
+DATA.tangoOkikae2 = ""
 DATA.rate = 1.0
 
 
@@ -72,8 +72,8 @@ def initialize(directory, interface_):
         DATA.tangoOkikae1 = DATA.data["tangoOkikae1"]
         DATA.tangoOkikae2 = DATA.data["tangoOkikae2"]
     except:
-        DATA.data["tangoOkikae1"] = []
-        DATA.data["tangoOkikae2"] = []
+        DATA.data["tangoOkikae1"] = ""
+        DATA.data["tangoOkikae2"] = ""
 
     DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
 
@@ -86,25 +86,23 @@ def speakFreely(add=True):
     DATA.userLog.pop(0)
     if result != None:
         if add:
-            MEMORY.learnSentence(result, "!")
-
-        if add:
-            DATA.tangoOkikae1.append(("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            DATA.tangoOkikae2.append((DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            DATA.tangoOkikae1 += "\n" + ("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            DATA.tangoOkikae2 += "\n" + (DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
             res1 = [result, DATA.settings["myname"]]
-            for i in range(3):
+            for i in range(8):
                 res1 = CONSIDERATION.rensou(res1[0], res1[1])
-                res2 = INTELLIGENCE.replaceWords(res1[1]+"\t"+res1[0], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
-                DATA.tangoOkikae1.append((res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-                DATA.tangoOkikae2.append((res2).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            if len(DATA.tangoOkikae1) >= 128:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-            if len(DATA.tangoOkikae2) >= 128:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+                res2 = INTELLIGENCE.replaceWords(res1[0]+"\t"+res1[1], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
+                DATA.tangoOkikae1 += "\n" + (res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+                DATA.tangoOkikae2 += "\n" + (res2).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            if len(DATA.tangoOkikae1) >= 4096:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-4096:]
+            if len(DATA.tangoOkikae2) >= 4096:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-4096:]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
-    MEMORY.evalute()
+            MEMORY.learnSentence(result, "!")
+            MEMORY.evalute()
 
     DATA.lastSentence = result
     return result
@@ -145,26 +143,24 @@ def receive(x, u, add=True, force=False):
         
         if add:
             MEMORY.learnSentence(x, u)
-        #else:
-        #    MEMORY.findWords(x)
         
         if result == None:
             DATA.myVoice = None
             return
 
         if add:
-            DATA.tangoOkikae1.append((u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            DATA.tangoOkikae2.append((DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"])))
+            DATA.tangoOkikae1 += "\n" + (u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            DATA.tangoOkikae2 += "\n" + (DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
             res1 = [u, x]
-            for i in range(3):
+            for i in range(4):
                 res1 = CONSIDERATION.rensou(res1[0], res1[1])
                 res2 = INTELLIGENCE.replaceWords(res1[0]+"\t"+res1[1], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
-                DATA.tangoOkikae1.append((res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-                DATA.tangoOkikae2.append((res2).replace("!\t", "{}\t".format(DATA.settings["myname"])))
-            if len(DATA.tangoOkikae1) >= 128:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-            if len(DATA.tangoOkikae2) >= 128:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+                DATA.tangoOkikae1 += "\n" + (res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+                DATA.tangoOkikae2 += "\n" + (res2).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            if len(DATA.tangoOkikae1) >= 4096:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-4096:]
+            if len(DATA.tangoOkikae2) >= 4096:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-4096:]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
