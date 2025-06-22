@@ -86,20 +86,12 @@ def speakFreely(add=True):
     DATA.userLog.pop(0)
     if result != None:
         if add:
-            DATA.tangoOkikae1 += "\n\n" + ("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            DATA.tangoOkikae2 += "\n\n" + (DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            res1 = [result, DATA.settings["myname"]]
-            for i in range(8):
-                res1 = CONSIDERATION.rensou(res1[0], res1[1])
-                res2 = INTELLIGENCE.replaceWords(res1[0]+"\t"+res1[1], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
-                DATA.tangoOkikae1 += "\n\n" + (res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-                DATA.tangoOkikae2 += "\n\n" + (res2).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            if len(DATA.tangoOkikae1) >= 4096:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-4096:]
-                DATA.tangoOkikae1 = DATA.tangoOkikae1.split("\n\n", 1)[1] 
-            if len(DATA.tangoOkikae2) >= 4096:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-4096:]
-                DATA.tangoOkikae2 = DATA.tangoOkikae1.split("\n\n", 1)[1] 
+            DATA.tangoOkikae1 += "\t" + ("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            DATA.tangoOkikae2 += "\t" + (DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            if len(DATA.tangoOkikae1.split("\t")) >= 128:
+                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-128:])
+            if len(DATA.tangoOkikae2.split("\t")) >= 128:
+                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-128:])
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
@@ -151,25 +143,17 @@ def receive(x, u, add=True, force=False):
             return
 
         if add:
-            DATA.tangoOkikae1 += "\n\n" + (u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            DATA.tangoOkikae2 += "\n\n" + (DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            res1 = [u, x]
-            for i in range(4):
-                res1 = CONSIDERATION.rensou(res1[0], res1[1])
-                res2 = INTELLIGENCE.replaceWords(res1[0]+"\t"+res1[1], DATA.tangoOkikae1, DATA.tangoOkikae2, ignoreTab=True)
-                DATA.tangoOkikae1 += "\n\n" + (res1[0]+"\t"+res1[1]).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-                DATA.tangoOkikae2 += "\n\n" + (res2).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            if len(DATA.tangoOkikae1) >= 4096:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-4096:]
-                DATA.tangoOkikae1 = DATA.tangoOkikae1.split("\n\n", 1)[1] 
-            if len(DATA.tangoOkikae2) >= 4096:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-4096:]
-                DATA.tangoOkikae2 = DATA.tangoOkikae1.split("\n\n", 1)[1] 
+            DATA.tangoOkikae1 += "\t" + (u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            DATA.tangoOkikae2 += "\t" + (DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
+            if len(DATA.tangoOkikae1.split("\t")) > 128:
+                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-128:])
+            if len(DATA.tangoOkikae2.split("\t")) > 128:
+                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-128:])
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
-        print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
-        print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
+        #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
+        #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
         
         result = INTELLIGENCE.replaceWords(DATA.heartLastSpeaker+"\t"+result, DATA.tangoOkikae1, DATA.tangoOkikae2)
 

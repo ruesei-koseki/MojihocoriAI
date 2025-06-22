@@ -19,76 +19,82 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     # 本体を取り出す
     x_body = x.split("\t", 1)[1] if "\t" in x and not ignoreTab else x
     numberToWord = []
-    # 差分を取得
-    diffs = list(differ.compare(inputsHeart, inputs))
-
     replacements = []
-    old = ""
-    new = ""
+    
+    # 差分を取得
+    for n in range(len(inputsHeart.split("\t"))):
+        diffs = list(differ.compare(inputsHeart.split("\t")[n].replace("!input-", ""), inputs.split("\t")[n]))
+        old = ""
+        new = ""
+
+        i = 0
+        j = ""
+        o = ""
+        for diff in diffs:
+            i += 1
+            tag = diff[:2]
+            content = diff[2:]
+
+            if tag == "- ":
+                if j != "- ":
+                    if o:
+                        replacements.append((o, o))
+                        o = ""
+                    j = "- "
+                old += content
+            elif tag == "+ ":
+                if j != "+ ":
+                    if o:
+                        replacements.append((o, o))
+                        o = ""
+                    j = "+ "
+                new += content
+            elif tag == "  ":
+                o += content
+                if old and new:
+                    replacements.append((old, new))
+                old = ""
+                new = ""
+                j = "  "
+                
+        if o:
+            replacements.append((o, o))
+        if old and new:
+            replacements.append((old, new))
+        old = ""
+        new = ""
+        j = ""
+        k = 0
+        l = ""
 
     i = 0
-    j = ""
-    k = 0
-    l = ""
-    m = False
-    for diff in diffs:
-        i += 1
-        tag = diff[:2]
-        content = diff[2:]
-
-        if content == "\t":
-            m = False
-            if old and new:
-                replacements.append((old, new))
-            old = ""
-            new = ""
-            j = ""
-            k = 0
-            l = ""
+    deletes = []
+    for old, new in replacements:
+        if old == None:
             continue
-        if tag == "- ":
-            m = True
-            if j != "- ":
-                old += l
-                new += l
-                j = "- "
-                k = 0
-                l = ""
-            old += content
-        elif tag == "+ ":
-            m = True
-            if j != "+ ":
-                old += l
-                new += l
-                j = "+ "
-                k = 0
-                l = ""
-            new += content
-        elif tag == "  ":
-            if m:
-                k += 1
-                l += content
-                if k >= 3 or i >= len(inputs) - 1:
-                    if old and new:
-                        replacements.append((old, new))
-                    old = ""
-                    new = ""
-                    k = 0
-                    l = ""
-            j = "  "
+        for n in range(len(inputsHeart.split("\t"))):
+            if old in inputs.split("\t")[n] and old in inputsHeart.split("\t")[n]:
+                replacements[i] = (None, None)
+                break
+        for old2, new2 in replacements:
+            if old2 == None:
+                continue
+            if old in old2 and old2 in x_body and old != old2:
+                replacements[i] = (None, None)
+                break
+        i += 1
 
     # 置換処理
-    inputsHeart_copy = inputsHeart
-    for old, new in replacements:
+    for old, new in reversed(replacements):
+        if old == None:
+            continue
         if old in x_body:
-            if not bool(re.search("\[word\_(.*?){}(.*?)\]".format(old), x_body)) and not bool(re.search("\[word\_(.*?){}(.*?)\]".format(old), inputsHeart_copy)):
+            if not bool(re.search("\[(.*?){}(.*?)\]".format(re.escape(old)), x_body)):
                 print(f"{old} => {new}")
                 wordNumber = "[word_"+str(random.randint(0, 1000000))+"]"
-                inputsHeart_copy = inputsHeart_copy.replace(old, wordNumber)
                 x_body = x_body.replace(old, wordNumber)
                 numberToWord.append([wordNumber, new])
     for ntw in numberToWord:
-        inputsHeart_copy = inputsHeart_copy.replace(ntw[0], ntw[1])
         x_body = x_body.replace(ntw[0], ntw[1])
 
     return x_body

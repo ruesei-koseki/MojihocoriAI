@@ -14,6 +14,7 @@ lastMessage = None
 lastUsername = "誰か"
 messages = []
 pin = False
+answerFlag = False
 
 import datetime
 dt = datetime.datetime.now()
@@ -67,7 +68,7 @@ def setMode(x):
 
 kaisu = 0
 async def speak(result):
-    global channel, people, mode, pin, lastMessage, messages, kaisu, dt
+    global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i, answerFlag
     try:
         print("{}: {}".format(mojihocori.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
@@ -114,6 +115,13 @@ async def speak(result):
                     pin = False
                 elif com[1] == "saveMyData":
                     mojihocori.MEMORY.saveData()
+                elif com[1] == "confirmClock":
+                    dt = datetime.datetime.now()
+                    i = 0
+                    add = True
+                    mojihocori.receive(dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock", add=add)
+                    lastMessage = [dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock"]
+                    messages.append([dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock"])
             else:
                 Message += result + "\n"
         Message = Message[:-1]
@@ -129,6 +137,7 @@ async def speak(result):
                 if result:
                     result = mojihocori.speakFreely(add=add)
                     await speak(result)
+                    answerFlag = False
                     dt = datetime.datetime.now()
                 
     except:
@@ -143,9 +152,9 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
-    mojihocori.receive("通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system", add=add)
-    lastMessage = ["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system"]
-    messages.append(["通知: 貴方は目を覚ましました。\nあなたの名前は「{}」です。".format(mojihocori.DATA.settings["mynames"]), "!system"])
+    mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add)
+    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
+    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
 
 ii = 0
 i = 0
@@ -180,6 +189,10 @@ async def on_message(message):
                     mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
                     mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
                 ff = True
+        if bool(re.search("(.*?)\n==>\n(.*?)", message.content)):
+            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
+            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
+            ff = True
         if ff:
             mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
             return
@@ -248,7 +261,7 @@ async def on_message(message):
 
 @tasks.loop(seconds=1)
 async def cron():
-    global people, lastMessage, messages, mode, channel, i, add, dt
+    global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag
     try:
         dt_now = datetime.datetime.now()
         """
@@ -283,6 +296,9 @@ async def cron():
                     mojihocori.nextNode(add=add)
         elif mode == 2:
             if len(messages) != 0:
+                messages = []
+                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])):
+                    answerFlag = True
                 pss = []
                 for ps in people:
                     pss.append(ps[0])
@@ -298,13 +314,12 @@ async def cron():
                     denominator = 0
                 else:
                     denominator = len(people) - 2
-                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
+                if answerFlag or bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
                         pass
                     else:
                         await speak(result)
-                messages = []
             else:
                 if random.randint(0, 19) == 0 and mojihocori.DATA.myVoice != None:
                     a = mojihocori.nextNode(add=add)
@@ -319,7 +334,6 @@ async def cron():
                 add = False
 
             dt = datetime.datetime.now()
-            mojihocori.receive(dt_now.strftime('%Y年 %m月 %d日 : %H時 %M分 %S秒'), "!systemClock", add=add)
             mojihocori.receive("!command ignore", lastUsername, add=add)
             print("沈黙を検知")
             if mode == 2 and random.randint(0, 5) == 0:
