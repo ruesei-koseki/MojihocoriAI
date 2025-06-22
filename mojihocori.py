@@ -88,10 +88,10 @@ def speakFreely(add=True):
         if add:
             DATA.tangoOkikae1 += "\t" + ("!\t"+result).replace("!\t", "{}\t".format(DATA.settings["myname"]))
             DATA.tangoOkikae2 += "\t" + (DATA.heartLastSpeaker+"\t"+DATA.lastSentenceHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            if len(DATA.tangoOkikae1.split("\t")) >= 512:
-                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-512:])
-            if len(DATA.tangoOkikae2.split("\t")) >= 512:
-                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-512:])
+            if len(DATA.tangoOkikae1.split("\t")) >= 128:
+                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-128:])
+            if len(DATA.tangoOkikae2.split("\t")) >= 128:
+                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-128:])
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
@@ -145,10 +145,10 @@ def receive(x, u, add=True, force=False):
         if add:
             DATA.tangoOkikae1 += "\t" + (u+"\t"+x).replace("!\t", "{}\t".format(DATA.settings["myname"]))
             DATA.tangoOkikae2 += "\t" + (DATA.heartLastSpeakerInput+"\t"+DATA.lastSentenceInputHeart).replace("!\t", "{}\t".format(DATA.settings["myname"]))
-            if len(DATA.tangoOkikae1.split("\t")) > 512:
-                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-512:])
-            if len(DATA.tangoOkikae2.split("\t")) > 512:
-                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-512:])
+            if len(DATA.tangoOkikae1.split("\t")) > 128:
+                DATA.tangoOkikae1 = "\t".join(DATA.tangoOkikae1.split("\t")[-128:])
+            if len(DATA.tangoOkikae2.split("\t")) > 128:
+                DATA.tangoOkikae2 = "\t".join(DATA.tangoOkikae2.split("\t")[-128:])
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
