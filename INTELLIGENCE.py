@@ -99,13 +99,14 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
             else:
                 if not k:
                     k =  True
-                j = 4
+                j = 6
         if j <= 0:
             replacements[i] = (None, None)
         j = 0
         i += 1
 
 
+    print(replacements)
     # 置換処理
     for old, new in reversed(replacements):
         if old == None:
