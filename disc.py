@@ -142,7 +142,7 @@ async def speak(result):
                 
     except:
         mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
-        messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
+        #messages.append(["エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system"])
         print("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません")
 
 # 起動時に動作する処理
@@ -291,9 +291,12 @@ async def cron():
                         else:
                             await speak(result)
                     messages = []
-            else:
-                if random.randint(0, 60*15) == 0 and mojihocori.DATA.myVoice != None:
-                    mojihocori.nextNode(add=add)
+            if random.randint(0, 60*25) == 0 and mojihocori.DATA.myVoice != None:
+                result = mojihocori.speakFreely(add=add)
+                if result == None:
+                    pass
+                else:
+                    await speak(result)
         elif mode == 2:
             if len(messages) != 0:
                 messages = []

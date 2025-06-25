@@ -29,6 +29,9 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
 
         i = 0
         j = ""
+        k = 0
+        l = ""
+        m = False
         o = ""
         for diff in diffs:
             i += 1
@@ -36,27 +39,42 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
             content = diff[2:]
 
             if tag == "- ":
+                m = True
                 if j != "- ":
                     if o:
                         replacements.append((o, o))
                         o = ""
+                    old += l
+                    new += l
                     j = "- "
+                    k = 0
+                    l = ""
                 old += content
             elif tag == "+ ":
+                m = True
                 if j != "+ ":
                     if o:
                         replacements.append((o, o))
                         o = ""
+                    old += l
+                    new += l
                     j = "+ "
+                    k = 0
+                    l = ""
                 new += content
             elif tag == "  ":
-                o += content
-                if old and new:
-                    replacements.append((old, new))
-                old = ""
-                new = ""
+                if m:
+                    k += 1
+                    l += content
+                    if k >= 2 or i >= len(inputs) - 1:
+                        if old and new:
+                            replacements.append((old, new))
+                        old = ""
+                        new = ""
+                        k = 0
+                        l = ""
                 j = "  "
-                
+
         if o:
             replacements.append((o, o))
         if old and new:
@@ -66,23 +84,27 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         j = ""
         k = 0
         l = ""
+        o = ""
 
     i = 0
-    deletes = []
+    j = 0
+    k = False
     for old, new in replacements:
         if old == None:
             continue
         for n in range(len(inputsHeart.split("\t"))):
-            if old in inputs.split("\t")[n] and old in inputsHeart.split("\t")[n]:
-                replacements[i] = (None, None)
-                break
-        for old2, new2 in replacements:
-            if old2 == None:
-                continue
-            if old in old2 and old2 in x_body and old != old2:
-                replacements[i] = (None, None)
-                break
+            if old not in inputsHeart.split("\t")[n].replace("!input-", ""):
+                if k:
+                    j -= 1
+            else:
+                if not k:
+                    k =  True
+                j = 6
+        if j <= 0:
+            replacements[i] = (None, None)
+        j = 0
         i += 1
+
 
     # 置換処理
     for old, new in reversed(replacements):
