@@ -93,7 +93,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         if old == None:
             continue
         for n in range(len(inputsHeart.split("\t"))):
-            if old not in inputsHeart.split("\t")[n].replace("!input-", ""):
+            if old not in inputsHeart.split("\t")[n].replace("!input-", "") or new not in inputs.split("\t")[n]:
                 if k:
                     j -= 1
             else:
