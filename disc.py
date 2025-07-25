@@ -70,6 +70,10 @@ kaisu = 0
 async def speak(result):
     global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i, answerFlag
     try:
+        if not add:
+            i = 0
+            add = True
+            mojihocori.MEMORY.learnSentence(result, "!")
         print("{}: {}".format(mojihocori.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
         pattern = re.compile(r"^[!/]command")
@@ -316,7 +320,7 @@ async def cron():
                 if len(people) <= 1:
                     denominator = 0
                 else:
-                    denominator = len(people)
+                    denominator = (len(people) - 2) * 2
                 if answerFlag or bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
@@ -337,11 +341,14 @@ async def cron():
                 add = False
 
             dt = datetime.datetime.now()
-            mojihocori.receive("!command ignore", lastUsername, add=add)
+            mojihocori.receive("!command ignore", mojihocori.DATA.userLog[-1], add=add)
             print("沈黙を検知")
             if mode == 2 and random.randint(0, 5) == 0:
                 result = mojihocori.speakFreely(add=add)
-                await speak(result)
+                if result == None:
+                    pass
+                else:
+                    await speak(result)
         
     except:
         import traceback

@@ -3,7 +3,6 @@ import random
 import operator
 import re
 import difflib
-differ = difflib.Differ()
 
 def isNextOk():
     for iiiii in range(7):
@@ -17,107 +16,109 @@ def isNextOk():
 
 def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     # 本体を取り出す
-    x_body = x.split("\t", 1)[1] if "\t" in x and not ignoreTab else x
-    numberToWord = []
     replacements = []
-    
-    # 差分を取得
-    for n in range(len(inputsHeart.split("\t"))):
-        diffs = list(differ.compare(inputsHeart.split("\t")[n].replace("!input-", ""), inputs.split("\t")[n]))
+
+    word3 = []
+    word3_ = []
+    xx = x
+    for word in sorted(DATA.data["words"], key=len, reverse=True):
+        if word in xx and word != "\t":
+            word3_.append(word)
+            xx = xx.replace(word, " ")
+    for w in xx.split():
+        word3_.append(w)
+    xx = x
+    while True:
+        a = []
+        for w3 in word3_:
+            if w3 in xx:
+                a.append([w3, xx.find(w3)])
+        if a == []:
+            break
+        a = sorted(a, key=lambda x: (x[1], -len(x[0])))
+        word3.append(a[0][0])
+        xx = xx[xx.find(a[0][0])+len(a[0][0]):]
+        
+    for i in range(0, len(inputs.split("\t"))):
+        word1_ = []
+        word2_ = []
+        ipts = inputs.split("\t")[i]
+        iptsh = inputsHeart.split("\t")[i]
+        for word in sorted(DATA.data["words"], key=len, reverse=True):
+            if word in ipts and word != "\t":
+                word1_.append(word)
+                ipts = ipts.replace(word, "")
+        for w in ipts.split():
+            word1_.append(w)
+        for word in sorted(DATA.data["words"], key=len, reverse=True):
+            if word in iptsh and word != "\t":
+                word2_.append(word)
+                iptsh = iptsh.replace(word, "")
+        for w in iptsh.split():
+            word2_.append(w)
+        ipts = inputs.split("\t")[i]
+        iptsh = inputsHeart.split("\t")[i]
+        word1 = []
+        word2 = []
+        while True:
+            a = []
+            for w1 in word1_:
+                if w1 in ipts:
+                    a.append([w1, ipts.find(w1)])
+            if a == []:
+                break
+            a = sorted(a, key=lambda x: (x[1], -len(x[0])))
+            word1.append(a[0])
+            ipts = ipts[ipts.find(a[0][0])+len(a[0][0]):]
+        while True:
+            a = []
+            for w2 in word2_:
+                if w2 in iptsh:
+                    a.append([w2, iptsh.find(w2)])
+            if a == []:
+                break
+            a = sorted(a, key=lambda x: (x[1], -len(x[0])))
+            word2.append(a[0])
+            iptsh = iptsh[iptsh.find(a[0][0])+len(a[0][0]):]
+        word1 = list(word1)
+        word2 = list(word2)
+
+        w1 = []
+        for wo1 in word1:
+            w1.append(wo1[0])
+        w2 = []
+        for wo2 in word2:
+            w2.append(wo2[0])
+
+        # 差分を取得
+        diffs = list(difflib.ndiff(w2, w1))
         old = ""
         new = ""
-
-        i = 0
-        j = ""
-        k = 0
-        l = ""
-        m = False
-        o = ""
         for diff in diffs:
-            i += 1
             tag = diff[:2]
             content = diff[2:]
 
             if tag == "- ":
-                m = True
-                if j != "- ":
-                    if o:
-                        replacements.append((o, o))
-                        o = ""
-                    old += l
-                    new += l
-                    j = "- "
-                    k = 0
-                    l = ""
                 old += content
             elif tag == "+ ":
-                m = True
-                if j != "+ ":
-                    if o:
-                        replacements.append((o, o))
-                        o = ""
-                    old += l
-                    new += l
-                    j = "+ "
-                    k = 0
-                    l = ""
                 new += content
             elif tag == "  ":
-                if m:
-                    k += 1
-                    l += content
-                    if k >= 2 or i >= len(inputs) - 1:
-                        if old and new:
-                            replacements.append((old, new))
-                        old = ""
-                        new = ""
-                        k = 0
-                        l = ""
-                j = "  "
+                if old or new:
+                    replacements.append((old, new))
+                    old = ""
+                    new = ""
+                replacements.append((content, content))
+        if old or new:
+            replacements.append((old, new))  # 最後に残ったやつ
 
-        if o:
-            replacements.append((o, o))
-        if old and new:
-            replacements.append((old, new))
-        old = ""
-        new = ""
-        j = ""
-        k = 0
-        l = ""
-        o = ""
-
-    i = 0
-    j = -1
-    k = False
-    for old, new in replacements:
-        if old == None:
-            continue
-        for n in range(len(inputsHeart.split("\t"))):
-            if old not in inputsHeart.split("\t")[n].replace("!input-", "") or new not in inputs.split("\t")[n]:
-                if k:
-                    j -= 1
-            else:
-                if not k:
-                    k =  True
-                j = 6
-        if j <= -1:
-            replacements[i] = (None, None)
-        j = -1
-        i += 1
-
-
-    print(replacements)
     # 置換処理
-    for old, new in reversed(replacements):
-        if old == None:
-            continue
-        if old in x_body:
-            if not bool(re.search("\[(.*?){}(.*?)\]".format(re.escape(old)), x_body)):
-                print(f"{old} => {new}")
-                wordNumber = "[word_"+str(random.randint(0, 1000000))+"]"
-                x_body = x_body.replace(old, wordNumber)
-                numberToWord.append([wordNumber, new])
-    for ntw in numberToWord:
-        x_body = x_body.replace(ntw[0], ntw[1])
-
-    return x_body
+    i = 0
+    for wo3 in word3:
+        for old, new in reversed(replacements):
+            if wo3 == old:
+                print("{} => {}".format(old, new))
+                word3[i] = new
+                break
+        i += 1
+    result = "".join(word3)
+    return result

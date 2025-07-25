@@ -231,7 +231,7 @@ def cron():
                     if len(people) <= 1:
                         denominator = 0
                     else:
-                        denominator = len(people) - 2
+                        denominator = (len(people) - 2) * 2
                     if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                         result = mojihocori.speakFreely(add=add)
                         if result == None:
