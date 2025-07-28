@@ -326,7 +326,7 @@ def looking(x, u, reply=True, force=False):
 
 
 
-def rensou(u, x, reply=True, force=False):
+def rensou(x, u, reply=True, force=False):
     #過去の発言をもとに考える
     try:
         print("思考中: {}".format(x))
@@ -370,7 +370,7 @@ def rensou(u, x, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("次のセリフ: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
-                                    return [DATA.data["sentence"][i+iiii+1][1], DATA.data["sentence"][i+iiii+1][0]]
+                                    return [DATA.data["sentence"][i+iiii+1][0], DATA.data["sentence"][i+iiii+1][1]]
                             else:
                                 pass
                         else:
@@ -406,7 +406,7 @@ def rensou(u, x, reply=True, force=False):
                                 if flag:
                                     print("類似: {}, {}, {}".format(DATA.data["sentence"][i][0], i, rate))
                                     print("次のセリフ: {}, {}".format(DATA.data["sentence"][i+iiii+1][0], i+iiii+1))
-                                    return [DATA.data["sentence"][i+iiii+1][1], DATA.data["sentence"][i+iiii+1][0]]
+                                    return [DATA.data["sentence"][i+iiii+1][0], DATA.data["sentence"][i+iiii+1][1]]
                             else:
                                 pass
                         else:
