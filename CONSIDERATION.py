@@ -239,7 +239,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(u, x*6), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*6)) >= rate:
-                    for iiii in range(2):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -352,7 +352,7 @@ def rensou(u, x, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity("{}: {}".format(u, x*6), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*6)) >= rate:
-                    for iiii in range(2):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:

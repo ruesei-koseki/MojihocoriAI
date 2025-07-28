@@ -22,7 +22,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     word3_ = []
     xx = x
     for word in sorted(DATA.data["words"], key=len, reverse=True):
-        if word in xx and word != "\t":
+        if word in xx:
             word3_.append(word)
             xx = xx.replace(word, " ")
     for w in xx.split():
@@ -39,25 +39,25 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         word3.append(a[0][0])
         xx = xx[xx.find(a[0][0])+len(a[0][0]):]
         
-    for i in range(0, len(inputs.split("\t"))):
+    for i in range(0, len(inputs)):
         word1_ = []
         word2_ = []
-        ipts = inputs.split("\t")[i]
-        iptsh = inputsHeart.split("\t")[i]
+        ipts = inputs[i]
+        iptsh = inputsHeart[i]
         for word in sorted(DATA.data["words"], key=len, reverse=True):
-            if word in ipts and word != "\t":
+            if word in ipts:
                 word1_.append(word)
                 ipts = ipts.replace(word, "")
         for w in ipts.split():
             word1_.append(w)
         for word in sorted(DATA.data["words"], key=len, reverse=True):
-            if word in iptsh and word != "\t":
+            if word in iptsh:
                 word2_.append(word)
                 iptsh = iptsh.replace(word, "")
         for w in iptsh.split():
             word2_.append(w)
-        ipts = inputs.split("\t")[i]
-        iptsh = inputsHeart.split("\t")[i]
+        ipts = inputs[i]
+        iptsh = inputsHeart[i]
         word1 = []
         word2 = []
         while True:
