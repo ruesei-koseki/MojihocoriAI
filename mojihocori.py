@@ -68,6 +68,9 @@ def initialize(directory, interface_):
     except:
         DATA.data["tangoOkikae2"] = []
     
+    DATA.tangoOkikae1 = DATA.data["tangoOkikae1"]
+    DATA.tangoOkikae2 = DATA.data["tangoOkikae2"]
+        
     for message in DATA.data["sentence"]:
         MEMORY.findWords(message[0])
         MEMORY.findWords(message[1])
@@ -100,10 +103,10 @@ def speakFreely(add=True):
         if len(DATA.tangoOkikae2) > 24:
             DATA.tangoOkikae2 = DATA.tangoOkikae2[-24:]
 
-        DATA.tangoOkikae1.append(DATA.lastUser)
+        DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
         DATA.tangoOkikae1.append(DATA.settings["myname"])
         DATA.tangoOkikae2.append(DATA.settings["myname"])
-        DATA.tangoOkikae2.append(DATA.lastUser)
+        DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
 
         DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
         DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
@@ -135,10 +138,10 @@ def receive(x, u, add=True, force=False):
         
         DATA.maeheart = DATA.heart
         DATA.lastSentenceInput = x
-        if "!system" not in u:
+        if "!" not in u:
             DATA.lastUser = u
-        DATA.userLog.append(u)
-        DATA.userLog.pop(0)
+            DATA.userLog.append(u)
+            DATA.userLog.pop(0)
         if add:
             if x == "!bad":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
@@ -166,16 +169,16 @@ def receive(x, u, add=True, force=False):
             if len(DATA.tangoOkikae2) > 24:
                 DATA.tangoOkikae2 = DATA.tangoOkikae2[-24:]
 
-            DATA.tangoOkikae1.append(DATA.lastUser)
+            DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
             DATA.tangoOkikae1.append(DATA.settings["myname"])
             DATA.tangoOkikae2.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.lastUser)
+            DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
 
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
-        #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
-        #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
+        print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
+        print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
         
         result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         DATA.myVoice = result
