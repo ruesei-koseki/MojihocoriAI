@@ -98,10 +98,10 @@ def speakFreely(add=True):
         DATA.tangoOkikae1.append(DATA.settings["myname"])
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
         DATA.tangoOkikae2.append(DATA.heartLastSpeaker.replace("!input-", "") if DATA.heartLastSpeaker.replace("!input-", "") != "!" and DATA.heartLastSpeaker.replace("!input-", "") != "!output" else DATA.settings["myname"])
-        if len(DATA.tangoOkikae1) > 24:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-24:]
-        if len(DATA.tangoOkikae2) > 24:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-24:]
+        if len(DATA.tangoOkikae1) > 32:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+        if len(DATA.tangoOkikae2) > 32:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
 
         DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
         DATA.tangoOkikae1.append(DATA.settings["myname"])
@@ -130,61 +130,63 @@ def nextNode(add=True):
     else:
         return None
 
-def receive(x, u, add=True, force=False):
+def receive(x, u, add=True, reply=True, force=False):
     try:
         if x == None or u == None: return
         #if u not in DATA.data["words"]:
         #    DATA.data["words"].append(u)
         
-        DATA.maeheart = DATA.heart
-        DATA.lastSentenceInput = x
-        if "!" not in u:
-            DATA.lastUser = u
-            DATA.userLog.append(u)
-            DATA.userLog.pop(0)
-        if add:
-            if x == "!bad":
-                DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
-            if x == "!good":
-                DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(x, u, force=force)
-        
-        if add:
-            MEMORY.learnSentence(x, u)
-        
-        if result == None:
-            DATA.myVoice = None
-            return
+        xx = x.split("\n")
+        for x in xx:
+            DATA.maeheart = DATA.heart
+            DATA.lastSentenceInput = x
+            if "!" not in u:
+                DATA.lastUser = u
+                DATA.userLog.append(u)
+                DATA.userLog.pop(0)
+            if add:
+                if x == "!bad":
+                    DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
+                if x == "!good":
+                    DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
+            result = CONSIDERATION.looking(x, u, force=force, reply=reply)
+            
+            if add:
+                MEMORY.learnSentence(x, u)
+            
+            if result == None:
+                DATA.myVoice = None
+                return
 
-        if u != "!system":
-            if DATA.tangoOkikae1 != [] and DATA.tangoOkikae2 != []:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[:-2]
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[:-2]
-            DATA.tangoOkikae1.append(x)
-            DATA.tangoOkikae1.append(u if u != "!" and u != "!output" else DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
-            DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput.replace("!input-", "") if DATA.heartLastSpeakerInput.replace("!input-", "") != "!" and DATA.heartLastSpeakerInput.replace("!input-", "") != "!output" else DATA.settings["myname"])
-            if len(DATA.tangoOkikae1) > 24:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-24:]
-            if len(DATA.tangoOkikae2) > 24:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-24:]
+            if u != "!system":
+                if DATA.tangoOkikae1 != [] and DATA.tangoOkikae2 != []:
+                    DATA.tangoOkikae1 = DATA.tangoOkikae1[:-2]
+                    DATA.tangoOkikae2 = DATA.tangoOkikae2[:-2]
+                DATA.tangoOkikae1.append(x)
+                DATA.tangoOkikae1.append(u if u != "!" and u != "!output" else DATA.settings["myname"])
+                DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
+                DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput.replace("!input-", "") if DATA.heartLastSpeakerInput.replace("!input-", "") != "!" and DATA.heartLastSpeakerInput.replace("!input-", "") != "!output" else DATA.settings["myname"])
+                if len(DATA.tangoOkikae1) > 32:
+                    DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+                if len(DATA.tangoOkikae2) > 32:
+                    DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
 
-            DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
-            DATA.tangoOkikae1.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+                DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+                DATA.tangoOkikae1.append(DATA.settings["myname"])
+                DATA.tangoOkikae2.append(DATA.settings["myname"])
+                DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
 
-            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
-            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+                DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+                DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
-        print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
-        print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
-        
-        result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
-        DATA.myVoice = result
-        print("座標: {}".format(DATA.heart))
-        print("ログ: {}".format(DATA.userLog))
-        print("心の声: {}".format(result))
+            #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
+            #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
+            
+            result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
+            DATA.myVoice = result
+            print("座標: {}".format(DATA.heart))
+            print("ログ: {}".format(DATA.userLog))
+            print("心の声: {}".format(result))
     except:
         import traceback
         traceback.print_exc()

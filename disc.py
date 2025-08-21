@@ -131,7 +131,7 @@ async def speak(result):
         Message = Message[:-1]
         if Message != "":
             async with channel.typing():
-                if len(Message) / (mode * 3) <= 1:
+                if len(Message) / (mode * 3) >= 1:
                     await asyncio.sleep(len(Message) / (mode * 3))
                 else:
                     await asyncio.sleep(1)
@@ -141,8 +141,8 @@ async def speak(result):
                 if result:
                     result = mojihocori.speakFreely(add=add)
                     await speak(result)
-                    answerFlag = False
                     dt = datetime.datetime.now()
+                answerFlag = False
                 
     except:
         mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
@@ -276,8 +276,8 @@ async def cron():
 
         a = []
         for person in people:
-            if person[1] < 6:
-                a.append([person[0], person[1]+0.5])
+            if person[1] < 60*10:
+                a.append([person[0], person[1]+1])
         people = a
         pss = []
         for ps in people:
@@ -303,7 +303,6 @@ async def cron():
                     await speak(result)
         elif mode == 2:
             if len(messages) != 0:
-                messages = []
                 if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])):
                     answerFlag = True
                 pss = []
@@ -311,28 +310,24 @@ async def cron():
                     pss.append(ps[0])
                 aaa = ""
                 for person in pss:
-                    if person[0] == mojihocori.DATA.settings["myname"]:
+                    if person == mojihocori.DATA.settings["myname"]:
                         pass
                     else:
-                        aaa = aaa + person[0] + "|"
+                        aaa = aaa + person + "|"
                 aaa = aaa[0:-1]
                 
                 if len(people) <= 1:
                     denominator = 0
                 else:
-                    denominator = (len(people) - 2) * 2
-                if answerFlag or bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or (not bool(re.search(aaa, lastMessage[0])) and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
+                    denominator = (len(people) - 2)
+                
+                if answerFlag or bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
                         pass
                     else:
                         await speak(result)
-            else:
-                if random.randint(0, 19) == 0 and mojihocori.DATA.myVoice != None:
-                    a = mojihocori.nextNode(add=add)
-                    if a:
-                        result = mojihocori.speakFreely(add=add)
-                        await speak(result)
+                messages = []
         if dt_now - dt >= datetime.timedelta(seconds=20):
             if i > -2:
                 i -= 1
