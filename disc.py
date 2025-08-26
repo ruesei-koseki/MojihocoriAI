@@ -156,7 +156,7 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
-    mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add)
+    mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add, reply=True)
     lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
     messages.append(["通知: 貴方は目を覚ましました。", "!system"])
 
@@ -263,7 +263,7 @@ async def on_message(message):
         messages.append([message.content, username])
         dt = datetime.datetime.now()
 
-@tasks.loop(seconds=1)
+@tasks.loop(seconds=4)
 async def cron():
     global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag
     try:
@@ -295,7 +295,7 @@ async def cron():
                         else:
                             await speak(result)
                     messages = []
-            if random.randint(0, 60*25) == 0 and mojihocori.DATA.myVoice != None:
+            if random.randint(0, 15*25) == 0 and mojihocori.DATA.myVoice != None:
                 result = mojihocori.speakFreely(add=add)
                 if result == None:
                     pass

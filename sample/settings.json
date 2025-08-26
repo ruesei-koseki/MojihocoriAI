@@ -1,14 +1,6 @@
 {
-    "ichininsho": [
-        "私",
-        "わたし",
-        "僕",
-        "ぼく",
-        "俺",
-        "おれ"
-    ],
-    "myname": "sanae",
-    "mynames": "sanae|Sanae|早苗",
+    "myname": "sample",
+    "mynames": "sample|Sample|サンプル",
     "defaultMode": 2,
     "irc":{
         "host": "localhost",
