@@ -119,6 +119,7 @@ async def speak(result):
                     pin = False
                 elif com[1] == "saveMyData":
                     mojihocori.MEMORY.saveData()
+                """
                 elif com[1] == "confirmClock":
                     dt = datetime.datetime.now()
                     i = 0
@@ -126,6 +127,7 @@ async def speak(result):
                     mojihocori.receive(dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock", add=add)
                     lastMessage = [dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock"]
                     messages.append([dt.strftime('只今の日付と時刻は、 %Y年 %m月 %d日 %H時 %M分 %S秒 です。'), "!clock"])
+                """
             else:
                 Message += result + "\n"
         Message = Message[:-1]
@@ -159,6 +161,10 @@ async def on_ready():
     mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add, reply=True)
     lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
     messages.append(["通知: 貴方は目を覚ましました。", "!system"])
+    dt_now = datetime.datetime.now()
+    mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
+    lastMessage = [dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"]
+    messages.append([dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"])
 
 ii = 0
 i = 0
@@ -167,6 +173,10 @@ add = True
 @client.event
 async def on_message(message):
     global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
+
+    if bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", message.content)) and "モジホコリ、" in message.content:
+        exit()
+        return
 
     if message.channel == channel or bool(re.search(mojihocori.DATA.settings["mynames"], message.content)) or isinstance(message.channel, discord.DMChannel):
         username = message.author.display_name.split("#")[0]
@@ -226,30 +236,35 @@ async def on_message(message):
             print(attachment.url)
         message.content += additional
 
-        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             setMode(0)
             return
-        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             setMode(1)
             return
-        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             setMode(2)
             return
-        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             pin = True
             return
-        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             pin = False
             return
-        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             await channel.send(helpMessage)
             return
-        if bool(re.search("セーブして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"], message.content)):
+        if bool(re.search("セーブして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
             mojihocori.receive("!command saveMyData", username)
             print("セーブします")
             mojihocori.MEMORY.saveData()
             print("完了")
             return
+        """
+        elif bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+            exit()
+            return
+        """
         
         print("受信: {}, from {}".format(message.content, username))
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
@@ -268,11 +283,11 @@ async def cron():
     global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag
     try:
         dt_now = datetime.datetime.now()
-        """
-        pattern = re.compile(r"(0|3)0:00$")
-        if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
-            mojihocori.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
-        """
+        
+        pattern = re.compile(r"(0|3)0 : [0-9][0-9]$")
+        if bool(pattern.search(dt_now.strftime('%Y / %m / %d %H : %M : %S'))):
+            mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
+        
 
         a = []
         for person in people:
@@ -295,7 +310,7 @@ async def cron():
                         else:
                             await speak(result)
                     messages = []
-            if random.randint(0, 15*25) == 0 and mojihocori.DATA.myVoice != None:
+            if random.randint(0, 60*25) == 0 and mojihocori.DATA.myVoice != None:
                 result = mojihocori.speakFreely(add=add)
                 if result == None:
                     pass

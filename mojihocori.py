@@ -156,29 +156,28 @@ def receive(x, u, add=True, reply=True, force=False):
             DATA.myVoice = None
             return
 
-        if u != "!system":
-            if DATA.tangoOkikae1 != [] and DATA.tangoOkikae2 != []:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[:-2]
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[:-2]
-            DATA.tangoOkikae1.append(x)
-            DATA.tangoOkikae1.append(u if u != "!" and u != "!output" else DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
-            DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput.replace("!input-", "") if DATA.heartLastSpeakerInput.replace("!input-", "") != "!" and DATA.heartLastSpeakerInput.replace("!input-", "") != "!output" else DATA.settings["myname"])
-            if len(DATA.tangoOkikae1) > 32:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
-            if len(DATA.tangoOkikae2) > 32:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
+        if DATA.tangoOkikae1 != [] and DATA.tangoOkikae2 != []:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[:-2]
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[:-2]
+        DATA.tangoOkikae1.append(x)
+        DATA.tangoOkikae1.append(u if u != "!" and u != "!output" else DATA.settings["myname"])
+        DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
+        DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput.replace("!input-", "") if DATA.heartLastSpeakerInput.replace("!input-", "") != "!" and DATA.heartLastSpeakerInput.replace("!input-", "") != "!output" else DATA.settings["myname"])
+        if len(DATA.tangoOkikae1) > 32:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-32:]
+        if len(DATA.tangoOkikae2) > 32:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-32:]
 
-            DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
-            DATA.tangoOkikae1.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+        DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+        DATA.tangoOkikae1.append(DATA.settings["myname"])
+        DATA.tangoOkikae2.append(DATA.settings["myname"])
+        DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
 
-            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
-            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+        DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+        DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
-            #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
-            #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
+        #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
+        #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
             
         result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
         DATA.myVoice = result
