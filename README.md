@@ -22,9 +22,9 @@ botに「アンピン」というと、チャンネルを動けるようにな�
 これらのコマンドのタイミングも学習します。
 
 ## インストール
-1. ```git clone https://github.com/ruesei-koseki/blobAI/```
-2. ```pip install py-cord```
+1. ```git clone https://github.com/ruesei-koseki/MojihocoriAI/```
+2. ```pip install discord.py```
 3. ```pip install rapidfuzz```
-4. ```cp sample blobAI```
+4. ```cp sample MojihocoriAI```
 5. mybot/settings.jsonを設定
-6. ```python disc.py blobAI```
+6. ```python disc.py mybot```
