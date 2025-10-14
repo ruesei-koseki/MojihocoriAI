@@ -133,18 +133,14 @@ async def speak(result):
         Message = Message[:-1]
         if Message != "":
             async with channel.typing():
-                if len(Message) / (mode * 3) >= 1:
-                    await asyncio.sleep(len(Message) / (mode * 3))
+                if len(Message) / (mode * 5) >= 1:
+                    if len(Message) / (mode * 5) >= 5:
+                        await asyncio.sleep(5)
+                    else:
+                        await asyncio.sleep(len(Message) / (mode * 3))
                 else:
                     await asyncio.sleep(1)
                 await channel.send(Message)
-                
-                result = mojihocori.nextNode(add=add)
-                if result:
-                    result = mojihocori.speakFreely(add=add)
-                    await speak(result)
-                    dt = datetime.datetime.now()
-                answerFlag = False
                 
     except:
         mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
@@ -183,42 +179,13 @@ async def on_message(message):
         if message.channel != channel:
             try:
                 print("チャンネルを移動しました: {}".format(message.channel.name))
-                mojihocori.MEMORY.learnSentence("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic).replace("\n", " "), username)
+                mojihocori.receive("!command discMove {} | チャンネル名: {}, カテゴリー: {}, トピック: {}".format(message.channel.id, message.channel.name, message.channel.category, message.channel.topic).replace("\n", " "), username)
             except:
                 print("チャンネルを移動しました: {}のDM".format(username))
-                mojihocori.MEMORY.learnSentence("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username).replace("\n", " "), username)
+                mojihocori.receive("!command discMove {} | 誰のDMか: {}".format(message.channel.id, username).replace("\n", " "), username)
             channel = message.channel
             people = [[mojihocori.DATA.settings["myname"], 0]]
         if message.author == client.user:
-            return
-
-        ff = False
-        parts = message.content.split("\n")
-        for part in parts:
-            if bool(re.search("(.*?)===(.*?)", part)):
-                if part.split("===")[0] == "":
-                    mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-                else:
-                    mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-                ff = True
-        if bool(re.search("(.*?)\n==>\n(.*?)", message.content)):
-            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
-            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
-            ff = True
-        if ff:
-            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
-            return
-        
-        ff = False
-        xx = message.content.split("\n")
-        for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
-                mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
-                ff = True
-        if ff:
-            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
             return
 
         pss = []
@@ -278,16 +245,22 @@ async def on_message(message):
         messages.append([message.content, username])
         dt = datetime.datetime.now()
 
+done_zhihou = False
+zhihou_span = 0
 @tasks.loop(seconds=4)
 async def cron():
-    global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag
+    global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag, done_zhihou, zhihou_span
     try:
         dt_now = datetime.datetime.now()
         
-        pattern = re.compile(r"(0|3)0 : [0-9][0-9]$")
-        if bool(pattern.search(dt_now.strftime('%Y / %m / %d %H : %M : %S'))):
-            mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
-        
+        if not done_zhihou and zhihou_span <= 0:
+            pattern = re.compile(r"(0|3)0 : [0-9][0-9]$")
+            if bool(pattern.search(dt_now.strftime('%Y / %m / %d %H : %M : %S'))):
+                mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
+            done_zhihou = True
+            zhihou_span = 90
+        if zhihou_span > 0:
+            zhihou_span -= 1
 
         a = []
         for person in people:

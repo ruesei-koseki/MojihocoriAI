@@ -1,7 +1,4 @@
 import DATA
-import random
-import operator
-import re
 import difflib
 
 def isNextOk():
