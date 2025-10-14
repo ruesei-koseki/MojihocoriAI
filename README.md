@@ -1,4 +1,4 @@
-# blobAI
+# MojihocoriAI
 Discrodで動く会話AIです。
 
 これは、ユーザーのメッセージに自分の意思で返信するAIです。
