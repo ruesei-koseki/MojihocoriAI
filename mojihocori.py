@@ -156,10 +156,10 @@ def receive(x, u, add=True, reply=True, force=False):
             DATA.tangoOkikae2 = DATA.tangoOkikae2[-512:]
 
         for name in DATA.settings["mynames"].split("|"):
-            DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+            DATA.tangoOkikae1.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else name)
             DATA.tangoOkikae1.append(name)
             DATA.tangoOkikae2.append(name)
-            DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else DATA.settings["myname"])
+            DATA.tangoOkikae2.append(DATA.lastUser if DATA.lastUser != "!" and DATA.lastUser != "!output" else name)
 
         DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
         DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
