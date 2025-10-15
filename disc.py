@@ -14,7 +14,6 @@ lastMessage = None
 lastUsername = "誰か"
 messages = []
 pin = False
-answerFlag = False
 
 import datetime
 dt = datetime.datetime.now()
@@ -68,7 +67,7 @@ def setMode(x):
 
 kaisu = 0
 async def speak(result):
-    global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i, answerFlag
+    global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i
     try:
         if not add:
             i = 0
@@ -249,7 +248,7 @@ done_zhihou = False
 zhihou_span = 0
 @tasks.loop(seconds=4)
 async def cron():
-    global people, lastMessage, messages, mode, channel, i, add, dt, answerFlag, done_zhihou, zhihou_span
+    global people, lastMessage, messages, mode, channel, i, add, dt, done_zhihou, zhihou_span
     try:
         dt_now = datetime.datetime.now()
         
@@ -264,7 +263,7 @@ async def cron():
 
         a = []
         for person in people:
-            if person[1] < 60*10:
+            if person[1] < (60*10)/4:
                 a.append([person[0], person[1]+1])
         people = a
         pss = []
@@ -291,8 +290,6 @@ async def cron():
                     await speak(result)
         elif mode == 2:
             if len(messages) != 0:
-                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])):
-                    answerFlag = True
                 pss = []
                 for ps in people:
                     pss.append(ps[0])
@@ -304,12 +301,8 @@ async def cron():
                         aaa = aaa + person + "|"
                 aaa = aaa[0:-1]
                 
-                if len(people) <= 1:
-                    denominator = 0
-                else:
-                    denominator = (len(people) - 2)
-                
-                if answerFlag or bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
+                denominator = len(people)-1
+                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
                         pass
