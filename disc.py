@@ -186,6 +186,35 @@ async def on_message(message):
             people = [[mojihocori.DATA.settings["myname"], 0]]
         if message.author == client.user:
             return
+        
+        ff = False
+        parts = message.content.split("\n")
+        for part in parts:
+            if bool(re.search("(.*?)===(.*?)", part)):
+                if part.split("===")[0] == "":
+                    mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                else:
+                    mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                ff = True
+        if bool(re.search("(.*?)\n==>\n(.*?)", message.content)):
+            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
+            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
+            ff = True
+        if ff:
+            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
+        
+        ff = False
+        xx = message.content.split("\n")
+        for x in xx:
+            if bool(re.search("(.+): (.+)", x)):
+                mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+                ff = True
+        if ff:
+            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            return
 
         pss = []
         for ps in people:
@@ -226,11 +255,6 @@ async def on_message(message):
             mojihocori.MEMORY.saveData()
             print("完了")
             return
-        """
-        elif bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
-            exit()
-            return
-        """
         
         print("受信: {}, from {}".format(message.content, username))
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
