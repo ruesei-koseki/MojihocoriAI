@@ -189,18 +189,24 @@ async def on_message(message):
         
         ff = False
         parts = message.content.split("\n")
+        taisho = ""
+        if bool(re.search("(.*?)--", parts[0])):
+            taisho = parts[0].split("--")[0]
+            ff = True
         for part in parts:
             if bool(re.search("(.*?)===(.*?)", part)):
-                if part.split("===")[0] == "":
-                    mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
-                else:
-                    mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                    mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                if taisho == "" or taisho in mojihocori.DATA.settings["mynames"]:
+                    if part.split("===")[0] == "":
+                        mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
+                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                    else:
+                        mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
+                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
                 ff = True
         if bool(re.search("(.*?)\n==>\n(.*?)", message.content)):
-            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
-            mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
+            if taisho == "" or taisho in mojihocori.DATA.settings["mynames"]:
+                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
+                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
             ff = True
         if ff:
             mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
@@ -231,25 +237,25 @@ async def on_message(message):
             print(attachment.url)
         message.content += additional
 
-        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             setMode(0)
             return
-        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             setMode(1)
             return
-        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             setMode(2)
             return
-        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             pin = True
             return
-        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("アンピン|動いていい", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             pin = False
             return
-        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        elif bool(re.search("ヘルプを表示|ヘルプ表示|show help", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             await channel.send(helpMessage)
             return
-        if bool(re.search("セーブして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|mojihocori", message.content)):
+        if bool(re.search("セーブして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             mojihocori.receive("!command saveMyData", username)
             print("セーブします")
             mojihocori.MEMORY.saveData()
@@ -325,7 +331,10 @@ async def cron():
                         aaa = aaa + person + "|"
                 aaa = aaa[0:-1]
                 
-                denominator = len(people)-1
+                if len(people)-2 <= 0:
+                    denominator = 0
+                else:
+                    denominator = len(people)-2
                 if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
@@ -341,7 +350,7 @@ async def cron():
                 add = False
 
             dt = datetime.datetime.now()
-            mojihocori.receive("!command ignore", mojihocori.DATA.userLog[-1], add=add)
+            mojihocori.receive("!command ignore", mojihocori.DATA.lastUser, add=add)
             print("沈黙を検知")
             if mode == 2 and random.randint(0, 5) == 0:
                 result = mojihocori.speakFreely(add=add)

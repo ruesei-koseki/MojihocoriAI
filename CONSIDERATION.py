@@ -15,7 +15,7 @@ def looking(x, u, reply=True, force=False):
                 break
             rate -= a
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = DATA.heart
                 t = len(DATA.data["sentence"]) - 1
                 i = f
@@ -32,6 +32,8 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good" and
                                 DATA.data["sentence"][i + iiii + 1][1] != "!"):
                                 flag = False
                                 for iiiii in range(1):
@@ -65,7 +67,7 @@ def looking(x, u, reply=True, force=False):
                     i += 1
                     ii += 1
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = 0
                 t = DATA.heart-1
                 i = f
@@ -82,6 +84,8 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good" and
                                 DATA.data["sentence"][i + iiii + 1][1] != "!"):
                                 flag = False
                                 for iiiii in range(1):
@@ -122,7 +126,7 @@ def looking(x, u, reply=True, force=False):
                 break
             rate -= a
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = DATA.heart
                 t = len(DATA.data["sentence"]) - 1
                 i = f
@@ -139,6 +143,8 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good" and
                                 DATA.data["sentence"][i + iiii + 1][1] != "!"):
                                 flag = True
                                 for iiiii in range(1):
@@ -167,7 +173,7 @@ def looking(x, u, reply=True, force=False):
                     i += 1
                     ii += 1
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = 0
                 t = DATA.heart-1
                 i = f
@@ -184,6 +190,8 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good" and
                                 DATA.data["sentence"][i + iiii + 1][1] != "!"):
                                 flag = True
                                 for iiiii in range(1):
@@ -218,7 +226,7 @@ def looking(x, u, reply=True, force=False):
                 break
             rate -= a
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = DATA.heart
                 t = len(DATA.data["sentence"]) - 1
                 i = f
@@ -234,7 +242,9 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceInput) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
-                                "!system" not in DATA.data["sentence"][i + iiii + 1][1]):
+                                "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good"):
                                 flag = True
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
@@ -262,7 +272,7 @@ def looking(x, u, reply=True, force=False):
                     i += 1
                     ii += 1
             #今の気持ちから考える
-            for iiii in range(8):
+            for iiii in range(1):
                 f = 0
                 t = DATA.heart-1
                 i = f
@@ -278,7 +288,9 @@ def looking(x, u, reply=True, force=False):
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceInput) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentence) < 0.85 and
                                 Levenshtein.normalized_similarity(DATA.data["sentence"][i + iiii + 1][0], DATA.lastSentenceHeart) < 0.85 and
-                                "!system" not in DATA.data["sentence"][i + iiii + 1][1]):
+                                "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
+                                DATA.data["sentence"][i + iiii + 1][0] != "!good"):
                                 flag = True
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
