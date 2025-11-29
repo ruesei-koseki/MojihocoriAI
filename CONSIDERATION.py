@@ -126,7 +126,7 @@ def looking(x, u, reply=True, force=False):
                 break
             rate -= a
             #今の気持ちから考える
-            for iiii in range(1):
+            for iiii in range(4):
                 f = DATA.heart
                 t = len(DATA.data["sentence"]) - 1
                 i = f
@@ -173,7 +173,7 @@ def looking(x, u, reply=True, force=False):
                     i += 1
                     ii += 1
             #今の気持ちから考える
-            for iiii in range(1):
+            for iiii in range(4):
                 f = 0
                 t = DATA.heart-1
                 i = f
@@ -226,7 +226,7 @@ def looking(x, u, reply=True, force=False):
                 break
             rate -= a
             #今の気持ちから考える
-            for iiii in range(1):
+            for iiii in range(4):
                 f = DATA.heart
                 t = len(DATA.data["sentence"]) - 1
                 i = f
@@ -272,7 +272,7 @@ def looking(x, u, reply=True, force=False):
                     i += 1
                     ii += 1
             #今の気持ちから考える
-            for iiii in range(1):
+            for iiii in range(4):
                 f = 0
                 t = DATA.heart-1
                 i = f
