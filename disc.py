@@ -1,5 +1,4 @@
 import mojihocori
-import time
 import random
 import re
 import sys
@@ -20,10 +19,8 @@ dt = datetime.datetime.now()
 
 from discord.ext import tasks
 import discord
-import threading
 import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-from rapidfuzz.distance import Levenshtein
 
 helpMessage = f"""==mojihocoriAIヘルプ==
 このbotはユーザーのメッセージに自分の意思で返信するAIです。
@@ -132,11 +129,11 @@ async def speak(result):
         Message = Message[:-1]
         if Message != "":
             async with channel.typing():
-                if len(Message) / (mode * 5) >= 1:
-                    if len(Message) / (mode * 5) >= 5:
+                if len(Message) / 6 >= 1:
+                    if len(Message) / 6 >= 5:
                         await asyncio.sleep(5)
                     else:
-                        await asyncio.sleep(len(Message) / (mode * 3))
+                        await asyncio.sleep(len(Message) / 6)
                 else:
                     await asyncio.sleep(1)
                 await channel.send(Message)
@@ -153,13 +150,6 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
-    mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add, reply=True)
-    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
-    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
-    dt_now = datetime.datetime.now()
-    mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
-    lastMessage = [dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"]
-    messages.append([dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"])
 
 ii = 0
 i = 0

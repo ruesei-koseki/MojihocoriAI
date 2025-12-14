@@ -110,11 +110,33 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
 
     # 置換処理
     i = 0
+    temp = ""
+    temp2 = ""
+    temp3 = []
     for wo3 in word3:
         for old, new in reversed(replacements):
             if wo3 == old:
                 print("{} => {}".format(old, new))
                 word3[i] = new
+                temp = ""
+                temp2 = ""
+                break
+            elif wo3 == temp:
+                print("{} => {}".format(temp, temp2))
+                for t3 in temp3:
+                    word3[t3] = ""
+                word3[i] = temp2
+                temp = ""
+                temp2 = ""
+                break
+            elif wo3 in old:
+                temp = old.replace(wo3, "")
+                temp2 = new
+                temp3.append(i)
+                break
+            elif wo3 in temp:
+                temp = temp.replace(wo3, "")
+                temp3.append(i)
                 break
         i += 1
     result = "".join(word3)

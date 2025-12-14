@@ -23,7 +23,7 @@ def looking(x, u, reply=True, force=False):
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
-                    if Levenshtein.normalized_similarity("{}: {}".format(u, x*16), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*16)) >= rate:
+                    if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -34,7 +34,8 @@ def looking(x, u, reply=True, force=False):
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!good" and
-                                DATA.data["sentence"][i + iiii + 1][1] != "!"):
+                                DATA.data["sentence"][i + iiii + 1][1] != "!" and
+                                DATA.data["sentence"][i + iiii + 1][1] != DATA.data["sentence"][i][1]):
                                 flag = False
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
@@ -75,7 +76,7 @@ def looking(x, u, reply=True, force=False):
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
-                    if Levenshtein.normalized_similarity("{}: {}".format(u, x*16), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*16)) >= rate:
+                    if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -86,7 +87,8 @@ def looking(x, u, reply=True, force=False):
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!good" and
-                                DATA.data["sentence"][i + iiii + 1][1] != "!"):
+                                DATA.data["sentence"][i + iiii + 1][1] != "!" and
+                                DATA.data["sentence"][i + iiii + 1][1] != DATA.data["sentence"][i][1]):
                                 flag = False
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
@@ -134,7 +136,7 @@ def looking(x, u, reply=True, force=False):
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
-                    if Levenshtein.normalized_similarity("{}: {}".format(u, x*16), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*16)) >= rate:
+                    if Levenshtein.normalized_similarity("{}: {}".format(u, x), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -145,7 +147,8 @@ def looking(x, u, reply=True, force=False):
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!good" and
-                                DATA.data["sentence"][i + iiii + 1][1] != "!"):
+                                DATA.data["sentence"][i + iiii + 1][1] != "!" and
+                                DATA.data["sentence"][i + iiii + 1][1] != DATA.data["sentence"][i][1]):
                                 flag = True
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
@@ -181,7 +184,7 @@ def looking(x, u, reply=True, force=False):
                 for sen in DATA.data["sentence"][f:t]:
                     if i >= len(DATA.data["sentence"]) - 1:
                         break
-                    if Levenshtein.normalized_similarity("{}: {}".format(u, x*16), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0]*16)) >= rate:
+                    if Levenshtein.normalized_similarity("{}: {}".format(u, x), "{}: {}".format(DATA.data["sentence"][i][1], DATA.data["sentence"][i][0])) >= rate:
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -192,7 +195,8 @@ def looking(x, u, reply=True, force=False):
                                 "!system" not in DATA.data["sentence"][i + iiii + 1][1] and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!bad" and
                                 DATA.data["sentence"][i + iiii + 1][0] != "!good" and
-                                DATA.data["sentence"][i + iiii + 1][1] != "!"):
+                                DATA.data["sentence"][i + iiii + 1][1] != "!" and
+                                DATA.data["sentence"][i + iiii + 1][1] != DATA.data["sentence"][i][1]):
                                 flag = True
                                 for iiiii in range(1):
                                     if i+iiii+2+iiiii < len(DATA.data["sentence"]) - 1:
