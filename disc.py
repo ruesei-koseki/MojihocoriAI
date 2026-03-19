@@ -72,7 +72,7 @@ async def speak(result):
             mojihocori.MEMORY.learnSentence(result, "!")
         print("{}: {}".format(mojihocori.DATA.settings["myname"], result))
         #result = re.sub(r'@(everyone|here|[!&]?[0-9]{17,21})', '@\u200b\\1', result)
-        pattern = re.compile(r"^[!/]command")
+        pattern = re.compile(r"^!command")
         print("users: {}".format(people))
         results = result.split("\n")
 
@@ -83,22 +83,21 @@ async def speak(result):
                 if com[1] == "discMove":
                     if not pin:
                         if client.get_channel(int(com[2])) != None:
+                            channel = client.get_channel(int(com[2]))
                             try:
-                                channel = client.get_channel(int(com[2]))
+                                print("チャンネルを移動しました: {}".format(channel.name))
+                                mojihocori.receive("チャンネルを移動しました: {}".format(channel.name), "!system", add=add)
+                                people = [[mojihocori.DATA.settings["myname"], 0]]
+                                messages.append(["チャンネルを移動しました: {}".format(channel.name), "!system"])
                             except:
-                                print("チャンネルが存在しません")
-                                mojihocori.receive("チャンネルが存在しません", "!system", add=add)
-                                messages.append(["チャンネルが存在しません", "!system"])
-                                try:
-                                    print("チャンネルを移動しました: {}".format(channel.name))
-                                    mojihocori.receive("チャンネルを移動しました: {}".format(channel.name), "!system", add=add)
-                                    people = [[mojihocori.DATA.settings["myname"], 0]]
-                                    messages.append(["チャンネルを移動しました: {}".format(channel.name), "!system"])
-                                except:
-                                    print("チャンネルを移動しました: DM")
-                                    mojihocori.receive("チャンネルを移動しました: DM", "!system", add=add)
-                                    people = [[mojihocori.DATA.settings["myname"], 0]]
-                                    messages.append(["チャンネルを移動しました: DM", "!system"])
+                                print("チャンネルを移動しました: DM")
+                                mojihocori.receive("チャンネルを移動しました: DM", "!system", add=add)
+                                people = [[mojihocori.DATA.settings["myname"], 0]]
+                                messages.append(["チャンネルを移動しました: DM", "!system"])
+                        else:
+                            print("チャンネルが存在しません")
+                            mojihocori.receive("チャンネルが存在しません", "!system", add=add)
+                            messages.append(["チャンネルが存在しません", "!system"])
                     else:
                         print("エラー: あなたは固定されています。")
                         mojihocori.receive("エラー: あなたは固定されています。", "!system", add=add)
@@ -129,14 +128,18 @@ async def speak(result):
         Message = Message[:-1]
         if Message != "":
             async with channel.typing():
-                if len(Message) / 6 >= 1:
-                    if len(Message) / 6 >= 5:
+                if len(Message) / 6 / mode >= 1:
+                    if len(Message) / 6 / mode >= 5:
                         await asyncio.sleep(5)
                     else:
-                        await asyncio.sleep(len(Message) / 6)
+                        await asyncio.sleep(len(Message) / 6 / mode)
                 else:
                     await asyncio.sleep(1)
                 await channel.send(Message)
+                nxt = mojihocori.nextSpeak()
+                if nxt:
+                    print("続きを返信します")
+                    await speak(nxt)
                 
     except:
         mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
@@ -150,6 +153,13 @@ async def on_ready():
     global lastMessage, messages
     print('ログインしました')
     cron.start()
+    mojihocori.receive("通知: 貴方は目を覚ましました。", "!system", add=add, reply=True)
+    lastMessage = ["通知: 貴方は目を覚ましました。", "!system"]
+    messages.append(["通知: 貴方は目を覚ましました。", "!system"])
+    dt_now = datetime.datetime.now()
+    mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
+    lastMessage = [dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"]
+    messages.append([dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock"])
 
 ii = 0
 i = 0
@@ -187,29 +197,29 @@ async def on_message(message):
             if bool(re.search("(.*?)===(.*?)", part)):
                 if taisho == "" or taisho in mojihocori.DATA.settings["mynames"]:
                     if part.split("===")[0] == "":
-                        mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", mama=True)
-                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                        mojihocori.MEMORY.learnSentence(lastMessage[0], "!input", directLearning=True)
+                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", directLearning=True)
                     else:
-                        mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", mama=True)
-                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", mama=True)
+                        mojihocori.MEMORY.learnSentence(part.split("===")[0], "!input", directLearning=True)
+                        mojihocori.MEMORY.learnSentence(part.split("===")[1], "!output", directLearning=True)
                 ff = True
         if bool(re.search("(.*?)\n==>\n(.*?)", message.content)):
             if taisho == "" or taisho in mojihocori.DATA.settings["mynames"]:
-                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", mama=True)
-                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", mama=True)
+                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[0], "!input", directLearning=True)
+                mojihocori.MEMORY.learnSentence(message.content.split("\n==>\n")[1], "!output", directLearning=True)
             ff = True
         if ff:
-            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            mojihocori.MEMORY.learnSentence("!good", "!system", directLearning=True)
             return
         
         ff = False
         xx = message.content.split("\n")
         for x in xx:
-            if bool(re.search("(.+): (.+)", x)):
-                mojihocori.MEMORY.learnSentence(x.split(": ")[1], x.split(": ")[0], mama=True)
+            if bool(re.search("(.+):- (.+)", x)):
+                mojihocori.MEMORY.learnSentence(x.split(":- ")[1], x.split(":- ")[0], directLearning=True)
                 ff = True
         if ff:
-            mojihocori.MEMORY.learnSentence("!good", "!system", mama=True)
+            mojihocori.MEMORY.learnSentence("!good", "!system", directLearning=True)
             return
 
         pss = []
@@ -228,13 +238,20 @@ async def on_message(message):
         message.content += additional
 
         if bool(re.search("沈黙モード|黙|だま", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
+            mojihocori.receive("!command setMode 0", username)
             setMode(0)
             return
         if bool(re.search("寡黙モード|静かに|しずかに", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
+            mojihocori.receive("!command setMode 1", username)
             setMode(1)
             return
         if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
+            mojihocori.receive("!command setMode 2", username)
             setMode(2)
+            return
+        if bool(re.search("饒舌モード", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
+            mojihocori.receive("!command setMode 3", username)
+            setMode(3)
             return
         if bool(re.search("ピン|じっとしてて", message.content)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", message.content)):
             pin = True
@@ -274,8 +291,8 @@ async def cron():
         
         if not done_zhihou and zhihou_span <= 0:
             pattern = re.compile(r"(0|3)0 : [0-9][0-9]$")
-            if bool(pattern.search(dt_now.strftime('%Y / %m / %d %H : %M : %S'))):
-                mojihocori.receive(dt_now.strftime('%Y / %m / %d %H : %M : %S'), "!systemClock")
+            if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
+                mojihocori.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock")
             done_zhihou = True
             zhihou_span = 90
         if zhihou_span > 0:
@@ -332,6 +349,30 @@ async def cron():
                     else:
                         await speak(result)
                 messages = []
+        elif mode == 3:
+            if len(messages) != 0:
+                pss = []
+                for ps in people:
+                    pss.append(ps[0])
+                aaa = ""
+                for person in pss:
+                    if person == mojihocori.DATA.settings["myname"]:
+                        pass
+                    else:
+                        aaa = aaa + person + "|"
+                aaa = aaa[0:-1]
+                
+                if len(people)-2 <= 0:
+                    denominator = 0
+                else:
+                    denominator = len(people)-2
+                if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
+                    result = mojihocori.speakFreely(add=add)
+                    if result == None:
+                        pass
+                    else:
+                        await speak(result)
+                messages = []
         if dt_now - dt >= datetime.timedelta(seconds=20):
             if i > -2:
                 i -= 1
@@ -341,8 +382,15 @@ async def cron():
 
             dt = datetime.datetime.now()
             mojihocori.receive("!command ignore", mojihocori.DATA.lastUser, add=add)
+            pattern = re.compile(r"(0|3)0 : [0-9][0-9]$")
+            if bool(pattern.search(dt_now.strftime('%Y/%m/%d %H:%M:%S'))):
+                mojihocori.receive(dt_now.strftime('%Y/%m/%d %H:%M:%S'), "!systemClock", add=add)
             print("沈黙を検知")
-            if mode == 2 and random.randint(0, 5) == 0:
+            if len(people)-2 <= 0:
+                denominator = 0
+            else:
+                denominator = len(people)-2
+            if mode == 2 and random.randint(0, denominator) == 0:
                 result = mojihocori.speakFreely(add=add)
                 if result == None:
                     pass

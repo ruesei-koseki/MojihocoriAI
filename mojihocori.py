@@ -93,6 +93,8 @@ def speakFreely(add=True):
 
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
+        DATA.tangoOkikae1.append(DATA.settings["myname"])
+        DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
         if len(DATA.tangoOkikae1) > 128:
             DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
         if len(DATA.tangoOkikae2) > 128:
@@ -103,6 +105,37 @@ def speakFreely(add=True):
 
     DATA.lastSentence = result
     return result
+
+def nextSpeak(add=True):
+    if INTELLIGENCE.isNextOk():
+        DATA.heart += 1
+        result = DATA.data["sentence"][DATA.heart][0]
+        DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
+        if "!" not in DATA.lastUser:
+            DATA.lastUserReplied = DATA.lastUser
+        DATA.userLog.append("!")
+        DATA.userLog.pop(0)
+        if result != None:
+            if add:
+                MEMORY.learnSentence(result, "!")
+
+            DATA.tangoOkikae1.append(result)
+            DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
+            DATA.tangoOkikae1.append(DATA.settings["myname"])
+            DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
+            if len(DATA.tangoOkikae1) > 128:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
+            if len(DATA.tangoOkikae2) > 128:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+            MEMORY.evalute()
+
+        DATA.lastSentence = result
+        return result
+    else:
+        return None
+
 
 def receive(x, u, add=True, reply=True, force=False):
     try:
@@ -117,6 +150,12 @@ def receive(x, u, add=True, reply=True, force=False):
             DATA.userLog.append(u)
             DATA.userLog.pop(0)
         
+        """
+        if random.randint(0,4) == 0:
+            print("シャッフルしました")
+            DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
+        """
+         
         if add:
             if x == "!bad" and DATA.data["sentence"][DATA.heart+1][0] != "!bad":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
@@ -131,27 +170,26 @@ def receive(x, u, add=True, reply=True, force=False):
             DATA.myVoice = None
             return
 
-        DATA.tangoOkikae1.append(x)
-        DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
-        if "!system" not in u:
-            if u != "!" and u != "!output" and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
-                DATA.tangoOkikae1.append(u)
-                DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
-            elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
-                for name in DATA.settings["mynames"].split("|"):
+        if DATA.rate >= 0.4:
+            DATA.tangoOkikae1.append(x)
+            DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
+            if "!system" not in u:
+                if u != "!" and u != "!output" and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
                     DATA.tangoOkikae1.append(u)
-                    DATA.tangoOkikae2.append(name)
-            elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
-                for name in DATA.settings["mynames"].split("|"):
-                    DATA.tangoOkikae1.append(name)
                     DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
-        if len(DATA.tangoOkikae1) > 128:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-        if len(DATA.tangoOkikae2) > 128:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+                elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
+                    DATA.tangoOkikae1.append(u)
+                    DATA.tangoOkikae2.append(DATA.settings["myname"])
+                elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
+                    DATA.tangoOkikae1.append(DATA.settings["myname"])
+                    DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
+            if len(DATA.tangoOkikae1) > 128:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
+            if len(DATA.tangoOkikae2) > 128:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
 
-        DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
-        DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
         #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
         #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))

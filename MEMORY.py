@@ -6,11 +6,11 @@ import INTELLIGENCE
 from janome.tokenizer import Tokenizer
 t = Tokenizer()
 
-def learnSentence(x, u, save=True, mama=False):
-    #if len(DATA.data["sentence"]) >= 1000 or mama:
+def learnSentence(x, u, save=True, directLearning=False):
+    #if len(DATA.data["sentence"]) >= 1000 or directLearning:
     
-    #mamaがTrueのときに自分の名前以外を無効にする
-    if u not in DATA.settings["mynames"].split("|") and mama and u not in ["!input", "!output", "!system"]:
+    #directLearningがTrueのときに自分の名前以外を無効にする
+    if u not in DATA.settings["mynames"].split("|") and directLearning and u not in ["!input", "!output", "!system"]:
         u = "!input-"+u
 
     #言葉を脳に記録する
@@ -41,8 +41,8 @@ def findWords(x):
                 DATA.data["words"].append(w)
     ws = x
     for w in list(t.tokenize(x, wakati=True)):
-        ws = ws.replace(w, "|separator|")
-    for ww in ws.split("|separator|"):
+        ws = ws.replace(w, "⁡")
+    for ww in ws.split("⁡"):
         if ww not in DATA.data["words"]:  # 既に記憶されていない単語のみ追加
             if ww != "":
                 DATA.data["words"].append(ww)
