@@ -2,11 +2,16 @@ import mojihocori
 import random
 import re
 import sys
+import threading
+import time 
 if sys.argv[1]:
-    mojihocori.initialize(sys.argv[1], "discord")
+    cronThread = threading.Thread(target=mojihocori.initialize, args=(sys.argv[1], "discord"), daemon=True)
+    cronThread.start()
 else:
-    mojihocori.initialize("main", "discord")
+    cronThread = threading.Thread(target=mojihocori.initialize, args=("main", "discord"), daemon=True)
+    cronThread.start()
 
+time.sleep(1)
 people = [[mojihocori.DATA.settings["myname"], 0]]
 channel = None
 lastMessage = None
@@ -402,90 +407,91 @@ async def cron():
         traceback.print_exc()
 
 
-"""
-import speech_recognition as sr
-
-r = sr.Recognizer()
-mic = sr.Microphone()
-
-into = "こんにちは"
-
-
+import pyaudio
+import numpy as np
+from faster_whisper import WhisperModel
 def listen():
-    global messages, people, lastMessage, i
-    while True:
-        
-        print("聞き取っています...")
-        
-        with mic as source:
-            r.adjust_for_ambient_noise(source) #雑音対策
-            audio = r.listen(source)
+    global messages, people, lastMessage, i, lastUsername
+    
 
-        print ("解析中...")
+    # モデルは軽量なものか、turboを推奨
+    model = WhisperModel("small", device="cpu", compute_type="float32")
 
-        try:
-            into = r.recognize_google(audio, language=mojihocori.DATA.settings["languageHear"])
-            print(into)
+    RATE = 16000
+    CHUNK = 1024
+    # 判定用設定
+    SILENCE_WAIT = 0.8  # 何秒無音が続いたら「言い終わり」とするか
+    THRESHOLD = 0.02    # 声かどうかの音量しきい値（環境に合わせて調整）
 
-            if Levenshtein.normalized_similarity(into, mojihocori.DATA.lastSentence) < 0.85:
+    audio = pyaudio.PyAudio()
+    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
 
+    print("リスニング中...")
 
-                pss = []
-                for ps in people:
-                    pss.append(ps[0])
-                if "あなた" not in pss:
-                    people.append(["あなた", 0])
+    audio_buffer = []
+    silent_chunks = 0
+    is_speaking = False
 
-
-
-                if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
-                    mojihocori.receive("!command saveMyData", "あなた")
-                    print("セーブします")
-                    mojihocori.MEMORY.saveData()
-                    print("完了")
+    try:
+        while True:
+            data = stream.read(CHUNK)
+            audio_int16 = np.frombuffer(data, dtype=np.int16)
+            audio_float32 = audio_int16.astype(np.float32) / 32768.0
+            
+            # 1. 音量で簡易VAD（軽い処理）
+            max_vol = np.max(np.abs(audio_float32))
+            
+            if max_vol > THRESHOLD:
+                if not is_speaking:
+                    is_speaking = True
+                    print("録音中...")
+                audio_buffer.append(audio_int16)
+                silent_chunks = 0
+            elif is_speaking:
+                audio_buffer.append(audio_int16)
+                silent_chunks += 1
                 
-                else:
-
-
-                    a = 0
-                    b = ""
-                    c = []
-                    for intoo in into.split():
-                        if a >= 4:
-                            c.append(b)
-                            b = ""
-                            a = 0
-                        else:
-                            if a != 0:
-                                b += " "
-                        b += intoo
-                        a += 1
-                    if b != "":
-                        c.append(b)
-                        b = ""
-                        a = 0
-                    for cc in c:
-                        lastMessage = [cc, "あなた"]
-                        mojihocori.receive(cc, "あなた")
+                # 2. 指定時間以上無音が続いたら「言い終わり」と判断
+                if silent_chunks > int(RATE / CHUNK * SILENCE_WAIT):
+                    print("推論中...")
+                    full_audio = np.concatenate(audio_buffer).astype(np.float32) / 32768.0
+                    
+                    # ここで初めてWhisperを呼ぶ（重い処理を1回だけ）
+                    segments, _ = model.transcribe(full_audio, beam_size=1) # beam_size=1で高速化
+                    for s in segments:
+                        print(f"結果: {s.text}")
+                        into = s.text
+                        lastMessage = [into, "あなた"]
+                        mojihocori.receive(into, "あなた")
                         lastUsername = "あなた"
-                        messages.append([cc, "あなた"])
+                        messages.append([into, "あなた"])
+                        if bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", into)):
+                            exit()
+                        if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
+                            mojihocori.receive("!command saveMyData", "あなた")
+                            print("セーブします")
+                            mojihocori.MEMORY.saveData()
+                            print("完了")
+                        
+                    # リセット
+                    audio_buffer = []
+                    silent_chunks = 0
+                    is_speaking = False
+                    print("リスニング中...")
 
-
-
-
-        # 以下は認識できなかったときに止まらないように。
-        except sr.UnknownValueError:
-            dt = datetime.datetime.now()
-            mojihocori.receive("!command ignore", lastUsername, add=add)
-            print("沈黙を検知")
-        except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
+    except KeyboardInterrupt:
+        pass
+    finally:
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
 
 import threading
-cronThread = threading.Thread(target=listen, daemon=True)
-cronThread.start()
-"""
+if mojihocori.DATA.settings["hear"]:
+    cronThread = threading.Thread(target=listen, daemon=True)
+    cronThread.start()
+
+
 
 
 

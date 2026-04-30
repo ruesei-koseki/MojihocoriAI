@@ -1,79 +1,120 @@
+import requests
+import pyaudio
+import re
+
+host = "127.0.0.1"
+port = 50021 # VOICEVOXデフォルト
+
+def play_voicevox(text, speaker=2):
+    # 1. クエリ作成
+    res1 = requests.post(f"http://{host}:{port}/audio_query", params={"text": text, "speaker": speaker})
+    # 2. 音声合成
+    res2 = requests.post(f"http://{host}:{port}/synthesis", params={"speaker": speaker}, json=res1.json())
+    
+    audio_data = res2.content
+    # 3. 再生 (PyAudioを使用)
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16, channels=1, rate=24000, output=True)
+    stream.write(audio_data)
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+        
+
+
 import mojihocori
 import sys
-import re
-import datetime
+import threading
 
-if sys.argv[1] and sys.argv[2]:
-    mojihocori.initialize(sys.argv[1], "discord")
+if sys.argv[1]:
+    cronThread = threading.Thread(target=mojihocori.initialize, args=(sys.argv[1], "discord"), daemon=True)
+    cronThread.start()
 else:
-    print("人格フォルダとコーパスを指定してください。")
-    exit()
+    cronThread = threading.Thread(target=mojihocori.initialize, args=("main", "discord"), daemon=True)
+    cronThread.start()
 
 def speak(x):
     print(x)
+    com = x.split(" ")
+    if com[0] == "!command":
+        return
+    play_voicevox(x)
 
+import pyaudio
+import numpy as np
+from faster_whisper import WhisperModel
 
-import speech_recognition as sr
+# モデルは軽量なものか、turboを推奨
+model = WhisperModel("small", device="cpu", compute_type="float32")
 
-r = sr.Recognizer()
-mic = sr.Microphone()
+RATE = 16000
+CHUNK = 1024
+# 判定用設定
+SILENCE_WAIT = 0.8  # 何秒無音が続いたら「言い終わり」とするか
+THRESHOLD = 0.02    # 声かどうかの音量しきい値（環境に合わせて調整）
 
-into = "こんにちは"
+audio = pyaudio.PyAudio()
+stream = audio.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
 
-def listen():
+print("リスニング中...")
+
+audio_buffer = []
+silent_chunks = 0
+is_speaking = False
+
+try:
     while True:
+        data = stream.read(CHUNK)
+        audio_int16 = np.frombuffer(data, dtype=np.int16)
+        audio_float32 = audio_int16.astype(np.float32) / 32768.0
         
-        print("聞き取っています...")
+        # 1. 音量で簡易VAD（軽い処理）
+        max_vol = np.max(np.abs(audio_float32))
         
-        with mic as source:
-            r.adjust_for_ambient_noise(source) #雑音対策
-            audio = r.listen(source)
-
-        print ("解析中...")
-
-        try:
-            into = r.recognize_google(audio, language=mojihocori.DATA.settings["languageHear"])
-            print(into)
-            if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
-                mojihocori.receive("!command saveMyData", "あなた")
-                print("セーブします")
-                mojihocori.MEMORY.saveData()
-                print("完了")
-            else:
-                a = 0
-                b = ""
-                c = []
-                for intoo in into.split():
-                    if a >= 4:
-                        c.append(b)
-                        b = ""
-                        a = 0
-                    else:
-                        if a != 0:
-                            b += " "
-                    b += intoo
-                    a += 1
-                if b != "":
-                    c.append(b)
-                    b = ""
-                    a = 0
-                for cc in c:
+        if max_vol > THRESHOLD:
+            if not is_speaking:
+                is_speaking = True
+                print("録音中...")
+            audio_buffer.append(audio_int16)
+            silent_chunks = 0
+        elif is_speaking:
+            audio_buffer.append(audio_int16)
+            silent_chunks += 1
+            
+            # 2. 指定時間以上無音が続いたら「言い終わり」と判断
+            if silent_chunks > int(RATE / CHUNK * SILENCE_WAIT):
+                print("推論中...")
+                full_audio = np.concatenate(audio_buffer).astype(np.float32) / 32768.0
+                
+                # ここで初めてWhisperを呼ぶ（重い処理を1回だけ）
+                segments, _ = model.transcribe(full_audio, language="ja", beam_size=1) # beam_size=1で高速化
+                for s in segments:
+                    print(f"結果: {s.text}")
+                    
+                    into = s.text
+                    if bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", into)):
+                        exit()
+                    if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
+                        mojihocori.receive("!command saveMyData", "あなた")
+                        print("セーブします")
+                        mojihocori.MEMORY.saveData()
+                        print("完了")
                     mojihocori.receive(into, "あなた")
                     result = mojihocori.speakFreely()
                     if result == None:
                         pass
                     else:
                         speak(result)
+                    
+                # リセット
+                audio_buffer = []
+                silent_chunks = 0
+                is_speaking = False
+                print("リスニング中...")
 
-        # 以下は認識できなかったときに止まらないように。
-        except sr.UnknownValueError:
-            dt = datetime.datetime.now()
-            mojihocori.receive("!command ignore", "あなた")
-            print("沈黙を検知")
-        except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
-
-import threading
-cronThread = threading.Thread(target=listen, daemon=True)
-cronThread.start()
+except KeyboardInterrupt:
+    pass
+finally:
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()

@@ -30,7 +30,7 @@ DATA.userLog = [None] * 10
 DATA.tangoOkikae1 = []
 DATA.tangoOkikae2 = []
 DATA.rate = 1.0
-
+jogen = 256
 
 def initialize(directory, interface_):
     #初期化
@@ -95,10 +95,10 @@ def speakFreely(add=True):
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
         DATA.tangoOkikae1.append(DATA.settings["myname"])
         DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
-        if len(DATA.tangoOkikae1) > 128:
-            DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-        if len(DATA.tangoOkikae2) > 128:
-            DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+        if len(DATA.tangoOkikae1) > jogen:
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
+        if len(DATA.tangoOkikae2) > jogen:
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
         DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
         DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
         MEMORY.evalute()
@@ -123,10 +123,10 @@ def nextSpeak(add=True):
             DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
             DATA.tangoOkikae1.append(DATA.settings["myname"])
             DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
-            if len(DATA.tangoOkikae1) > 128:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-            if len(DATA.tangoOkikae2) > 128:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+            if len(DATA.tangoOkikae1) > jogen:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
+            if len(DATA.tangoOkikae2) > jogen:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
             MEMORY.evalute()
@@ -183,10 +183,10 @@ def receive(x, u, add=True, reply=True, force=False):
                 elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
                     DATA.tangoOkikae1.append(DATA.settings["myname"])
                     DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
-            if len(DATA.tangoOkikae1) > 128:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-128:]
-            if len(DATA.tangoOkikae2) > 128:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-128:]
+            if len(DATA.tangoOkikae1) > jogen:
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
+            if len(DATA.tangoOkikae2) > jogen:
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
 
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
