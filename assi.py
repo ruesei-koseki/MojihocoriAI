@@ -1,6 +1,7 @@
 import requests
 import pyaudio
 import re
+import time
 
 host = "127.0.0.1"
 port = 50021 # VOICEVOXデフォルト
@@ -19,8 +20,6 @@ def play_voicevox(text, speaker=2):
     stream.stop_stream()
     stream.close()
     p.terminate()
-        
-
 
 import mojihocori
 import sys
@@ -32,6 +31,13 @@ if sys.argv[1]:
 else:
     cronThread = threading.Thread(target=mojihocori.initialize, args=("main", "discord"), daemon=True)
     cronThread.start()
+time.sleep(1)
+
+mode = mojihocori.DATA.settings["defaultMode"]
+def setMode(x):
+    global mode
+    mode = x
+    print("mode: {}".format(mode))
 
 def speak(x):
     print(x)
@@ -45,7 +51,7 @@ import numpy as np
 from faster_whisper import WhisperModel
 
 # モデルは軽量なものか、turboを推奨
-model = WhisperModel("small", device="cpu", compute_type="float32")
+model = WhisperModel("small", device="cpu")
 
 RATE = 16000
 CHUNK = 1024
@@ -87,18 +93,33 @@ try:
                 full_audio = np.concatenate(audio_buffer).astype(np.float32) / 32768.0
                 
                 # ここで初めてWhisperを呼ぶ（重い処理を1回だけ）
-                segments, _ = model.transcribe(full_audio, language="ja", beam_size=1) # beam_size=1で高速化
+                segments, _ = model.transcribe(full_audio, beam_size=1, language=mojihocori.DATA.settings["languageHear"], vad_filter=True) # beam_size=1で高速化
                 for s in segments:
                     print(f"結果: {s.text}")
                     
                     into = s.text
-                    if bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", into)):
-                        exit()
+                    if bool(re.search("沈黙モード|黙|だま", into)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", into)):
+                        mojihocori.receive("!command setMode 0", "あなた")
+                        setMode(0)
+                        continue
+                    if bool(re.search("寡黙モード|静かに|しずかに", into)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", into)):
+                        mojihocori.receive("!command setMode 1", "あなた")
+                        setMode(1)
+                        continue
+                    if bool(re.search("通常モード|喋って|話して|しゃべって|はなして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", into)):
+                        mojihocori.receive("!command setMode 2", "あなた")
+                        setMode(2)
+                        continue
+                    if bool(re.search("饒舌モード", into)) and bool(re.search(mojihocori.DATA.settings["mynames"]+"|モジホコリ、", into)):
+                        mojihocori.receive("!command setMode 3", "あなた")
+                        setMode(3)
+                        continue
                     if bool(re.search("セーブして", into)) and bool(re.search(mojihocori.DATA.settings["mynames"], into)):
                         mojihocori.receive("!command saveMyData", "あなた")
                         print("セーブします")
                         mojihocori.MEMORY.saveData()
                         print("完了")
+                        continue
                     mojihocori.receive(into, "あなた")
                     result = mojihocori.speakFreely()
                     if result == None:

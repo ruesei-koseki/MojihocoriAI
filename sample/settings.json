@@ -9,5 +9,6 @@
     },
     "discToken": "TOKEN",
     "voice": 2,
-    "languageHear": "ja-JP"
+    "languageHear": "ja",
+    "hear": false
 }

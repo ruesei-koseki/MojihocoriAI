@@ -93,8 +93,9 @@ def speakFreely(add=True):
 
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-        DATA.tangoOkikae1.append(DATA.settings["myname"])
-        DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
+        for myname in DATA.settings["mynames"].split("|"):
+            DATA.tangoOkikae1.append(myname)
+            DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
         if len(DATA.tangoOkikae1) > jogen:
             DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
         if len(DATA.tangoOkikae2) > jogen:
@@ -121,8 +122,9 @@ def nextSpeak(add=True):
 
             DATA.tangoOkikae1.append(result)
             DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-            DATA.tangoOkikae1.append(DATA.settings["myname"])
-            DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
+            for myname in DATA.settings["mynames"].split("|"):
+                DATA.tangoOkikae1.append(myname)
+                DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
             if len(DATA.tangoOkikae1) > jogen:
                 DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
             if len(DATA.tangoOkikae2) > jogen:
@@ -178,11 +180,13 @@ def receive(x, u, add=True, reply=True, force=False):
                     DATA.tangoOkikae1.append(u)
                     DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
                 elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
-                    DATA.tangoOkikae1.append(u)
-                    DATA.tangoOkikae2.append(DATA.settings["myname"])
+                    for myname in DATA.settings["mynames"].split("|"):
+                        DATA.tangoOkikae1.append(u)
+                        DATA.tangoOkikae2.append(myname)
                 elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
-                    DATA.tangoOkikae1.append(DATA.settings["myname"])
-                    DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
+                    for myname in DATA.settings["mynames"].split("|"):
+                        DATA.tangoOkikae1.append(myname)
+                        DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
             if len(DATA.tangoOkikae1) > jogen:
                 DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
             if len(DATA.tangoOkikae2) > jogen:
