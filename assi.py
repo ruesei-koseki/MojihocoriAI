@@ -90,7 +90,7 @@ def image():
         pil_img = Image.fromarray(rgb_frame)
         dhash = imagehash.dhash(pil_img)
         if image:
-            if dhash - image > 5:
+            if dhash - image > 10:
                 image = dhash
                 mojihocori.receive("視覚刺激: {}".format(image), "!system")
                 if not isSpeaking and not is_speaking:
