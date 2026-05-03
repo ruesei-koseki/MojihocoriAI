@@ -5,6 +5,7 @@ import time
 import mojihocori
 import sys
 import threading
+import random
 
 if sys.argv[1]:
     cronThread = threading.Thread(target=mojihocori.initialize, args=(sys.argv[1], "discord"), daemon=True)
@@ -94,20 +95,38 @@ def image():
                 image = dhash
                 mojihocori.receive("視覚刺激: {}".format(image), "!system")
                 if not isSpeaking and not is_speaking:
-                    result = mojihocori.speakFreely()
-                    if result == None:
-                        pass
-                    else:
-                        speak(result)
+                    if mode == 1:
+                        if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                            result = mojihocori.speakFreely()
+                            if result == None:
+                                pass
+                            else:
+                                speak(result)
+                    if mode >= 2:
+                        if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                            result = mojihocori.speakFreely()
+                            if result == None:
+                                pass
+                            else:
+                                speak(result)
         else:
             image = dhash
             mojihocori.receive("視覚刺激: {}".format(image), "!system")
             if not isSpeaking and not is_speaking:
-                result = mojihocori.speakFreely()
-                if result == None:
-                    pass
-                else:
-                    speak(result)
+                if mode == 1:
+                    if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                        result = mojihocori.speakFreely()
+                        if result == None:
+                            pass
+                        else:
+                            speak(result)
+                if mode >= 2:
+                    if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                        result = mojihocori.speakFreely()
+                        if result == None:
+                            pass
+                        else:
+                            speak(result)
         stop_event.wait(timeout=0.5)
 
 
@@ -178,20 +197,38 @@ try:
                         oto = dhash
                         mojihocori.receive("聴覚刺激: {}".format(oto), "!system")
                         if not isSpeaking and not is_speaking:
-                            result = mojihocori.speakFreely()
-                            if result == None:
-                                pass
-                            else:
-                                speak(result)
+                            if mode == 1:
+                                if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                                    result = mojihocori.speakFreely()
+                                    if result == None:
+                                        pass
+                                    else:
+                                        speak(result)
+                            if mode >= 2:
+                                if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                                    result = mojihocori.speakFreely()
+                                    if result == None:
+                                        pass
+                                    else:
+                                        speak(result)
                 else:
                     oto = dhash
                     mojihocori.receive("聴覚刺激: {}".format(oto), "!system")
                     if not isSpeaking and not is_speaking:
-                        result = mojihocori.speakFreely()
-                        if result == None:
-                            pass
-                        else:
-                            speak(result)
+                        if mode == 1:
+                            if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                                result = mojihocori.speakFreely()
+                                if result == None:
+                                    pass
+                                else:
+                                    speak(result)
+                        if mode >= 2:
+                            if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                                result = mojihocori.speakFreely()
+                                if result == None:
+                                    pass
+                                else:
+                                    speak(result)
                 audio_subbuffer = []
                 silent_subchunks = 0
                 is_speaking_sub = False
@@ -268,11 +305,20 @@ try:
                             continue
                         mojihocori.receive(into, "あなた")
                         if not isSpeaking:
-                            result = mojihocori.speakFreely()
-                            if result == None:
-                                pass
-                            else:
-                                speak(result)
+                            if mode == 1:
+                                if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                                    result = mojihocori.speakFreely()
+                                    if result == None:
+                                        pass
+                                    else:
+                                        speak(result)
+                            if mode >= 2:
+                                if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                                    result = mojihocori.speakFreely()
+                                    if result == None:
+                                        pass
+                                    else:
+                                        speak(result)
                         kazu += 1
                     if kazu == 0:
                         if renzokuC == 0:
