@@ -1,5 +1,6 @@
 import DATA
 import difflib
+from rapidfuzz.distance import Levenshtein
 
 def isNextOk():
     if len(DATA.data["sentence"]) - 1 <= DATA.heart+1:
@@ -111,13 +112,13 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
     temp3 = []
     for wo3 in word3:
         for old, new in reversed(replacements):
-            if wo3 == old:
+            if Levenshtein.normalized_similarity(wo3, old) >= 0.85:
                 print("{} => {}".format(old, new))
                 word3[i] = new
                 temp = ""
                 temp2 = ""
                 break
-            elif wo3 == temp:
+            elif Levenshtein.normalized_similarity(wo3, temp) >= 0.85:
                 print("{} => {}".format(temp, temp2))
                 for t3 in temp3:
                     word3[t3] = ""
