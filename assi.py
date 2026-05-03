@@ -2,12 +2,24 @@ import requests
 import pyaudio
 import re
 import time
+import mojihocori
+import sys
+import threading
+
+if sys.argv[1]:
+    cronThread = threading.Thread(target=mojihocori.initialize, args=(sys.argv[1], "discord"), daemon=True)
+    cronThread.start()
+else:
+    cronThread = threading.Thread(target=mojihocori.initialize, args=("main", "discord"), daemon=True)
+    cronThread.start()
+time.sleep(1)
+
 
 host = "127.0.0.1"
 port = 50021 # VOICEVOXデフォルト
 isSpeaking = False
 
-def play_voicevox(text, speaker=2):
+def play_voicevox(text, speaker=mojihocori.DATA.settings["defaultMode"]):
     global isSpeaking
     # 1. クエリ作成
     res1 = requests.post(f"http://{host}:{port}/audio_query", params={"text": text, "speaker": speaker})
@@ -25,18 +37,6 @@ def play_voicevox(text, speaker=2):
     p.terminate()
     isSpeaking = False
 
-import mojihocori
-import sys
-import threading
-
-if sys.argv[1]:
-    cronThread = threading.Thread(target=mojihocori.initialize, args=(sys.argv[1], "discord"), daemon=True)
-    cronThread.start()
-else:
-    cronThread = threading.Thread(target=mojihocori.initialize, args=("main", "discord"), daemon=True)
-    cronThread.start()
-time.sleep(1)
-
 mode = mojihocori.DATA.settings["defaultMode"]
 def setMode(x):
     global mode
@@ -51,7 +51,6 @@ def speak(x):
     play_voicevox(x)
 
 
-import pyaudio
 import numpy as np
 from faster_whisper import WhisperModel
 
