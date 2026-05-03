@@ -96,14 +96,14 @@ def image():
                 mojihocori.receive("視覚刺激: {}".format(image), "!system")
                 if not isSpeaking and not is_speaking:
                     if mode == 1:
-                        if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                        if mojihocori.DATA.myVoice != None:
                             result = mojihocori.speakFreely()
                             if result == None:
                                 pass
                             else:
                                 speak(result)
                     if mode >= 2:
-                        if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                        if mojihocori.DATA.myVoice != None:
                             result = mojihocori.speakFreely()
                             if result == None:
                                 pass
@@ -114,14 +114,14 @@ def image():
             mojihocori.receive("視覚刺激: {}".format(image), "!system")
             if not isSpeaking and not is_speaking:
                 if mode == 1:
-                    if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                    if mojihocori.DATA.myVoice != None:
                         result = mojihocori.speakFreely()
                         if result == None:
                             pass
                         else:
                             speak(result)
                 if mode >= 2:
-                    if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                    if mojihocori.DATA.myVoice != None:
                         result = mojihocori.speakFreely()
                         if result == None:
                             pass
@@ -198,14 +198,14 @@ try:
                         mojihocori.receive("聴覚刺激: {}".format(oto), "!system")
                         if not isSpeaking and not is_speaking:
                             if mode == 1:
-                                if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                                if mojihocori.DATA.myVoice != None:
                                     result = mojihocori.speakFreely()
                                     if result == None:
                                         pass
                                     else:
                                         speak(result)
                             if mode >= 2:
-                                if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                                if mojihocori.DATA.myVoice != None:
                                     result = mojihocori.speakFreely()
                                     if result == None:
                                         pass
@@ -216,14 +216,14 @@ try:
                     mojihocori.receive("聴覚刺激: {}".format(oto), "!system")
                     if not isSpeaking and not is_speaking:
                         if mode == 1:
-                            if bool(re.search(mojihocori.DATA.settings["mynames"], into)) and mojihocori.DATA.myVoice != None:
+                            if mojihocori.DATA.myVoice != None:
                                 result = mojihocori.speakFreely()
                                 if result == None:
                                     pass
                                 else:
                                     speak(result)
                         if mode >= 2:
-                            if (bool(re.search(mojihocori.DATA.settings["mynames"], into)) or random.randint(0, 3) == 0) and mojihocori.DATA.myVoice != None:
+                            if mojihocori.DATA.myVoice != None:
                                 result = mojihocori.speakFreely()
                                 if result == None:
                                     pass
