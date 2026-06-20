@@ -25,7 +25,6 @@ dt = datetime.datetime.now()
 from discord.ext import tasks
 import discord
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 helpMessage = f"""==mojihocoriAIヘルプ==
 このbotはユーザーのメッセージに自分の意思で返信するAIです。
