@@ -1,8 +1,7 @@
 import DATA
 from rapidfuzz.distance import Levenshtein
 
-a = 0.1
-
+a = 0.2
 def looking(x, u, reply=True, force=False):
     global a
     #過去の発言をもとに考える
@@ -126,7 +125,7 @@ def looking(x, u, reply=True, force=False):
 
         rate = 1
         while True:
-            if rate <= 0:
+            if rate <= 0.0:
                 break
             rate -= a
             #今の気持ちから考える
@@ -138,7 +137,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(6):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -187,7 +186,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(6):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -230,7 +229,7 @@ def looking(x, u, reply=True, force=False):
 
         rate = 1
         while True:
-            if rate <= 0:
+            if rate <= 0.0:
                 break
             rate -= a
             #今の気持ちから考える
@@ -242,7 +241,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(6):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -288,7 +287,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(6):
+                    for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:

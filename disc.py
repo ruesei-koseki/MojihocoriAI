@@ -346,7 +346,7 @@ async def cron():
                 if len(people)-2 <= 0:
                     denominator = 0
                 else:
-                    denominator = len(people)-2
+                    denominator = len(people)-1
                 if bool(re.search(mojihocori.DATA.settings["mynames"], lastMessage[0])) or isinstance(channel, discord.channel.DMChannel) or ((not bool(re.search(aaa, lastMessage[0])) or aaa == "") and random.randint(0, denominator) == 0 and mojihocori.DATA.myVoice != None):
                     result = mojihocori.speakFreely(add=add)
                     if result == None:
@@ -406,7 +406,7 @@ async def cron():
         import traceback
         traceback.print_exc()
 
-
+"""
 import pyaudio
 import numpy as np
 from faster_whisper import WhisperModel
@@ -490,7 +490,7 @@ import threading
 if mojihocori.DATA.settings["hear"]:
     cronThread = threading.Thread(target=listen, daemon=True)
     cronThread.start()
-
+"""
 
 
 

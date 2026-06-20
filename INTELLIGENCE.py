@@ -1,5 +1,6 @@
 import DATA
 import difflib
+import random
 from rapidfuzz.distance import Levenshtein
 
 def isNextOk():
@@ -138,3 +139,4 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
         i += 1
     result = "".join(word3)
     return result
+

@@ -30,7 +30,7 @@ DATA.userLog = [None] * 10
 DATA.tangoOkikae1 = []
 DATA.tangoOkikae2 = []
 DATA.rate = 1.0
-jogen = 256
+jogen = 128
 
 def initialize(directory, interface_):
     #初期化
@@ -93,9 +93,10 @@ def speakFreely(add=True):
 
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-        for myname in DATA.settings["mynames"].split("|"):
-            DATA.tangoOkikae1.append(myname)
-            DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
+        if DATA.heartLastSpeaker != "!" and DATA.heartLastSpeaker != "!output":
+            for myname in DATA.settings["mynames"].split("|"):
+                DATA.tangoOkikae1.append(myname)
+                DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
         if len(DATA.tangoOkikae1) > jogen:
             DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
         if len(DATA.tangoOkikae2) > jogen:
@@ -117,18 +118,19 @@ def nextSpeak(add=True):
         DATA.userLog.append("!")
         DATA.userLog.pop(0)
         if result != None:
+            result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
             if add:
                 MEMORY.learnSentence(result, "!")
 
             DATA.tangoOkikae1.append(result)
             DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-            for myname in DATA.settings["mynames"].split("|"):
+            for myname in reversed(DATA.settings["mynames"].split("|")):
                 DATA.tangoOkikae1.append(myname)
                 DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
-            if len(DATA.tangoOkikae1) > jogen:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
-            if len(DATA.tangoOkikae2) > jogen:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
+            if len(DATA.tangoOkikae1) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
+                DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen*(len(DATA.settings["mynames"].split("|"))+1):]
+            if len(DATA.tangoOkikae2) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
+                DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen*(len(DATA.settings["mynames"].split("|"))+1):]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
             MEMORY.evalute()
@@ -172,28 +174,27 @@ def receive(x, u, add=True, reply=True, force=False):
             DATA.myVoice = None
             return
 
-        if DATA.rate >= 0.4:
-            DATA.tangoOkikae1.append(x)
-            DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
-            if "!system" not in u:
-                if u != "!" and u != "!output" and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
+        DATA.tangoOkikae1.append(x)
+        DATA.tangoOkikae2.append(DATA.lastSentenceInputHeart)
+        if "!system" not in u:
+            if u != "!" and u != "!output" and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
+                DATA.tangoOkikae1.append(u)
+                DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
+            elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
+                for myname in reversed(DATA.settings["mynames"].split("|")):
                     DATA.tangoOkikae1.append(u)
+                    DATA.tangoOkikae2.append(myname)
+            elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
+                for myname in reversed(DATA.settings["mynames"].split("|")):
+                    DATA.tangoOkikae1.append(myname)
                     DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
-                elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
-                    for myname in DATA.settings["mynames"].split("|"):
-                        DATA.tangoOkikae1.append(u)
-                        DATA.tangoOkikae2.append(myname)
-                elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
-                    for myname in DATA.settings["mynames"].split("|"):
-                        DATA.tangoOkikae1.append(myname)
-                        DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
-            if len(DATA.tangoOkikae1) > jogen:
-                DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen:]
-            if len(DATA.tangoOkikae2) > jogen:
-                DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
+        if len(DATA.tangoOkikae1) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
+            DATA.tangoOkikae1 = DATA.tangoOkikae1[-jogen*(len(DATA.settings["mynames"].split("|"))+1):]
+        if len(DATA.tangoOkikae2) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
+            DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen*(len(DATA.settings["mynames"].split("|"))+1):]
 
-            DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
-            DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
+        DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
+        DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
 
         #print("\ntangoOkikae1: {}".format(DATA.tangoOkikae1))
         #print("\ntangoOkikae2: {}\n".format(DATA.tangoOkikae2))
