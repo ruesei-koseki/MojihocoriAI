@@ -80,6 +80,11 @@ def initialize(directory, interface_):
 
     DATA.heart = random.randint(0, len(DATA.data["sentence"]) - 1) #今の気持ち(ログの座標で表される)
 
+def record():
+    MEMORY.learnSentence(DATA.myVoice, "!")
+    MEMORY.evalute()
+    
+
 def speakFreely(add=True):
     #自由に話す
     result = DATA.myVoice
@@ -88,9 +93,6 @@ def speakFreely(add=True):
     DATA.userLog.append("!")
     DATA.userLog.pop(0)
     if result != None:
-        if add:
-            MEMORY.learnSentence(result, "!")
-
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
         if DATA.heartLastSpeaker != "!" and DATA.heartLastSpeaker != "!output":
@@ -103,7 +105,6 @@ def speakFreely(add=True):
             DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen:]
         DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
         DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
-        MEMORY.evalute()
 
     DATA.lastSentence = result
     return result
@@ -119,8 +120,6 @@ def nextSpeak(add=True):
         DATA.userLog.pop(0)
         if result != None:
             result = INTELLIGENCE.replaceWords(result, DATA.tangoOkikae1, DATA.tangoOkikae2)
-            if add:
-                MEMORY.learnSentence(result, "!")
 
             DATA.tangoOkikae1.append(result)
             DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
@@ -133,7 +132,6 @@ def nextSpeak(add=True):
                 DATA.tangoOkikae2 = DATA.tangoOkikae2[-jogen*(len(DATA.settings["mynames"].split("|"))+1):]
             DATA.data["tangoOkikae1"] = DATA.tangoOkikae1
             DATA.data["tangoOkikae2"] = DATA.tangoOkikae2
-            MEMORY.evalute()
 
         DATA.lastSentence = result
         return result

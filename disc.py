@@ -18,6 +18,7 @@ lastMessage = None
 lastUsername = "誰か"
 messages = []
 pin = False
+yukou = False
 
 import datetime
 dt = datetime.datetime.now()
@@ -68,7 +69,7 @@ def setMode(x):
 
 kaisu = 0
 async def speak(result):
-    global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i
+    global channel, people, mode, pin, lastMessage, messages, kaisu, dt, add, i, yukou
     try:
         if not add:
             i = 0
@@ -83,6 +84,7 @@ async def speak(result):
         Message = ""
         for result in results:
             if bool(pattern.search(result)):
+                nxt = mojihocori.nextSpeak()
                 com = result.split(" ")
                 if com[1] == "discMove":
                     if not pin:
@@ -132,6 +134,7 @@ async def speak(result):
         Message = Message[:-1]
         if Message != "":
             async with channel.typing():
+                yukou = True
                 if len(Message) / 6 / mode >= 1:
                     if len(Message) / 6 / mode >= 5:
                         await asyncio.sleep(5)
@@ -139,11 +142,13 @@ async def speak(result):
                         await asyncio.sleep(len(Message) / 6 / mode)
                 else:
                     await asyncio.sleep(1)
-                await channel.send(Message)
-                nxt = mojihocori.nextSpeak()
-                if nxt:
-                    print("続きを返信します")
-                    await speak(nxt)
+                if yukou:
+                    await channel.send(Message)
+                    mojihocori.record()
+                    nxt = mojihocori.nextSpeak()
+                    if nxt:
+                        print("続きを返信します")
+                        await speak(nxt)
                 
     except:
         mojihocori.receive("エラー: チャンネルがNoneか、このチャンネルに入る権限がありません", "!system", add=add)
@@ -171,7 +176,7 @@ add = True
 # メッセージ受信時に動作する処理
 @client.event
 async def on_message(message):
-    global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt
+    global pin, channel, people, lastMessage, messages, helpMessage, lastUsername, ii, mode, i, add, dt, yukou
 
     if bool(re.search("休んで(良い|いい)(わ|よ|わよ)|終了して|exit bot", message.content)) and "モジホコリ、" in message.content:
         exit()
@@ -274,6 +279,7 @@ async def on_message(message):
             return
         
         print("受信: {}, from {}".format(message.content, username))
+        yukou = False
         if len(people) <= 2 or isinstance(message.channel, discord.DMChannel):
             mojihocori.receive(message.content, username, force=True)
         else:
