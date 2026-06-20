@@ -165,7 +165,7 @@ def receive(x, u, add=True, reply=True, force=False):
                 DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
             if x == "!good" and DATA.data["sentence"][DATA.heart+1][0] != "!good":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(x, u, force=force, reply=reply)
+        result = CONSIDERATION.looking(INTELLIGENCE.replaceWords(x, DATA.tangoOkikae2, DATA.tangoOkikae1), INTELLIGENCE.replaceWords(u, DATA.tangoOkikae2, DATA.tangoOkikae1), force=force, reply=reply)
         
         if add:
             MEMORY.learnSentence(x, u)
