@@ -137,7 +137,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(1):
+                    for iiii in range(6):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -186,7 +186,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(1):
+                    for iiii in range(6):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -241,7 +241,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(1):
+                    for iiii in range(6):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:
@@ -287,7 +287,7 @@ def looking(x, u, reply=True, force=False):
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
                 if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
-                    for iiii in range(1):
+                    for iiii in range(6):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
                         if reply:

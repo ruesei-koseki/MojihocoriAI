@@ -343,7 +343,7 @@ async def cron():
                         aaa = aaa + person + "|"
                 aaa = aaa[0:-1]
                 
-                if len(people)-2 <= 0:
+                if len(people)-1 <= 0:
                     denominator = 0
                 else:
                     denominator = len(people)-1
