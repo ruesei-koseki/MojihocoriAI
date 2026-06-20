@@ -94,7 +94,7 @@ def speakFreely(add=True):
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
         if DATA.heartLastSpeaker != "!" and DATA.heartLastSpeaker != "!output":
-            for myname in DATA.settings["mynames"].split("|"):
+            for myname in reversed(DATA.settings["mynames"].split("|")):
                 DATA.tangoOkikae1.append(myname)
                 DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
         if len(DATA.tangoOkikae1) > jogen:
@@ -124,7 +124,7 @@ def nextSpeak(add=True):
 
             DATA.tangoOkikae1.append(result)
             DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-            for myname in DATA.settings["mynames"].split("|"):
+            for myname in reversed(DATA.settings["mynames"].split("|")):
                 DATA.tangoOkikae1.append(myname)
                 DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
             if len(DATA.tangoOkikae1) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
@@ -181,11 +181,11 @@ def receive(x, u, add=True, reply=True, force=False):
                 DATA.tangoOkikae1.append(u)
                 DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
             elif (DATA.heartLastSpeakerInput == "!" or DATA.heartLastSpeakerInput == "!output") and u != "!" and u != "!output":
-                for myname in DATA.settings["mynames"].split("|"):
+                for myname in reversed(DATA.settings["mynames"].split("|")):
                     DATA.tangoOkikae1.append(u)
                     DATA.tangoOkikae2.append(myname)
             elif (u == "!" or u == "!output") and DATA.heartLastSpeakerInput != "!" and DATA.heartLastSpeakerInput != "!output":
-                for myname in DATA.settings["mynames"].split("|"):
+                for myname in reversed(DATA.settings["mynames"].split("|")):
                     DATA.tangoOkikae1.append(myname)
                     DATA.tangoOkikae2.append(DATA.heartLastSpeakerInput)
         if len(DATA.tangoOkikae1) > jogen*(len(DATA.settings["mynames"].split("|"))+1):
