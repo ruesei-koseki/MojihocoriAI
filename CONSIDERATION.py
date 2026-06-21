@@ -136,7 +136,7 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                if Levenshtein.normalized_similarity(u+": "+x, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                     for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
@@ -185,7 +185,7 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                if Levenshtein.normalized_similarity(u+": "+x, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                     for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
@@ -240,7 +240,7 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                if Levenshtein.normalized_similarity(u+": "+x, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                     for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
@@ -286,7 +286,7 @@ def looking(x, u, reply=True, force=False):
             for sen in DATA.data["sentence"][f:t]:
                 if i >= len(DATA.data["sentence"]) - 1:
                     break
-                if Levenshtein.normalized_similarity(u+": "+x, DATA.data["sentence"][i][1]+": "+DATA.data["sentence"][i][0]) >= rate:
+                if Levenshtein.normalized_similarity(x, DATA.data["sentence"][i][0]) >= rate:
                     for iiii in range(1):
                         if i+iiii+1 >= len(DATA.data["sentence"]):
                             break
