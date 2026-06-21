@@ -118,6 +118,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                 word3[i] = new
                 temp = ""
                 temp2 = ""
+                temp3 = []
                 break
             elif Levenshtein.normalized_similarity(wo3, temp) >= 0.85:
                 print("{} => {}".format(temp, temp2))
@@ -126,6 +127,7 @@ def replaceWords(x, inputs, inputsHeart, ignoreTab=False):
                 word3[i] = temp2
                 temp = ""
                 temp2 = ""
+                temp3 = []
                 break
             elif wo3 in old:
                 temp = old.replace(wo3, "")
