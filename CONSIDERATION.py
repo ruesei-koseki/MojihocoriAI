@@ -12,7 +12,6 @@ def looking(x, u, reply=True, force=False):
         f = DATA.heart+1
         t = len(DATA.data["sentence"]) - 1
         i = f
-        ii = 0
         d = 0
         b = 0
         for sen in DATA.data["sentence"][f:t]:
@@ -34,7 +33,6 @@ def looking(x, u, reply=True, force=False):
         f = 0
         t = DATA.heart-1
         i = f
-        ii = 0
         for sen in DATA.data["sentence"][f:t]:
             c = Levenshtein.normalized_similarity(x, sen[0]) 
             if d > c:
@@ -78,7 +76,6 @@ def looking(x, u, reply=True, force=False):
         f = DATA.heart+1
         t = len(DATA.data["sentence"]) - 1
         i = f
-        ii = 0
         d = 0
         b = 0
         for sen in DATA.data["sentence"][f:t]:
@@ -100,7 +97,6 @@ def looking(x, u, reply=True, force=False):
         f = 0
         t = DATA.heart-1
         i = f
-        ii = 0
         for sen in DATA.data["sentence"][f:t]:
             c = Levenshtein.normalized_similarity(u+": "+x, sen[1]+": "+sen[0]) 
             if d > c:
@@ -138,7 +134,6 @@ def looking(x, u, reply=True, force=False):
         f = DATA.heart+1
         t = len(DATA.data["sentence"]) - 1
         i = f
-        ii = 0
         d = 0
         b = None
         for sen in DATA.data["sentence"][f:t]:
