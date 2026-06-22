@@ -39,6 +39,7 @@ def findWords(x):
         if w not in DATA.data["words"]:  # 既に記憶されていない単語のみ追加
             if w != "":
                 DATA.data["words"].append(w)
+    """
     ws = x
     for w in list(t.tokenize(x, wakati=True)):
         ws = ws.replace(w, "⁡")
@@ -46,6 +47,7 @@ def findWords(x):
         if ww not in DATA.data["words"]:  # 既に記憶されていない単語のみ追加
             if ww != "":
                 DATA.data["words"].append(ww)
+    """
 
 def saveData():
     with open(DATA.direc+"/data.json", "w", encoding="utf8") as f:
