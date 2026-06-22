@@ -95,7 +95,7 @@ def speakFreely(add=True):
     if result != None:
         DATA.tangoOkikae1.append(result)
         DATA.tangoOkikae2.append(DATA.lastSentenceHeart)
-        if DATA.heartLastSpeaker != "!" and DATA.heartLastSpeaker != "!output":
+        if DATA.heartLastSpeaker == "!" or DATA.heartLastSpeaker == "!output":
             for myname in reversed(DATA.settings["mynames"].split("|")):
                 DATA.tangoOkikae1.append(myname)
                 DATA.tangoOkikae2.append(DATA.heartLastSpeaker)
@@ -113,6 +113,7 @@ def nextSpeak(add=True):
     if INTELLIGENCE.isNextOk():
         DATA.heart += 1
         result = DATA.data["sentence"][DATA.heart][0]
+        DATA.lastSentenceHeart = result
         DATA.heartLastSpeaker = DATA.data["sentence"][DATA.heart][1]
         if "!" not in DATA.lastUser:
             DATA.lastUserReplied = DATA.lastUser
@@ -163,7 +164,7 @@ def receive(x, u, add=True, reply=True, force=False):
                 DATA.data["sentence"].insert(DATA.heart+1, ["!bad", "!"])
             if x == "!good" and DATA.data["sentence"][DATA.heart+1][0] != "!good":
                 DATA.data["sentence"].insert(DATA.heart+1, ["!good", "!"])
-        result = CONSIDERATION.looking(INTELLIGENCE.replaceWords(x, DATA.tangoOkikae2, DATA.tangoOkikae1), INTELLIGENCE.replaceWords(u, DATA.tangoOkikae2, DATA.tangoOkikae1), force=force, reply=reply)
+        result = CONSIDERATION.looking(x, u, force=force, reply=reply)
         
         if add:
             MEMORY.learnSentence(x, u)
