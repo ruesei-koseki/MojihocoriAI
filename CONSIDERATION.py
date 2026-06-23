@@ -80,7 +80,7 @@ def looking(x, u, reply=True, force=False):
         d = 0
         b = None
         for sen in DATA.data["sentence"][f:t]:
-            c = Levenshtein.normalized_similarity(u+": "+x, sen[1]+": "+sen[0]) 
+            c = Levenshtein.normalized_similarity(x, sen[0]) 
             if c > d:
                 if (i != len(DATA.data["sentence"]) and
                     Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.85 and
@@ -99,7 +99,7 @@ def looking(x, u, reply=True, force=False):
         t = DATA.heart-1
         i = f
         for sen in DATA.data["sentence"][f:t]:
-            c = Levenshtein.normalized_similarity(u+": "+x, sen[1]+": "+sen[0]) 
+            c = Levenshtein.normalized_similarity(x, sen[0]) 
             if c > d:
                 if (i != len(DATA.data["sentence"]) and
                     Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.85 and
@@ -139,7 +139,7 @@ def looking(x, u, reply=True, force=False):
         d = 0
         b = None
         for sen in DATA.data["sentence"][f:t]:
-            c = Levenshtein.normalized_similarity(u+": "+x, sen[1]+": "+sen[0]) 
+            c = Levenshtein.normalized_similarity(x, sen[0]) 
             if c > d:
                 if (i != len(DATA.data["sentence"]) and
                     Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.85 and
@@ -156,7 +156,7 @@ def looking(x, u, reply=True, force=False):
         t = DATA.heart-1
         i = f
         for sen in DATA.data["sentence"][f:t]:
-            c = Levenshtein.normalized_similarity(u+": "+x, sen[1]+": "+sen[0]) 
+            c = Levenshtein.normalized_similarity(x, sen[0]) 
             if c > d:
                 if (i != len(DATA.data["sentence"]) and
                     Levenshtein.normalized_similarity(DATA.data["sentence"][i+1][0], DATA.lastSentenceInput) < 0.85 and
